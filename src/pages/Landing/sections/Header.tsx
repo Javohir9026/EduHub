@@ -12,12 +12,12 @@ const Header = () => {
         </div>
         <div className="flex items-center gap-5">
           <div className=" hidden md:flex items-center gap-3">
-            <section id="features" className="cursor-pointer hover:border-b-2 hover:border-black text-black/70 hover:text-black">
+            <a href="#features" className="cursor-pointer hover:border-b-2 hover:border-black text-black/70 hover:text-black">
               Imkoniyatlar
-            </section>
-            <section id="benfits" className="cursor-pointer hover:border-b-2 hover:border-black text-black/70 hover:text-black">
+            </a>
+            <a href="#benfits" className="cursor-pointer hover:border-b-2 hover:border-black text-black/70 hover:text-black">
               Afzalliklar
-            </section>
+            </a>
           </div>
           <div className="flex items-center gap-2">
             <Button onClick={()=> navigate('/sign-in')} variant="outline" className="cursor-pointer !font-semibold hover:text-white hover:bg-purple-500">Kirish</Button>

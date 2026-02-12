@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 const SignInForm = () => {
   return (
-    <div className="flex justify-center mt-10">
+    <div className="flex justify-center items-center mt-10">
       <div className="flex flex-col gap-7">
         <Link to="/">
           <p className="flex gap-1 text-[14px] items-center text-black/70 hover:text-black">
@@ -14,10 +14,10 @@ const SignInForm = () => {
             Orqaga qaytish
           </p>
         </Link>
-        <div className="border rounded-[27px] border-black/20 p-7 flex flex-col gap-5">
+        <div className="border rounded-[27px] border-black/20 sm:p-7 p-2 flex flex-col gap-5">
           <div className="flex flex-col">
-            <h1 className="!font-bold text-[25px]">Xush Kelibsiz</h1>
-            <p className="text-black/70 text-[14px]">
+            <h1 className="!font-bold text-[25px] text-center sm:text-start">Xush Kelibsiz</h1>
+            <p className="text-black/70 text-[14px] text-center sm:text-start">
               EduHub hisobingizga kiring
             </p>
           </div>
@@ -26,7 +26,7 @@ const SignInForm = () => {
               <Label htmlFor="login">Login</Label>
               <div
                 className="
-    border border-black/20 rounded-lg w-[400px]
+    border border-black/20 rounded-lg sm:w-[400px] w-[350px]
     flex items-center px-2
     focus-within:outline
     focus-within:outline-2
@@ -47,7 +47,7 @@ const SignInForm = () => {
               <Label htmlFor="pass">Parol</Label>
               <div
                 className="
-    border border-black/20 rounded-lg w-[400px]
+    border border-black/20 rounded-lg sm:w-[400px] w-[350px]
     flex items-center px-2
     focus-within:outline
     focus-within:outline-2
