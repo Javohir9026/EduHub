@@ -123,8 +123,9 @@
   }
 }
 .container {
-  @apply mx-auto px-5 lg:px-30;
+  @apply mx-auto px-3 lg:px-10 xl:px-30;
 }
+
 
 * {
   font-family: "Montserrat", sans-serif;
