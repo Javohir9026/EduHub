@@ -1,12 +1,13 @@
 import Header from './sections/Header'
 import Footer from './sections/Footer'
+import Hero from './sections/Hero'
 
 const LandingPage = () => {
   return (
     <div>
         <Header/>
         <div className='container'>
-            MAIN
+            <Hero/>
         </div>
         <Footer/>
     </div>
