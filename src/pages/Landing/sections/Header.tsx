@@ -1,11 +1,13 @@
-
 import { EduHubLightText } from "@/assets/exportImg";
 import { Button } from "@/components/ui/button"
+import { useNavigate } from "react-router-dom";
+
 const Header = () => {
+  const navigate = useNavigate();
   return (
     <div className="py-3 border-b border-black/30">
       <div className="container flex justify-between items-center">
-        <div className="w-30 overflow-hidden flex items-center justify-center">
+        <div className="w-30 overflow-hidden flex items-center justify-center cursor-pointer" onClick={()=> navigate('/')}>
           <img src={EduHubLightText} alt="LogoLightText" />
         </div>
         <div className="flex items-center gap-5">
@@ -18,8 +20,8 @@ const Header = () => {
             </section>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" className="cursor-pointer !font-semibold hover:text-white hover:bg-purple-500">Kirish</Button>
-            <Button variant="outline" className="bg-blue-500 text-white !font-semibold hover:bg-blue-500/85 hover:text-white cursor-pointer hidden sm:block">Ro'yxatdan o'tish</Button>
+            <Button onClick={()=> navigate('/sign-in')} variant="outline" className="cursor-pointer !font-semibold hover:text-white hover:bg-purple-500">Kirish</Button>
+            <Button onClick={()=> navigate('/register')} variant="outline" className="bg-blue-500 text-white !font-semibold hover:bg-blue-500/85 hover:text-white cursor-pointer hidden sm:block">Ro'yxatdan o'tish</Button>
           </div>
         </div>
       </div>

@@ -1,10 +1,10 @@
-import { ArrowLeft, Lock, User } from "lucide-react";
+import { ArrowLeft, Building2, Lock, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-const SignInForm = () => {
+const RegisterForm = () => {
   return (
     <div className="flex justify-center mt-10">
       <div className="flex flex-col gap-7">
@@ -18,12 +18,12 @@ const SignInForm = () => {
           <div className="flex flex-col">
             <h1 className="!font-bold text-[25px]">Xush Kelibsiz</h1>
             <p className="text-black/70 text-[14px]">
-              EduHub hisobingizga kiring
+              EduHub hisobingizni yarating va bugundan <br /> boshqarishni boshlang!
             </p>
           </div>
           <form className="flex flex-col gap-5">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="login">Login</Label>
+              <Label htmlFor="login">O'quv Markaz Nomi</Label>
               <div
                 className="
     border border-black/20 rounded-lg w-[400px]
@@ -33,12 +33,12 @@ const SignInForm = () => {
     focus-within:outline-blue-400
   "
               >
-                <User className="stroke-black/60" />
+                <Building2 className="stroke-black/60" />
 
                 <Input
                   id="login"
                   type="text"
-                  placeholder="Login"
+                  placeholder="O'quv Markaz"
                   className="border-none focus:outline-none focus:ring-0 focus-visible:ring-0"
                 />
               </div>
@@ -84,4 +84,4 @@ const SignInForm = () => {
   );
 };
 
-export default SignInForm;
+export default RegisterForm;
