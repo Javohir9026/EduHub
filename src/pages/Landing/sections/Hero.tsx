@@ -1,6 +1,6 @@
 import { EduHubBlue, EduHubHeroImg } from "@/assets/exportImg";
 import { Button } from "@/components/ui/button";
-import { BookMarkedIcon, CheckCircle, Clock, Coins, Contact, GraduationCap, HandshakeIcon, LucideMoveDiagonal2, ShieldEllipsis, Trello, TwitchIcon, Voicemail } from "lucide-react";
+import { BookMarkedIcon, CheckCircle, Clock, Coins, Contact, GraduationCap, HandshakeIcon, ShieldEllipsis, Trello, TwitchIcon} from "lucide-react";
 
 const Hero = () => {
   return (
