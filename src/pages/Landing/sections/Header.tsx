@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 const Header = () => {
   return (
     <div className="py-3 border-b border-black/30">
-      <div className="container flex justify-between items-center">
+      <div className="container md:mobile-container flex justify-between items-center">
         <div className="w-30 overflow-hidden flex items-center justify-center">
           <img src={EduHubLightText} alt="LogoLightText" />
         </div>
