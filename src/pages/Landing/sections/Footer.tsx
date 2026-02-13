@@ -6,8 +6,10 @@ const Footer = () => {
       <div className="container pt-10 pb-5 flex flex-col gap-5">
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-5">
           <div className="flex flex-col gap-2">
-            <img src={EduHubLightText} alt="EduHubLogoLight" width={150} />
-            <p className="text-black/70">
+            <div className="flex justify-center sm:justify-start">
+              <img src={EduHubLightText} alt="EduHubLogoLight" width={150} />
+            </div>
+            <p className="text-black/70 text-center sm:text-start">
               Ta'lim markazlari uchun to'liq <br />
               boshqaruv tizimi
             </p>
@@ -38,18 +40,27 @@ const Footer = () => {
             </ul>
           </div>
         </div>
-        <div className="flex items-center justify-between grid sm:grid-cols-2 text-center md:text-start">
+        <div className="items-center text-center justify-between grid sm:grid-cols-2 text-center md:text-start">
           <p className="text-black/70">
             © {new Date().getFullYear()} EduHub. Barcha huquqlar himoyalangan.
           </p>
           <div className="flex items-center gap-2 justify-center md:justify-end">
-            <a href="#" className="text-black/70 hover:border-b-1 hover:border-black">
+            <a
+              href="#"
+              className="text-black/70 hover:border-b-1 hover:border-black"
+            >
               Telegram
             </a>
-            <a href="#" className="text-black/70 hover:border-b-1 hover:border-black">
+            <a
+              href="#"
+              className="text-black/70 hover:border-b-1 hover:border-black"
+            >
               Instagram
             </a>
-            <a href="#" className="text-black/70 hover:border-b-1 hover:border-black">
+            <a
+              href="#"
+              className="text-black/70 hover:border-b-1 hover:border-black"
+            >
               Facebook
             </a>
           </div>

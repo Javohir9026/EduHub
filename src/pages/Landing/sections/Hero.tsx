@@ -57,9 +57,47 @@ const Hero = () => {
             </Button>
 
             <Button
-              onClick={() => navigate("/sign-in")}
-              variant="outline"
-              className="p-6 cursor-pointer !font-semibold hover:text-white hover:bg-purple-500 w-full md:w-auto"
+              className="
+  h-[52px] inline-flex items-center justify-center
+  relative z-[1] overflow-hidden
+  cursor-pointer
+  text-[#090909] text-[18px] leading-none
+  px-[1.7em]
+  rounded-lg
+  bg-[#e8e8e8]
+  border border-[#e8e8e8]
+  shadow-[6px_6px_12px_#c5c5c5,-6px_-6px_12px_#ffffff]
+  transition-all duration-200 ease-in
+
+  active:text-[#666]
+  active:shadow-[inset_4px_4px_12px_#c5c5c5,inset_-4px_-4px_12px_#ffffff]
+
+  before:content-['']
+  before:absolute before:left-1/2 before:top-full
+  before:w-[140%] before:h-[180%]
+  before:-translate-x-1/2
+  before:scale-x-[1.25]
+  before:rounded-full
+  before:bg-black/5
+  before:transition-all before:duration-500 before:delay-100
+  before:[transition-timing-function:cubic-bezier(0.55,0,0.1,1)]
+  before:-z-[1]
+
+  after:content-['']
+  after:absolute after:left-[55%] after:top-[180%]
+  after:w-[160%] after:h-[190%]
+  after:-translate-x-1/2
+  after:scale-x-[1.45]
+  after:rounded-full
+  after:bg-purple-500
+  after:transition-all after:duration-500 after:delay-100
+  after:[transition-timing-function:cubic-bezier(0.55,0,0.1,1)]
+  after:-z-[1]
+
+  hover:text-white hover:border-purple-500
+  hover:before:top-[-35%] hover:before:bg-purple-500 hover:before:scale-y-[1.3] hover:before:scale-x-[0.8]
+  hover:after:top-[-45%] hover:after:bg-purple-500 hover:after:scale-y-[1.3] hover:after:scale-x-[0.8]
+  "
             >
               Kirish
             </Button>
@@ -204,10 +242,10 @@ const Hero = () => {
             </p>
           </div>
           <div className="flex justify-center items-center gap-2 flex-col md:flex-row">
-           <Button
-  onClick={() => navigate("/register")}
-  variant="outline"
-  className="
+            <Button
+              onClick={() => navigate("/register")}
+              variant="outline"
+              className="
     p-6 w-full md:w-auto
     bg-blue-500 text-white !font-semibold
     hover:bg-blue-500/85 hover:text-white
@@ -225,14 +263,51 @@ const Hero = () => {
     before:opacity-60
     hover:before:animate-shine
   "
->
-  Ro'yxatdan o'tish
-</Button>
+            >
+              Ro'yxatdan o'tish
+            </Button>
 
             <Button
-              onClick={() => navigate("/sign-in")}
-              variant="outline"
-              className="p-6 cursor-pointer !font-semibold hover:text-white hover:bg-purple-500 w-full md:w-auto"
+              className="
+  h-[52px] inline-flex items-center justify-center
+  relative z-[1] overflow-hidden
+  cursor-pointer
+  text-[#090909] text-[18px] leading-none
+  px-[1.7em]
+  rounded-lg
+  bg-[#e8e8e8]
+  border border-[#e8e8e8]
+  shadow-[6px_6px_12px_#c5c5c5,-6px_-6px_12px_#ffffff]
+  transition-all duration-200 ease-in
+
+  active:text-[#666]
+  active:shadow-[inset_4px_4px_12px_#c5c5c5,inset_-4px_-4px_12px_#ffffff]
+
+  before:content-['']
+  before:absolute before:left-1/2 before:top-full
+  before:w-[140%] before:h-[180%]
+  before:-translate-x-1/2
+  before:scale-x-[1.25]
+  before:rounded-full
+  before:transition-all before:duration-500 before:delay-100
+  before:[transition-timing-function:cubic-bezier(0.55,0,0.1,1)]
+  before:-z-[1]
+
+  after:content-['']
+  after:absolute after:left-[55%] after:top-[180%]
+  after:w-[160%] after:h-[190%]
+  after:-translate-x-1/2
+  after:scale-x-[1.45]
+  after:rounded-full
+  after:bg-purple-500
+  after:transition-all after:duration-500 after:delay-100
+  after:[transition-timing-function:cubic-bezier(0.55,0,0.1,1)]
+  after:-z-[1]
+
+  hover:text-white hover:border-purple-500
+  hover:before:top-[-35%] hover:before:bg-purple-500 hover:before:scale-y-[1.3] hover:before:scale-x-[0.8]
+  hover:after:top-[-45%] hover:after:bg-purple-500 hover:after:scale-y-[1.3] hover:after:scale-x-[0.8]
+  "
             >
               Kirish
             </Button>

@@ -6,7 +6,7 @@ const PublicLayout = () => {
   const navigate = useNavigate();
   return (
     <>
-      <div className="py-3 border-b border-black/30">
+      <div className="py-3 border-b border-black/30 top-0 sticky z-99 bg-white">
         <div className="container flex justify-between items-center">
           <div
             className="w-30 overflow-hidden flex items-center justify-center cursor-pointer"
