@@ -1,6 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { EduHubLightText } from "@/assets/exportImg";
+import Footer from "../sections/Footer";
 
 const PublicLayout = () => {
   const navigate = useNavigate();
@@ -49,6 +50,7 @@ const PublicLayout = () => {
         </div>
       </div>
       <Outlet />
+      <Footer/>
     </>
   );
 };

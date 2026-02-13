@@ -34,18 +34,18 @@ const Footer = () => {
           </div>
           <div className="flex flex-col gap-2">
             <h1 className="!font-bold text-1xl">Qollab Quvvatlash</h1>
-            <ul>
-              <li className="text-black/70">Biz bilan bog'lanish</li>
-              <li className="text-black/70">Yordam markazi</li>
-              <li className="text-black/70">Tavsiyalar</li>
+            <ul className="flex flex-col">
+              <Link to="/contact-us" className="text-black/70 cursor-pointer hover:text-black w-fit">Biz bilan bog'lanish</Link>
+              <Link to="/contact-us" className="text-black/70 cursor-pointer hover:text-black w-fit">Yordam markazi</Link>
+              <Link to="/contact-us" className="text-black/70 cursor-pointer hover:text-black w-fit">Tavsiyalar</Link>
             </ul>
           </div>
           <div className="flex flex-col gap-2">
             <h1 className="!font-bold text-1xl">Tashkilot</h1>
-            <ul>
-              <li className="text-black/70">Biz haqimizda</li>
-              <li className="text-black/70">Maxfiylik</li>
-              <li className="text-black/70">Shartlar va qoidalar</li>
+            <ul className="flex flex-col">
+              <Link  to="/about-us" className="text-black/70 hover:text-black w-fit">Biz haqimizda</Link>    
+              <Link to="/about-us" className="text-black/70 hover:text-black w-fit">Maxfiylik</Link>
+              <Link to="/about-us" className="text-black/70 hover:text-black w-fit">Shartlar va qoidalar</Link>
             </ul>
           </div>
         </div>
