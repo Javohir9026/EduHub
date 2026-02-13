@@ -34,10 +34,28 @@ const Hero = () => {
             <Button
               onClick={() => navigate("/register")}
               variant="outline"
-              className="p-6 bg-blue-500 text-white !font-semibold hover:bg-blue-500/85 hover:text-white cursor-pointer w-full md:w-auto"
+              className="
+    p-6 w-full md:w-auto
+    bg-blue-500 text-white !font-semibold
+    hover:bg-blue-500/85 hover:text-white
+    cursor-pointer
+    relative overflow-hidden
+    transition-all duration-300 ease-in-out
+    hover:scale-[1.03]
+    border-white/30 border-[3px]
+    shadow-[0_10px_20px_rgba(0,0,0,0.2)]
+
+    before:content-['']
+    before:absolute before:top-0 before:left-[-100px]
+    before:w-[100px] before:h-full
+    before:bg-[linear-gradient(120deg,rgba(255,255,255,0)_30%,rgba(255,255,255,0.8),rgba(255,255,255,0)_70%)]
+    before:opacity-60
+    hover:before:animate-shine
+  "
             >
               Ro'yxatdan o'tish
             </Button>
+
             <Button
               onClick={() => navigate("/sign-in")}
               variant="outline"
@@ -186,15 +204,33 @@ const Hero = () => {
             </p>
           </div>
           <div className="flex justify-center items-center gap-2 flex-col md:flex-row">
+           <Button
+  onClick={() => navigate("/register")}
+  variant="outline"
+  className="
+    p-6 w-full md:w-auto
+    bg-blue-500 text-white !font-semibold
+    hover:bg-blue-500/85 hover:text-white
+    cursor-pointer
+    relative overflow-hidden
+    transition-all duration-300 ease-in-out
+    hover:scale-[1.03]
+    border-white/30 border-[3px]
+    shadow-[0_10px_20px_rgba(0,0,0,0.2)]
+
+    before:content-['']
+    before:absolute before:top-0 before:left-[-100px]
+    before:w-[100px] before:h-full
+    before:bg-[linear-gradient(120deg,rgba(255,255,255,0)_30%,rgba(255,255,255,0.8),rgba(255,255,255,0)_70%)]
+    before:opacity-60
+    hover:before:animate-shine
+  "
+>
+  Ro'yxatdan o'tish
+</Button>
+
             <Button
-            onClick={()=>navigate('/register')}
-              variant="outline"
-              className="p-6 bg-blue-500 text-white !font-semibold hover:bg-blue-500/85 hover:text-white cursor-pointer w-full md:w-auto"
-            >
-              Ro'yxatdan o'tish
-            </Button>
-            <Button
-            onClick={()=>navigate('/sign-in')}
+              onClick={() => navigate("/sign-in")}
               variant="outline"
               className="p-6 cursor-pointer !font-semibold hover:text-white hover:bg-purple-500 w-full md:w-auto"
             >

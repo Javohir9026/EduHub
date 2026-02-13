@@ -4,7 +4,7 @@ const Footer = () => {
   return (
     <div className="bg-blue-100 text-black text-[13px]">
       <div className="container pt-10 pb-5 flex flex-col gap-5">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-5">
           <div className="flex flex-col gap-2">
             <img src={EduHubLightText} alt="EduHubLogoLight" width={150} />
             <p className="text-black/70">
