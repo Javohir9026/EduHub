@@ -1,5 +1,5 @@
 import { ArrowLeft, Eye, EyeOff, Loader2, Lock, User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -17,6 +17,7 @@ const SignInForm = () => {
   const [password, setPassword] = useState<string>("");
   const [errors, setErrors] = useState<LoginErrors>({});
   const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
   const validateField = (
     name: "login" | "password",
     value: string,
@@ -59,12 +60,16 @@ const SignInForm = () => {
       });
 
       console.log("Success:", res.data);
-
-      const token = res.data?.token;
-      if (token) {
-        localStorage.setItem("token", token);
+      
+      const access_token = res.data?.data?.access_token;
+      const refresh_token = res.data?.data?.refresh_token;
+      if (access_token) {
+        localStorage.setItem("access_token", access_token);
       }
-
+      if (refresh_token) {
+        localStorage.setItem("refresh_token", refresh_token);
+      }
+      navigate("/dashboard");
       setLogin("");
       setPassword("");
     } catch (error: any) {
