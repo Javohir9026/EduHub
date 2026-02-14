@@ -11,6 +11,10 @@ import ContactUs from "./pages/Landing/pages/contactUs";
 import AboutUs from "./pages/Landing/pages/aboutUs";
 import ScrollToTop from "./components/common/ScroolToTop";
 import AppLayout from "./layout/AppLayout";
+import StudentsPage from "./pages/students/StudentsPage";
+import TeachersPage from "./pages/Teachers/TeachersPage";
+import Groups from "./pages/Groups/Groups";
+import CalendarPage from "./pages/Calendar/CalendarPage";
 
 const App = () => {
   return (
@@ -76,6 +80,38 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/students"
+            element={
+              <ProtectedRoute>
+                <StudentsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/teachers"
+            element={
+              <ProtectedRoute>
+                <TeachersPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/groups"
+            element={
+              <ProtectedRoute>
+                <Groups />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/calendar"
+            element={
+              <ProtectedRoute>
+                <CalendarPage />
               </ProtectedRoute>
             }
           />

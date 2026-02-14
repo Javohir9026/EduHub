@@ -4,7 +4,7 @@ import { LogOut, Loader2 } from "lucide-react";
 import axios from "axios";
 import { useNavigate } from "react-router";
 
-const LogOutButton = () => {
+const LogOutButton = ({isExpanded, isHovered, isMobileOpen}: {isExpanded: boolean, isHovered: boolean, isMobileOpen: boolean}) => {
   const api = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -48,7 +48,7 @@ const LogOutButton = () => {
       ) : (
         <>
           <LogOut className="w-4 h-4" />
-          Chiqish
+          {(isExpanded || isHovered || isMobileOpen) && <span>Chiqish</span>}
         </>
       )}
     </Button>

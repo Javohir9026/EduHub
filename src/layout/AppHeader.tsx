@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { useSidebar } from "../context/SidebarContext";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
+import { EduHubLogo } from "@/assets/exportImg";
 
 const AppHeader: React.FC = () => {
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
@@ -25,8 +26,8 @@ const AppHeader: React.FC = () => {
         </button>
 
         {/* Logo (Mobile only) */}
-        <Link to="/" className="lg:hidden">
-          <img src="/images/logo/logo.svg" alt="Logo" width={120} />
+        <Link to="/" className="lg:hidden h-[50px] w-[100px] flex items-center justify-center overflow-hidden">
+          <img src={EduHubLogo} alt="Logo" width={150} height={150} className="object-contain" />
         </Link>
 
         {/* Right side  */}
