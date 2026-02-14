@@ -10,6 +10,7 @@ import InfoUsers from "./pages/Landing/pages/InfoUsers";
 import ContactUs from "./pages/Landing/pages/contactUs";
 import AboutUs from "./pages/Landing/pages/aboutUs";
 import ScrollToTop from "./components/common/ScroolToTop";
+import AppLayout from "./layout/AppLayout";
 
 const App = () => {
   return (
@@ -69,14 +70,16 @@ const App = () => {
             }
           />
         </Route>
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
+        <Route element={<AppLayout />}>
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

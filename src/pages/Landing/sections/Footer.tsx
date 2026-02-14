@@ -51,7 +51,7 @@ const Footer = () => {
         </div>
         <div className="items-center text-center justify-between grid sm:grid-cols-2 text-center md:text-start">
           <p className="text-black/70">
-            © {new Date().getFullYear()} EduHub. Barcha huquqlar himoyalangan.
+            © 2025-{new Date().getFullYear()} EduHub. Barcha huquqlar himoyalangan.
           </p>
           <div className="flex items-center gap-2 justify-center md:justify-end">
             <a

@@ -130,3 +130,8 @@
   font-family: "Montserrat", sans-serif;
   font-weight: 500;
 }
+
+::view-transition-old(root), ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+}

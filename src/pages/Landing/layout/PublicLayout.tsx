@@ -2,12 +2,18 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { EduHubLightText } from "@/assets/exportImg";
 import Footer from "../sections/Footer";
+import { useEffect } from "react";
+import { useTheme } from "@/components/common/ThemeProvider";
 
 const PublicLayout = () => {
   const navigate = useNavigate();
+  const { setTheme } = useTheme();
+  useEffect(() => {
+    setTheme("light");
+  }, []);
   return (
     <>
-      <div className="py-3 border-b border-black/30 top-0 sticky z-99 bg-white">
+      <div className="py-3 top-0 sticky z-99 bg-white shadow-lg">
         <div className="container flex justify-between items-center">
           <div
             className="w-30 overflow-hidden flex items-center justify-center cursor-pointer"
@@ -50,7 +56,7 @@ const PublicLayout = () => {
         </div>
       </div>
       <Outlet />
-      <Footer/>
+      <Footer />
     </>
   );
 };
