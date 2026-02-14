@@ -18,16 +18,16 @@ const Footer = () => {
           <div className="flex flex-col gap-2">
             <h1 className="!font-bold text-1xl">Foydalanuvchilar</h1>
             <ul className="flex flex-col">
-              <Link to="/info-users" className="text-black/70 hover:text-black">
+              <Link to="/info-users" className="text-black/70 hover:text-black w-fit">
                 Ustozlar
               </Link>
-              <Link to="/info-users" className="text-black/70 hover:text-black">
+              <Link to="/info-users" className="text-black/70 hover:text-black w-fit">
                 O'quvchilar
               </Link>
-              <Link to="/info-users" className="text-black/70 hover:text-black">
+              <Link to="/info-users" className="text-black/70 hover:text-black w-fit">
                 Guruhlar
               </Link>
-              <Link to="/info-users" className="text-black/70 hover:text-black">
+              <Link to="/info-users" className="text-black/70 hover:text-black w-fit">
                 To'lovlar
               </Link>
             </ul>
