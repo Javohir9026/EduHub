@@ -1,4 +1,4 @@
-import { EduLogoLight } from "@/assets/exportImg";
+import { EduHubLogo, EduLogoLight } from "@/assets/exportImg";
 import { Button } from "@/components/ui/button";
 import { Users, Globe, Award } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -16,18 +16,18 @@ const AboutUsPage = () => {
           <p className="text-black/70 text-lg lg:text-xl mb-8">
             EduHub ta'lim markazlarini raqamli boshqarish va o‘quv jarayonini
             soddalashtirishga ixtisoslashgan yetakchi platformadir. Bizning
-            maqsadimiz – har bir o‘quv markazi va o‘quvchi uchun eng qulay
-            va interaktiv muhit yaratish.
+            maqsadimiz – har bir o‘quv markazi va o‘quvchi uchun eng qulay va
+            interaktiv muhit yaratish.
           </p>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg cursor-pointer" onClick={()=>navigate('/contact-us')}>
+          <Button
+            className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg cursor-pointer"
+            onClick={() => navigate("/contact-us")}
+          >
             Biz bilan bog‘lanish
           </Button>
         </div>
-        <div className="flex-1">
-          <img
-            src={EduLogoLight}
-            alt="About Us"
-          />
+        <div className="flex-1 w-[200px] overflow-hidden flex items-center justify-center cursor-pointer h-[350px]">
+          <img src={EduHubLogo} alt="About Us" className="object-contain"/>
         </div>
       </section>
 
@@ -39,9 +39,7 @@ const AboutUsPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           <div className="bg-white rounded-2xl shadow-xl p-8 text-center hover:shadow-2xl transition-shadow">
             <Users className="mx-auto text-blue-600 w-12 h-12 mb-4" />
-            <h3 className="font-semibold text-black text-xl mb-2">
-              Jamiyat
-            </h3>
+            <h3 className="font-semibold text-black text-xl mb-2">Jamiyat</h3>
             <p className="text-black ">
               Biz foydalanuvchilarimiz va hamkorlarimiz bilan doimo ochiq va
               hamkorlik ruhida ishlaymiz.
@@ -53,18 +51,16 @@ const AboutUsPage = () => {
               Innovatsiya
             </h3>
             <p className="text-black">
-              Raqamli yechimlar va zamonaviy texnologiyalar yordamida
-              ta'\'limni yanada samarali qilamiz.
+              Raqamli yechimlar va zamonaviy texnologiyalar yordamida ta'\'limni
+              yanada samarali qilamiz.
             </p>
           </div>
           <div className="bg-white rounded-2xl shadow-xl p-8 text-center hover:shadow-2xl transition-shadow">
             <Award className="mx-auto text-blue-600 w-12 h-12 mb-4" />
-            <h3 className="font-semibold text-black text-xl mb-2">
-              Sifat
-            </h3>
+            <h3 className="font-semibold text-black text-xl mb-2">Sifat</h3>
             <p className="text-black">
-              Har bir xizmati va mahsulotimiz yuqori sifat standartlariga
-              javob beradi.
+              Har bir xizmati va mahsulotimiz yuqori sifat standartlariga javob
+              beradi.
             </p>
           </div>
         </div>
