@@ -174,7 +174,7 @@ const Hero = () => {
           </div>
         </div>
       </div>
-      <div className="bg-blue-200/20">
+      <div className="bg-gray-50">
         <div className="container py-25 flex flex-col gap-10">
           <div className="flex flex-col gap-6">
             <h1 className="flex justify-center !font-bold text-center text-4xl items-center">
