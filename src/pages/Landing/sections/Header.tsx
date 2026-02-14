@@ -1,4 +1,4 @@
-import { EduHubLightText } from "@/assets/exportImg";
+import { EduLogoLight } from "@/assets/exportImg";
 import { Button } from "@/components/ui/button"
 import { useNavigate } from "react-router-dom";
 
@@ -8,7 +8,7 @@ const Header = () => {
     <div className="py-3 top-0 sticky z-99 bg-white shadow-lg">
       <div className="container flex justify-between items-center">
         <div className="w-30 overflow-hidden flex items-center justify-center cursor-pointer" onClick={()=> navigate('/')}>
-          <img src={EduHubLightText} alt="LogoLightText" />
+          <img src={EduLogoLight} alt="LogoLightText" />
         </div>
         <div className="flex items-center gap-5">
           <div className=" hidden md:flex items-center gap-3">

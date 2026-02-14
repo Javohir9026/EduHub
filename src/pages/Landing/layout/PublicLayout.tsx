@@ -1,9 +1,9 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { EduHubLightText } from "@/assets/exportImg";
 import Footer from "../sections/Footer";
 import { useEffect } from "react";
 import { useTheme } from "@/components/common/ThemeProvider";
+import { EduLogoLight } from "@/assets/exportImg";
 
 const PublicLayout = () => {
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ const PublicLayout = () => {
             className="w-30 overflow-hidden flex items-center justify-center cursor-pointer"
             onClick={() => navigate("/")}
           >
-            <img src={EduHubLightText} alt="LogoLightText" />
+            <img src={EduLogoLight} alt="LogoLightText" />
           </div>
           <div className="flex items-center gap-5 hidden">
             <div className=" hidden md:flex items-center gap-3">

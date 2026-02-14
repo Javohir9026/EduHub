@@ -14,12 +14,12 @@ const AppHeader: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 flex w-full bg-background border-b border-gray-200 z-50">
+    <header className="sticky top-0 flex w-full bg-background border-b-2 border-border z-50">
       <div className="flex items-center justify-between w-full px-4 py-3 lg:px-6">
         {/* Sidebar Toggle Button */}
         <button
           onClick={handleToggle}
-          className="flex items-center justify-center w-10 h-10 border border-gray-200 rounded-lg"
+          className="flex items-center justify-center w-10 h-10 border-2 border-border rounded-lg"
         >
           ☰
         </button>

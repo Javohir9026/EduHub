@@ -1,4 +1,4 @@
-import { EduHubLightText } from "@/assets/exportImg";
+import { EduLogoLight } from "@/assets/exportImg";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
@@ -8,7 +8,7 @@ const Footer = () => {
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-5">
           <div className="flex flex-col gap-2">
             <div className="flex justify-center sm:justify-start">
-              <img src={EduHubLightText} alt="EduHubLogoLight" width={150} />
+              <img src={EduLogoLight} alt="EduHubLogoLight" width={150} />
             </div>
             <p className="text-black/70 text-center sm:text-start">
               Ta'lim markazlari uchun to'liq <br />

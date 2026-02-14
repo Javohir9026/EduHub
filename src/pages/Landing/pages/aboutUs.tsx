@@ -1,4 +1,4 @@
-import { EduHubLightText } from "@/assets/exportImg";
+import { EduLogoLight } from "@/assets/exportImg";
 import { Button } from "@/components/ui/button";
 import { Users, Globe, Award } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -25,7 +25,7 @@ const AboutUsPage = () => {
         </div>
         <div className="flex-1">
           <img
-            src={EduHubLightText}
+            src={EduLogoLight}
             alt="About Us"
           />
         </div>
@@ -54,7 +54,7 @@ const AboutUsPage = () => {
             </h3>
             <p className="text-black">
               Raqamli yechimlar va zamonaviy texnologiyalar yordamida
-              ta’limni yanada samarali qilamiz.
+              ta'\'limni yanada samarali qilamiz.
             </p>
           </div>
           <div className="bg-white rounded-2xl shadow-xl p-8 text-center hover:shadow-2xl transition-shadow">
