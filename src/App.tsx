@@ -7,6 +7,8 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import GuestRoute from "./routes/GuestRoute";
 import PublicLayout from "./pages/Landing/layout/PublicLayout";
 import InfoUsers from "./pages/Landing/pages/InfoUsers";
+import ContactUs from "./pages/Landing/pages/contactUs";
+import AboutUs from "./pages/Landing/pages/aboutUs";
 
 const App = () => {
   return (
@@ -38,8 +40,22 @@ const App = () => {
               </GuestRoute>
             }
           />
+          <Route path="info-users" element={
+              <GuestRoute>
+                <InfoUsers/>
+              </GuestRoute>
+            }/>
+            <Route path="contact-us" element={
+              <GuestRoute>
+                <ContactUs/>
+              </GuestRoute>
+            }/>  
+             <Route path="about-us" element={
+              <GuestRoute>
+                <AboutUs/>
+              </GuestRoute>
+            }/>
         </Route>
-        <Route path="/info-users" element={<InfoUsers />} />
         <Route
           path="/dashboard"
           element={
