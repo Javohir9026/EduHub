@@ -5,6 +5,7 @@ import RegisterForm from "./pages/Landing/auth/RegisterForm";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import Dashboard from "./pages/dashboard/Dashboard";
 import GuestRoute from "./routes/GuestRoute";
+import PublicLayout from "./pages/Landing/layout/PublicLayout";
 
 const App = () => {
   return (
@@ -19,22 +20,24 @@ const App = () => {
             </GuestRoute>
           }
         />
-        <Route
-          path="/sign-in"
-          element={
-            <GuestRoute>
-              <SignInForm />
-            </GuestRoute>
-          }
-        />
-        <Route
-          path="/register"
-          element={
-            <GuestRoute>
-              <RegisterForm />
-            </GuestRoute>
-          }
-        />
+        <Route element={<PublicLayout />}>
+          <Route
+            path="/sign-in"
+            element={
+              <GuestRoute>
+                <SignInForm />
+              </GuestRoute>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <GuestRoute>
+                <RegisterForm />
+              </GuestRoute>
+            }
+          />
+        </Route>
         <Route
           path="/dashboard"
           element={
