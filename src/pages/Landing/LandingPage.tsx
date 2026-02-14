@@ -6,7 +6,9 @@ import { useEffect } from "react";
 const LandingPage = () => {
   useEffect(() => {
     localStorage.setItem("theme", "light");
+    document.documentElement.classList.remove("dark");
   }, []);
+
   return (
     <div>
       <Header />
