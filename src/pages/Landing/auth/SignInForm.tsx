@@ -72,6 +72,7 @@ const SignInForm = () => {
       navigate("/dashboard");
       setLogin("");
       setPassword("");
+      toast.success("Kirish muvaffaqiyatli yakunlandi!");
     } catch (error: any) {
       console.log(error);
       toast.error("login Yoki Parol Notog'ri!", {

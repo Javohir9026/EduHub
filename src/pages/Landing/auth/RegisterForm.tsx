@@ -9,7 +9,7 @@ import {
   Phone,
   User,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -73,6 +73,7 @@ const RegisterForm = () => {
     return "+" + parts.join(" ");
   };
   const [isloading, setisloading] = useState(false);
+  const navigate = useNavigate();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -92,13 +93,23 @@ const RegisterForm = () => {
         data.append("file", file);
       }
 
-      const res = await axios.post(`${api}/auth/register`, data, {
+      await axios.post(`${api}/auth/register`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
-      console.log(res.data);
+      toast.success("Ro'yxatdan o'tish muvaffaqiyatli yakunlandi!");
+      setFormData({
+        name: "",
+        email: "",
+        phone: "+998",
+        login: "",
+        password: "",
+      });
+      navigate("/sign-in");
+      setFile(null);
+      setPreview(null);
     } catch (error: any) {
       console.log(error.response?.data);
       toast.error(error.response?.data.error.message);
@@ -125,8 +136,8 @@ const RegisterForm = () => {
       }
     }
     if (name === "phone") {
-      const phoneRegex = /^\+998 \d{2} \d{3} \d{2} \d{2}$/;
-
+      const phoneRegex =
+        /^\+998 (90|91|93|94|95|97|98|99|88|33|77|50) \d{3} \d{2} \d{2}$/;
       if (!value.trim()) {
         return "Telefon raqamni kiritish shart!";
       }
@@ -136,7 +147,7 @@ const RegisterForm = () => {
       }
 
       if (!phoneRegex.test(value)) {
-        return "Format: +998 97 123 45 67";
+        return "Operator kodi notog'ri kiritildi!";
       }
     }
 
