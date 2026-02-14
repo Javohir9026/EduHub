@@ -1,4 +1,5 @@
 import { EduHubLightText } from "@/assets/exportImg";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -16,11 +17,19 @@ const Footer = () => {
           </div>
           <div className="flex flex-col gap-2">
             <h1 className="!font-bold text-1xl">Foydalanuvchilar</h1>
-            <ul>
-              <li className="text-black/70">Ustozlar</li>
-              <li className="text-black/70">O'quvchilar</li>
-              <li className="text-black/70">Guruhlar</li>
-              <li className="text-black/70">To'lovlar</li>
+            <ul className="flex flex-col">
+              <Link to="/info-users" className="text-black/70 hover:text-black">
+                Ustozlar
+              </Link>
+              <Link to="/info-users" className="text-black/70 hover:text-black">
+                O'quvchilar
+              </Link>
+              <Link to="/info-users" className="text-black/70 hover:text-black">
+                Guruhlar
+              </Link>
+              <Link to="/info-users" className="text-black/70 hover:text-black">
+                To'lovlar
+              </Link>
             </ul>
           </div>
           <div className="flex flex-col gap-2">

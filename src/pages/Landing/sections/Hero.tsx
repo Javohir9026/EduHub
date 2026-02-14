@@ -57,7 +57,7 @@ const Hero = () => {
             </Button>
 
             <Button
-              className="
+              className="!font-semibold
   h-[52px] inline-flex items-center justify-center
   relative z-[1] overflow-hidden
   cursor-pointer
@@ -306,7 +306,7 @@ const Hero = () => {
 
   hover:text-white hover:border-purple-500
   hover:before:top-[-35%] hover:before:bg-purple-500 hover:before:scale-y-[1.3] hover:before:scale-x-[0.8]
-  hover:after:top-[-45%] hover:after:bg-purple-500 hover:after:scale-y-[1.3] hover:after:scale-x-[0.8]
+  hover:after:top-[-45%] hover:after:bg-purple-500 hover:after:scale-y-[1.3] hover:after:scale-x-[0.8] !font-semibold
   "
             >
               Kirish

@@ -6,6 +6,7 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import Dashboard from "./pages/dashboard/Dashboard";
 import GuestRoute from "./routes/GuestRoute";
 import PublicLayout from "./pages/Landing/layout/PublicLayout";
+import InfoUsers from "./pages/Landing/pages/InfoUsers";
 
 const App = () => {
   return (
@@ -38,6 +39,7 @@ const App = () => {
             }
           />
         </Route>
+        <Route path="/info-users" element={<InfoUsers />} />
         <Route
           path="/dashboard"
           element={
