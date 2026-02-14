@@ -1,14 +1,13 @@
-import { ArrowLeft, Lock, User } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Loader2, Lock, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-interface loginForm {
-  login: string;
-  password: string;
-}
+import axios from "axios";
+import { toast } from "sonner";
+
 interface LoginErrors {
   login?: string;
   password?: string;
@@ -18,7 +17,6 @@ const SignInForm = () => {
   const [password, setPassword] = useState<string>("");
   const [errors, setErrors] = useState<LoginErrors>({});
   const [loading, setLoading] = useState<boolean>(false);
-
   const validateField = (
     name: "login" | "password",
     value: string,
@@ -29,21 +27,54 @@ const SignInForm = () => {
     if (name === "login" && value.length < 6) {
       return "Kamida 6 ta belgidan iborat bo'lishi kerak!";
     }
-    if (name === "login" && value.length > 16) {
-      return "Ko'pi bilan 16 ta belgidan iborat bo'lishi kerak!";
-    }
 
-    if (name === "password" && !value.trim()) {
-      return "Parol kiriting!";
-    }
-    if (name === "password" && value.length < 8) {
-      return "Kamida 8 ta belgi!";
-    }
-    if (name === "password" && value.length > 16) {
-      return "Ko'pi bilan 16 ta belgidan iborat bo'lishi kerak!";
+    if (name === "password") {
+      if (!value.trim()) {
+        return "Parol kiriting!";
+      }
+      if (value.length < 8) {
+        return "Kamida 8 ta belgidan iborat bo'lishi kerak!";
+      }
     }
 
     return undefined;
+  };
+  const [showPassword, setShowPassword] = useState(false);
+  const isFormValid =
+    !validateField("login", login) && !validateField("password", password);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!isFormValid) return;
+
+    try {
+      setLoading(true);
+
+      const api = import.meta.env.VITE_API_URL;
+
+      const res = await axios.post(`${api}/auth/login`, {
+        login: login,
+        password: password,
+      });
+
+      console.log("Success:", res.data);
+
+      const token = res.data?.token;
+      if (token) {
+        localStorage.setItem("token", token);
+      }
+
+      setLogin("");
+      setPassword("");
+    } catch (error: any) {
+      console.log(error);
+      toast.error("login Yoki Parol Notog'ri!", {
+        duration: 3000,
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -64,7 +95,7 @@ const SignInForm = () => {
               EduHub hisobingizga kiring
             </p>
           </div>
-          <form className="flex flex-col gap-5">
+          <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-2">
               <Label htmlFor="login">Login</Label>
               <div
@@ -79,6 +110,7 @@ const SignInForm = () => {
                 <User className="stroke-black/60" />
 
                 <Input
+                  value={login}
                   onChange={(e) => {
                     const value = e.target.value;
                     setLogin(value);
@@ -103,15 +135,15 @@ const SignInForm = () => {
             <div className="flex flex-col gap-2">
               <Label htmlFor="pass">Parol</Label>
               <div
-                className="
-    border border-black/20 rounded-lg sm:w-[400px] w-[350px]
-    flex items-center px-2
-    focus-within:outline
-    focus-within:outline-2
-    focus-within:outline-blue-400
-  "
+                className="relative 
+  border border-black/20 rounded-lg sm:w-[400px] w-[350px]
+  flex items-center px-2
+  focus-within:outline
+  focus-within:outline-2
+  focus-within:outline-blue-400"
               >
                 <Lock className="stroke-black/60" />
+
                 <Input
                   onChange={(e) => {
                     const value = e.target.value;
@@ -125,11 +157,21 @@ const SignInForm = () => {
                     }));
                   }}
                   id="pass"
-                  type="password"
+                  value={password}
+                  type={showPassword ? "text" : "password"}
                   placeholder="Parol"
-                  className="border-none focus:outline-none focus:ring-0 focus-visible:ring-0"
+                  className="border-none focus:outline-none focus:ring-0 focus-visible:ring-0 pr-8"
                 />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-3 text-black/60"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
               </div>
+
               {errors.password && (
                 <p className="text-red-500 text-[12px]">*{errors.password}</p>
               )}
@@ -140,8 +182,20 @@ const SignInForm = () => {
                 Tizimda qolish
               </Label>
             </div>
-            <Button className="w-full bg-blue-500 hover:bg-blue-500/85 cursor-pointer !font-bold">
-              Kirish
+            <Button
+              disabled={!isFormValid || loading}
+              className={`w-full !font-bold flex items-center justify-center gap-2 ${
+                loading
+                  ? "bg-blue-400 cursor-not-allowed"
+                  : "bg-blue-500 hover:bg-blue-500/85"
+              }`}
+              type="submit"
+            >
+              {loading ? (
+                <Loader2 className="animate-spin" size={20} />
+              ) : (
+                "Kirish"
+              )}
             </Button>
           </form>
           <div className="flex gap-2 items-center">
