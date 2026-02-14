@@ -1,14 +1,14 @@
 import Header from "./sections/Header";
 import Footer from "./sections/Footer";
 import Hero from "./sections/Hero";
-import { useTheme } from "@/components/common/ThemeProvider";
 import { useEffect } from "react";
 
 const LandingPage = () => {
-  const { setTheme } = useTheme();
   useEffect(() => {
-    setTheme("light");
+    localStorage.setItem("theme", "light");
+    document.documentElement.classList.remove("dark");
   }, []);
+
   return (
     <div>
       <Header />

@@ -162,8 +162,8 @@ const SignInForm = () => {
           </p>
         </div>
 
-        <div className="hidden md:flex flex-1 bg-blue-500 items-center justify-center">
-            <img src={EduHubSignInImg} alt="SignInImg" />
+        <div className="hidden md:flex flex-1 bg-blue-500 items-center justify-center border-2 border-black">
+            <img src={EduHubSignInImg} alt="SignInImg" className="rounded-full" />
         </div>
       </div>
     </div>

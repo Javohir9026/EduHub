@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { useSidebar } from "@/context/SidebarContext";
 import { EduLogoDark, EduLogoLight, EduHubLogo } from "@/assets/exportImg";
+import LogOutButton from "@/components/common/LogOutButton";
 
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
@@ -72,7 +73,9 @@ const AppSidebar: React.FC = () => {
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto no-scrollbar"></div>
+      <div className="flex-1 overflow-y-auto no-scrollbar">
+        <LogOutButton/>
+      </div>
     </aside>
   );
 };

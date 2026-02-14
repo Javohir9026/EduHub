@@ -16,10 +16,14 @@ const PublicLayout = () => {
       <div className="py-3 top-0 sticky z-99 bg-white shadow-lg">
         <div className="container flex justify-between items-center">
           <div
-            className="w-30 overflow-hidden flex items-center justify-center cursor-pointer"
+            className="w-[200px] overflow-hidden flex items-center justify-center cursor-pointer h-[50px]"
             onClick={() => navigate("/")}
           >
-            <img src={EduLogoLight} alt="LogoLightText" />
+            <img
+              src={EduLogoLight}
+              alt="LogoLightText"
+              className="object-contain"
+            />
           </div>
           <div className="flex items-center gap-5 hidden">
             <div className=" hidden md:flex items-center gap-3">
