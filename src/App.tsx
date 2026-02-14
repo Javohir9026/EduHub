@@ -9,6 +9,7 @@ import PublicLayout from "./pages/Landing/layout/PublicLayout";
 import InfoUsers from "./pages/Landing/pages/InfoUsers";
 import ContactUs from "./pages/Landing/pages/contactUs";
 import AboutUs from "./pages/Landing/pages/aboutUs";
+import ScrollToTop from "./components/common/ScroolToTop";
 
 const App = () => {
   return (
@@ -40,21 +41,33 @@ const App = () => {
               </GuestRoute>
             }
           />
-          <Route path="info-users" element={
+          <Route
+            path="info-users"
+            element={
               <GuestRoute>
-                <InfoUsers/>
+                <ScrollToTop />
+                <InfoUsers />
               </GuestRoute>
-            }/>
-            <Route path="contact-us" element={
+            }
+          />
+          <Route
+            path="contact-us"
+            element={
               <GuestRoute>
-                <ContactUs/>
+                <ScrollToTop />
+                <ContactUs />
               </GuestRoute>
-            }/>  
-             <Route path="about-us" element={
+            }
+          />
+          <Route
+            path="about-us"
+            element={
               <GuestRoute>
-                <AboutUs/>
+                <ScrollToTop />
+                <AboutUs />
               </GuestRoute>
-            }/>
+            }
+          />
         </Route>
         <Route
           path="/dashboard"
