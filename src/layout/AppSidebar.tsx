@@ -7,7 +7,7 @@ import { useState } from "react";
 
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
-  const [activeTab, setActivetab] = useState(1)
+  const [activeTab, setActivetab] = useState(1);
   const navLinks = [
     {
       id: 1,
@@ -61,11 +61,7 @@ const AppSidebar: React.FC = () => {
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Logo */}
-      <div
-        className={`py-8 -mt-5 flex ${
-          !isExpanded && !isHovered ? "lg:justify-center" : "justify-center"
-        }`}
-      >
+      <div className="py-8 -mt-5 flex w-full justify-center">
         <Link to="/dashboard">
           {isExpanded || isHovered || isMobileOpen ? (
             <>
@@ -127,7 +123,7 @@ const AppSidebar: React.FC = () => {
             )}
           </Link>
         ))}
-        <LogOutButton />
+        <LogOutButton isExpanded={isExpanded} isHovered={isHovered} isMobileOpen={isMobileOpen} />
       </div>
     </aside>
   );
