@@ -123,9 +123,8 @@ const AppSidebar: React.FC = () => {
             )}
           </Link>
         ))}
-        <LogOutButton isExpanded={isExpanded} isHovered={isHovered} isMobileOpen={isMobileOpen}/>
+          <LogOutButton isExpanded={isExpanded} isHovered={isHovered} isMobileOpen={isMobileOpen}/>
         </div>
-        
     </aside>
   );
 };
