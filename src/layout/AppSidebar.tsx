@@ -103,8 +103,8 @@ const AppSidebar: React.FC = () => {
       </div>
 
       {/* Content */}
-        <div className="flex-1 overflow-y-auto flex flex-col gap-2 no-scrollbar">
-          {navLinks.map((link) => (
+      <div className="flex-1 overflow-y-auto flex flex-col gap-2 no-scrollbar">
+        {navLinks.map((link) => (
           <Link
             onClick={() => setActivetab(link.id)}
             key={link.id}
@@ -117,7 +117,9 @@ const AppSidebar: React.FC = () => {
             />
 
             {(isExpanded || isHovered || isMobileOpen) && (
-              <span className={`text-primary/80 font-medium ${activeTab === link.id ? "text-white " : ""} `}>
+              <span
+                className={`text-primary/80 font-medium ${activeTab === link.id ? "text-white " : ""} `}
+              >
                 {link.title}
               </span>
             )}
