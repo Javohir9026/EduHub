@@ -1,4 +1,5 @@
-import { ArrowLeft, Eye, EyeOff, Loader2, Lock, User } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Loader2 } from "lucide-react";
+import { EduHubSignInImg } from "@/assets/exportImg";
 import { Link, useNavigate } from "react-router-dom";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -12,221 +13,157 @@ interface LoginErrors {
   login?: string;
   password?: string;
 }
+
 const SignInForm = () => {
   const [login, setLogin] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errors, setErrors] = useState<LoginErrors>({});
   const [loading, setLoading] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState(false);
+
   const navigate = useNavigate();
+
   const validateField = (
     name: "login" | "password",
-    value: string,
+    value: string
   ): string | undefined => {
-    if (name === "login" && !value.trim()) {
-      return "Login kiriting!";
+    if (name === "login") {
+      if (!value.trim()) return "Login kiriting!";
+      if (value.length < 6) return "Kamida 6 ta belgidan iborat bo'lishi kerak!";
     }
-    if (name === "login" && value.length < 6) {
-      return "Kamida 6 ta belgidan iborat bo'lishi kerak!";
-    }
-
     if (name === "password") {
-      if (!value.trim()) {
-        return "Parol kiriting!";
-      }
-      if (value.length < 8) {
-        return "Kamida 8 ta belgidan iborat bo'lishi kerak!";
-      }
+      if (!value.trim()) return "Parol kiriting!";
+      if (value.length < 8) return "Kamida 8 ta belgidan iborat bo'lishi kerak!";
     }
-
     return undefined;
   };
-  const [showPassword, setShowPassword] = useState(false);
+
   const isFormValid =
     !validateField("login", login) && !validateField("password", password);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     if (!isFormValid) return;
 
     try {
       setLoading(true);
-
       const api = import.meta.env.VITE_API_URL;
+      const res = await axios.post(`${api}/auth/login`, { login, password });
 
-      const res = await axios.post(`${api}/auth/login`, {
-        login: login,
-        password: password,
-      });
-
-      console.log("Success:", res.data);
-      
       const access_token = res.data?.data?.access_token;
       const refresh_token = res.data?.data?.refresh_token;
-      if (access_token) {
-        localStorage.setItem("access_token", access_token);
-      }
-      if (refresh_token) {
-        localStorage.setItem("refresh_token", refresh_token);
-      }
+
+      if (access_token) localStorage.setItem("access_token", access_token);
+      if (refresh_token) localStorage.setItem("refresh_token", refresh_token);
+
+      toast.success("Kirish muvaffaqiyatli yakunlandi!");
       navigate("/dashboard");
       setLogin("");
       setPassword("");
-      toast.success("Kirish muvaffaqiyatli yakunlandi!");
     } catch (error: any) {
-      console.log(error);
-      toast.error("login Yoki Parol Notog'ri!", {
-        duration: 3000,
-      });
+      toast.error("Login yoki parol noto‘g‘ri!", { duration: 3000 });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex justify-center items-center mt-10">
-      <div className="flex flex-col gap-7">
-        <Link to="/">
-          <p className="flex gap-1 text-[14px] items-center text-black/70 hover:text-black">
-            <ArrowLeft strokeWidth={1} size={20} />
-            Orqaga qaytish
-          </p>
-        </Link>
-        <div className="border rounded-[27px] border-black/20 sm:p-7 p-2 flex flex-col gap-5">
-          <div className="flex flex-col">
-            <h1 className="!font-bold text-[25px] text-center sm:text-start">
-              Xush Kelibsiz
-            </h1>
-            <p className="text-black/70 text-[14px] text-center sm:text-start">
-              EduHub hisobingizga kiring
+    <div className="flex items-center justify-center min-h-screen bg-blue-50 p-4">
+      <div className="flex flex-col md:flex-row bg-white rounded-3xl shadow-xl overflow-hidden max-w-4xl w-full">
+        <div className="flex-1 p-8 sm:p-10 flex flex-col gap-6">
+          <Link to="/">
+            <p className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors">
+              <ArrowLeft strokeWidth={1} size={20} />
+              Orqaga qaytish
             </p>
+          </Link>
+
+          <div className="flex flex-col gap-2 text-center sm:text-left">
+            <h1 className="text-3xl font-bold text-gray-800">Xush Kelibsiz</h1>
+            <p className="text-gray-500 text-sm">EduHub hisobingizga kiring</p>
           </div>
+
           <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-2">
               <Label htmlFor="login">Login</Label>
-              <div
-                className="
-    border border-black/20 rounded-lg sm:w-[400px] w-[350px]
-    flex items-center px-2
-    focus-within:outline
-    focus-within:outline-2
-    focus-within:outline-blue-400
-  "
-              >
-                <User className="stroke-black/60" />
-
-                <Input
-                  value={login}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setLogin(value);
-
-                    const error = validateField("login", value);
-
-                    setErrors((prev) => ({
-                      ...prev,
-                      login: error,
-                    }));
-                  }}
-                  id="login"
-                  type="text"
-                  placeholder="Login"
-                  className="border-none focus:outline-none focus:ring-0 focus-visible:ring-0"
-                />
-              </div>
+              <Input
+                id="login"
+                type="text"
+                placeholder="Login"
+                value={login}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setLogin(value);
+                  setErrors((prev) => ({
+                    ...prev,
+                    login: validateField("login", value),
+                  }));
+                }}
+                className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
               {errors.login && (
-                <p className="text-red-500 text-[12px]">*{errors.login}</p>
+                <p className="text-red-500 text-xs mt-1">*{errors.login}</p>
               )}
             </div>
-            <div className="flex flex-col gap-2">
+
+            <div className="flex flex-col gap-2 relative">
               <Label htmlFor="pass">Parol</Label>
-              <div
-                className="relative 
-  border border-black/20 rounded-lg sm:w-[400px] w-[350px]
-  flex items-center px-2
-  focus-within:outline
-  focus-within:outline-2
-  focus-within:outline-blue-400"
+              <Input
+                id="pass"
+                type={showPassword ? "text" : "password"}
+                placeholder="Parol"
+                value={password}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setPassword(value);
+                  setErrors((prev) => ({
+                    ...prev,
+                    password: validateField("password", value),
+                  }));
+                }}
+                className="border border-gray-300 rounded-lg px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
               >
-                <Lock className="stroke-black/60" />
-
-                <Input
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setPassword(value);
-
-                    const error = validateField("password", value);
-
-                    setErrors((prev) => ({
-                      ...prev,
-                      password: error,
-                    }));
-                  }}
-                  id="pass"
-                  value={password}
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Parol"
-                  className="border-none focus:outline-none focus:ring-0 focus-visible:ring-0 pr-8"
-                />
-
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-3 text-black/60"
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
-
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
               {errors.password && (
-                <p className="text-red-500 text-[12px]">*{errors.password}</p>
+                <p className="text-red-500 text-xs mt-1">*{errors.password}</p>
               )}
             </div>
-            <div className="flex justify-start gap-2 items-center">
-              <Checkbox id="checkbox" className="border-black/20" />
-              <Label htmlFor="checkbox" className="text-[14px]">
+
+            <div className="flex items-center gap-2">
+              <Checkbox id="checkbox" className="border-gray-300" />
+              <Label htmlFor="checkbox" className="text-sm text-gray-600">
                 Tizimda qolish
               </Label>
             </div>
             <Button
+              type="submit"
               disabled={!isFormValid || loading}
-              className={`w-full !font-bold flex items-center justify-center gap-2 ${
+              className={`w-full font-bold flex items-center justify-center gap-2 py-3 rounded-lg transition-all ${
                 loading
                   ? "bg-blue-400 cursor-not-allowed"
-                  : "bg-blue-500 hover:bg-blue-500/85"
+                  : "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white"
               }`}
-              type="submit"
             >
-              {loading ? (
-                <Loader2 className="animate-spin" size={20} />
-              ) : (
-                "Kirish"
-              )}
+              {loading ? <Loader2 className="animate-spin" size={20} /> : "Kirish"}
             </Button>
           </form>
-          <div className="flex gap-2 items-center">
-            <p className="border-b-2 border-black/10 w-full"></p>
-            <p className="text-[14px] text-black/50">yoki</p>
-            <p className="border-b-2 border-black/10 w-full"></p>
-          </div>
-          <p className="text-[14px] text-center">
-            Hisobingiz yo'qmi ?{" "}
-            <Link to="/register">
-              <span className="text-blue-500 hover:text-blue-500/85 cursor-pointer !font-semibold">
-                Ro'yxatdan o'tish
-              </span>
+
+          <p className="text-center text-sm text-gray-500 mt-4">
+            Yordam kerakmi?{" "}
+            <Link to="#" className="text-blue-500 hover:underline">
+              Biz bilan bog'laning
             </Link>
           </p>
         </div>
-        <div className="flex justify-center">
-          <p className="text-[14px] !font-light">
-            Yordam kerakmi ?{" "}
-            <Link to="#">
-              <span className="text-blue-500 hover:text-blue-500/85 cursor-pointer">
-                Biz bilan bog'laning
-              </span>
-            </Link>
-          </p>
+
+        <div className="hidden md:flex flex-1 bg-blue-500 items-center justify-center border-2 border-black">
+            <img src={EduHubSignInImg} alt="SignInImg" className="rounded-full" />
         </div>
       </div>
     </div>
