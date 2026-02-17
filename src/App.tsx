@@ -15,10 +15,12 @@ import StudentsPage from "./pages/students/StudentsPage";
 import TeachersPage from "./pages/Teachers/TeachersPage";
 import Groups from "./pages/Groups/Groups";
 import CalendarPage from "./pages/Calendar/CalendarPage";
+import UserProfile from "./pages/UserProfile/userProfile";
 
 const App = () => {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route
           index
@@ -112,6 +114,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <CalendarPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/user-profile"
+            element={
+              <ProtectedRoute>
+                <UserProfile />
               </ProtectedRoute>
             }
           />

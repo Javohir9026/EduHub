@@ -98,7 +98,7 @@ const Hero = () => {
   hover:before:top-[-35%] hover:before:bg-purple-500 hover:before:scale-y-[1.3] hover:before:scale-x-[0.8]
   hover:after:top-[-45%] hover:after:bg-purple-500 hover:after:scale-y-[1.3] hover:after:scale-x-[0.8]
   "
-            >
+            onClick={()=>navigate('/sign-in')}>
               Kirish
             </Button>
           </div>
@@ -308,7 +308,7 @@ const Hero = () => {
   hover:before:top-[-35%] hover:before:bg-purple-500 hover:before:scale-y-[1.3] hover:before:scale-x-[0.8]
   hover:after:top-[-45%] hover:after:bg-purple-500 hover:after:scale-y-[1.3] hover:after:scale-x-[0.8] !font-semibold
   "
-            >
+            onClick={()=>navigate('/sign-in')}>
               Kirish
             </Button>
           </div>
