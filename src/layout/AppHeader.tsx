@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import { useSidebar } from "../context/SidebarContext";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import { EduHubLogo } from "@/assets/exportImg";
+import { ProfileModal } from "@/components/common/ProfileModal";
 
 const AppHeader: React.FC = () => {
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
@@ -26,14 +27,24 @@ const AppHeader: React.FC = () => {
         </button>
 
         {/* Logo (Mobile only) */}
-        <Link to="/" className="lg:hidden h-[50px] w-[100px] flex items-center justify-center overflow-hidden">
-          <img src={EduHubLogo} alt="Logo" width={150} height={150} className="object-contain" />
+        <Link
+          to="/"
+          className="lg:hidden h-[50px] w-[100px] flex items-center justify-center overflow-hidden"
+        >
+          <img
+            src={EduHubLogo}
+            alt="Logo"
+            width={150}
+            height={150}
+            className="object-contain"
+          />
         </Link>
 
         {/* Right side  */}
         <div className="hidden lg:flex items-center gap-4">
-            {/* content */}
-            <AnimatedThemeToggler/>
+          {/* content */}
+          <ProfileModal />
+          <AnimatedThemeToggler className="cursor-pointer text-black/70 dark:text-white/70 dark:hover:text-white hover:text-black" />
         </div>
       </div>
     </header>

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { LogOut, Loader2 } from "lucide-react";
-import axios from "axios";
 import { useNavigate } from "react-router";
 
 import {
@@ -15,6 +14,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import apiClient from "@/api/ApiClient";
 
 const LogOutButton = ({
   isExpanded,
@@ -33,7 +33,7 @@ const LogOutButton = ({
     try {
       setLoading(true);
 
-      await axios.post(
+      await apiClient.post(
         `${api}/auth/logout`,
         {},
         {

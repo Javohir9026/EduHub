@@ -15,8 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import FileUploader from "@/components/common/FileUploader";
 import { useState } from "react";
-import axios from "axios";
 import { toast } from "sonner";
+import apiClient from "@/api/ApiClient";
 interface RegisterErrors {
   name?: string;
   email?: string;
@@ -93,7 +93,7 @@ const RegisterForm = () => {
         data.append("file", file);
       }
 
-      await axios.post(`${api}/auth/register`, data, {
+      await apiClient.post(`${api}/auth/register`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
