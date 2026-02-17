@@ -163,7 +163,13 @@ const SignInForm = () => {
             </Button>
             <p className="text-center text-sm text-gray-500 mt-4">
               Hisobingiz yo'qmi?{" "}
+
               <Link to="/register" className="text-blue-500 hover:underline">
+
+              <Link
+                to="/register"
+                className="text-blue-500 hover:underline"
+              >
                 Yaratish
               </Link>
             </p>
@@ -177,7 +183,9 @@ const SignInForm = () => {
           </p>
         </div>
 
+
         <div className="hidden md:flex flex-1 bg-blue-500 items-center justify-center">
+
           <img src={EduHubSignInImg} alt="SignInImg" className="rounded-full" />
         </div>
       </div>
