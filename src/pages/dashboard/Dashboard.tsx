@@ -6,7 +6,7 @@ const Dashboard = () => {
           Dashboard
         </h1>
 
-        <p className="text-gray-500 mt-2 text-lg">
+        <p className="text-gray-500 mt-2 text-[13px]">
           Qaytib kelganingizdan xursandmiz! Mana sizning ta'lim markazingiz faoliyati
         </p>
       </div>
