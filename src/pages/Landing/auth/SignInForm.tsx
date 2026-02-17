@@ -110,9 +110,9 @@ const SignInForm = () => {
                 <p className="text-red-500 text-xs mt-1">*{errors.login}</p>
               )}
             </div>
-
             <div className="flex flex-col gap-2 relative">
               <Label htmlFor="pass">Parol</Label>
+
               <Input
                 id="pass"
                 type={showPassword ? "text" : "password"}
@@ -131,7 +131,7 @@ const SignInForm = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                className="absolute right-3 top-10 cursor-pointer -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -163,6 +163,9 @@ const SignInForm = () => {
             </Button>
             <p className="text-center text-sm text-gray-500 mt-4">
               Hisobingiz yo'qmi?{" "}
+
+              <Link to="/register" className="text-blue-500 hover:underline">
+
               <Link
                 to="/register"
                 className="text-blue-500 hover:underline"
@@ -180,7 +183,9 @@ const SignInForm = () => {
           </p>
         </div>
 
-        <div className="hidden md:flex flex-1 bg-blue-500 items-center justify-center border-2 border-black">
+
+        <div className="hidden md:flex flex-1 bg-blue-500 items-center justify-center">
+
           <img src={EduHubSignInImg} alt="SignInImg" className="rounded-full" />
         </div>
       </div>
