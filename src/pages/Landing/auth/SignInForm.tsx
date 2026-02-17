@@ -66,7 +66,7 @@ const SignInForm = () => {
       setLogin("");
       setPassword("");
     } catch (error: any) {
-      toast.error("Login yoki parol noto‘g‘ri!", { duration: 3000 });
+      toast.error("Login yoki parol noto'g'ri!", { duration: 3000 });
     } finally {
       setLoading(false);
     }
@@ -149,7 +149,7 @@ const SignInForm = () => {
             <Button
               type="submit"
               disabled={!isFormValid || loading}
-              className={`w-full font-bold flex items-center justify-center gap-2 py-3 rounded-lg transition-all ${
+              className={`w-full font-bold flex items-center justify-center gap-2 py-3 rounded-lg transition-all cursor-pointer ${
                 loading
                   ? "bg-blue-400 cursor-not-allowed"
                   : "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white"
@@ -163,13 +163,7 @@ const SignInForm = () => {
             </Button>
             <p className="text-center text-sm text-gray-500 mt-4">
               Hisobingiz yo'qmi?{" "}
-
               <Link to="/register" className="text-blue-500 hover:underline">
-
-              <Link
-                to="/register"
-                className="text-blue-500 hover:underline"
-              >
                 Yaratish
               </Link>
             </p>
@@ -183,9 +177,7 @@ const SignInForm = () => {
           </p>
         </div>
 
-
         <div className="hidden md:flex flex-1 bg-blue-500 items-center justify-center">
-
           <img src={EduHubSignInImg} alt="SignInImg" className="rounded-full" />
         </div>
       </div>

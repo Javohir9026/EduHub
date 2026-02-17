@@ -16,15 +16,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import apiClient from "@/api/ApiClient";
 
-const LogOutButton = ({
-  isExpanded,
-  isHovered,
-  isMobileOpen,
-}: {
-  isExpanded: boolean;
-  isHovered: boolean;
-  isMobileOpen: boolean;
-}) => {
+const LogOutButton = () => {
   const api = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -59,7 +51,7 @@ const LogOutButton = ({
       <AlertDialogTrigger asChild>
         <Button
           disabled={loading}
-          className="bg-red-600 hover:bg-red-700 text-white py-3 px-6 rounded-lg cursor-pointer flex items-center gap-2"
+          className="bg-red-600 hover:bg-red-700 text-white py-3 px-6 rounded-lg cursor-pointer flex items-center gap-2 w-full"
         >
           {loading ? (
             <>
@@ -69,9 +61,7 @@ const LogOutButton = ({
           ) : (
             <>
               <LogOut className="w-4 h-4" />
-              {(isExpanded || isHovered || isMobileOpen) && (
-                <span>Chiqish</span>
-              )}
+              <span>Chiqish</span>
             </>
           )}
         </Button>
@@ -88,7 +78,7 @@ const LogOutButton = ({
             Yo'q, Bekor qilish
           </AlertDialogCancel>
           <AlertDialogAction
-            className="cursor-pointer bg-red-600 hover:bg-red-700 text-white py-3 px-6 rounded-lg cursor-pointer flex items-center gap-2"
+            className="bg-red-600 hover:bg-red-700 text-white py-3 px-6 rounded-lg cursor-pointer flex items-center gap-2"
             onClick={handleLogout}
           >
             Ha, Chiqish
