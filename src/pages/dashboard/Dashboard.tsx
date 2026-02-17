@@ -1,7 +1,17 @@
 const Dashboard = () => {
   return (
-    <div >Dashboard</div>
-  )
-}
+    <div className="p-6">
+      <div>
+        <h1 className="text-4xl font-black tracking-tight">
+          Dashboard
+        </h1>
 
-export default Dashboard
+        <p className="text-gray-500 mt-2 text-lg">
+          Qaytib kelganingizdan xursandmiz! Mana sizning ta'lim markazingiz faoliyati
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;
