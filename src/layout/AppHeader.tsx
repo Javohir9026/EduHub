@@ -44,7 +44,6 @@ const AppHeader: React.FC = () => {
         <div className="hidden lg:flex items-center gap-4">
           {/* content */}
           <ProfileModal />
-          <AnimatedThemeToggler className="cursor-pointer text-black/70 dark:text-white/70 dark:hover:text-white hover:text-black" />
         </div>
       </div>
     </header>
