@@ -21,7 +21,7 @@ const Dashboard = () => {
         </p>
       </div>
       <div className="flex gap-4">
-        <Button className="flex items-center gap-2 bg-white border border-black text-black hover:bg-purple-500 hover:text-white hover:border-purple-500 transition-colors duration-200 cursor-pointer">
+        <Button className="flex items-center gap-2 bg-white border border-black text-black hover:bg-purple-500 hover:text-white hover:border-purple-500 transition-colors duration-200 cursor-pointer dark:bg-gray-800 dark:text-white">
           <Calendar />
           Bu oy
         </Button>
@@ -33,19 +33,18 @@ const Dashboard = () => {
     </div>
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       {stats.map((item) => (
-        <div key={item.id} className="bg-white rounded-xl p-6 shadow-md flex flex-col gap-3">
-          <div className="bg-gray-100 w-12 h-12 flex items-center justify-center rounded-lg text-blue-600">
+        <div key={item.id} className="bg-white rounded-xl p-6 shadow-md flex flex-col gap-3 dark:bg-gray-800">
+          <div className="bg-gray-100 w-12 h-12 flex items-center justify-center rounded-lg text-blue-600 dark:bg-gray-700 dark:text-white">
             {item.icon}
           </div>
-          <p className="text-gray-500 text-sm">{item.title}</p>
+          <p className="text-gray-500 text-sm dark:text-gray-400">{item.title}</p>
          <div className="flex items-center gap-2">
-           <h2 className="text-2xl font-bold">{item.count}</h2>
+           <h2 className="text-2xl font-bold dark:text-white">{item.count}</h2>
           <p className="text-green-500 text-[11px] mt-2">{item.persend}</p>
          </div>
         </div>
       ))}
     </div>
-    
     </div>
   );
 };
