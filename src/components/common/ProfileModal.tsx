@@ -4,13 +4,11 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { BadgeCheckIcon, Loader2, LogOut, Pen, UserIcon } from "lucide-react";
+import { Info, UserIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { AnimatedThemeToggler } from "../ui/animated-theme-toggler";
 import LogOutButton from "./LogOutButton";
 
@@ -38,7 +36,6 @@ export function ProfileModal() {
   useEffect(() => {
     getUserData();
   }, []);
-  const navigate = useNavigate();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -56,8 +53,22 @@ export function ProfileModal() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         {loading ? (
-          <div className="flex items-center justify-center p-3 w-[180px] h-[60px]">
-            <Loader2 className="animate-spin" />
+          <div className="flex flex-col min-w-[180px] gap-2 px-3 py-2 animate-pulse">
+            <div className="flex items-center gap-2">
+              <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700" />
+
+              <div className="flex flex-col gap-1">
+                <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded" />
+                <div className="h-3 w-20 bg-gray-200 dark:bg-gray-700 rounded" />
+              </div>
+            </div>
+            <div className="flex gap-1 w-full justify-around">
+              <div className="w-full h-8 rounded-lg bg-gray-200 dark:bg-gray-700" />
+
+              <div className="w-full h-8 rounded-lg bg-gray-200 dark:bg-gray-700" />
+            </div>
+
+            <div className="w-full h-8 rounded-lg bg-gray-200 dark:bg-gray-700" />
           </div>
         ) : (
           <div className="flex flex-col min-w-[180px] gap-2 px-3 py-2">
@@ -79,7 +90,7 @@ export function ProfileModal() {
                   to="/user-profile"
                   className="cursor-pointer p-1 w-full items-center flex justify-center "
                 >
-                  <Pen size={20} />
+                  <Info size={20} />
                 </Link>
               </div>
               <div className="cursor-pointer w-full flex justify-center items-center border rounded-lg hover:bg-gray-100  dark:hover:bg-gray-800">

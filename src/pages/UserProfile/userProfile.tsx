@@ -1,7 +1,8 @@
 import apiClient from "@/api/ApiClient";
 import { DefaultUserIcon } from "@/assets/exportImg";
+import { UserEditModal } from "@/components/common/User/UserEditModal";
 import { Button } from "@/components/ui/button";
-import { Loader2, Pen } from "lucide-react";
+import { Loader2, Pen, User } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 interface userType {
@@ -38,8 +39,38 @@ const userProfile = () => {
     <div className="flex flex-col gap-5">
       <h1 className="text-[20px] !font-semibold">Shaxsiy Profil</h1>
       {loading ? (
-        <div className="flex items-center justify-center">
-          <Loader2 className="animate-spin" />
+        <div className="bg-white dark:bg-fullbg rounded-lg p-5 flex flex-col gap-7 animate-pulse">
+          <div
+            className="border border-black/10 dark:border-white/10 p-4 rounded-lg 
+      flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+          >
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 items-center sm:text-left">
+              <div className="rounded-full w-20 h-20 bg-gray-200 dark:bg-gray-700" />
+
+              <div className="flex flex-col gap-2 items-center sm:items-start">
+                <div className="h-5 w-40 bg-gray-200 dark:bg-gray-700 rounded" />
+                <div className="h-4 w-28 bg-gray-200 dark:bg-gray-700 rounded" />
+              </div>
+            </div>
+
+            <div className="h-9 w-28 bg-gray-200 dark:bg-gray-700 rounded" />
+          </div>
+
+          <div className="border border-black/10 dark:border-white/10 p-4 rounded-lg flex flex-col gap-5">
+            <div className="flex justify-between">
+              <div className="h-5 w-40 bg-gray-200 dark:bg-gray-700 rounded" />
+              <div className="h-9 w-28 bg-gray-200 dark:bg-gray-700 rounded hidden sm:block" />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 w-full sm:w-1/2 gap-4">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="flex flex-col gap-2">
+                  <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded" />
+                  <div className="h-5 w-32 bg-gray-200 dark:bg-gray-700 rounded" />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       ) : (
         <div className="bg-white dark:bg-fullbg rounded-lg p-5 flex flex-col gap-7">
@@ -65,13 +96,7 @@ flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
             </div>
 
             <div className="flex justify-center sm:justify-end">
-              <Button
-                variant={"outline"}
-                className="cursor-pointer w-full sm:w-auto"
-              >
-                <Pen />
-                Tahrirlash
-              </Button>
+              <UserEditModal classname="cursor-pointer w-full sm:w-auto" />
             </div>
           </div>
 
@@ -81,13 +106,7 @@ flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
                 Shaxsiy Ma'lumotlar
               </h1>
 
-              <Button
-                variant={"outline"}
-                className="cursor-pointer w-full sm:w-auto hidden sm:flex"
-              >
-                <Pen />
-                Tahrirlash
-              </Button>
+              <UserEditModal classname="cursor-pointer w-full sm:w-auto hidden sm:flex" />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 w-full sm:w-1/2 gap-4">
