@@ -96,7 +96,13 @@ flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
             </div>
 
             <div className="flex justify-center sm:justify-end">
-              <UserEditModal classname="cursor-pointer w-full sm:w-auto" />
+              <UserEditModal
+                name={userData?.name ? userData.name : ""}
+                email={userData?.email ? userData.email : ""}
+                phone={userData?.phone ? userData.phone : ""}
+                login={userData?.login ? userData.login : ""}
+                classname="cursor-pointer w-full sm:w-auto"
+              />
             </div>
           </div>
 
@@ -106,7 +112,13 @@ flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
                 Shaxsiy Ma'lumotlar
               </h1>
 
-              <UserEditModal classname="cursor-pointer w-full sm:w-auto hidden sm:flex" />
+              <UserEditModal
+                name={userData?.name ? userData.name : ""}
+                email={userData?.email ? userData.email : ""}
+                phone={userData?.phone ? userData.phone : ""}
+                login={userData?.login ? userData.login : ""}
+                classname="cursor-pointer w-full sm:w-auto hidden sm:flex"
+              />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 w-full sm:w-1/2 gap-4">
