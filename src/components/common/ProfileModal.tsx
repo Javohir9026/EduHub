@@ -76,12 +76,12 @@ export function ProfileModal() {
               </div>
               <div className="flex gap-1 w-full justify-around">
                 <div className="cursor-pointer   w-full flex justify-center items-center border rounded-lg hover:bg-gray-100  dark:hover:bg-gray-800 p-1">
-                  <Link to="/user-profile" className="cursor-pointer p-1">
+                  <Link to="/user-profile" className="cursor-pointer p-1 w-full items-center flex justify-center ">
                     <Pen size={20} />
                   </Link>
                 </div>
                 <div className="cursor-pointer w-full flex justify-center items-center border rounded-lg hover:bg-gray-100  dark:hover:bg-gray-800">
-                  <AnimatedThemeToggler className="p-1 w-full items-center cursor-pointer flex justify-center" />
+                  <AnimatedThemeToggler className=" w-full items-center cursor-pointer flex justify-center" />
                 </div>
               </div>
               <LogOutButton />

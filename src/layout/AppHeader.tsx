@@ -41,7 +41,7 @@ const AppHeader: React.FC = () => {
         </Link>
 
         {/* Right side  */}
-        <div className="hidden lg:flex items-center gap-4">
+        <div className="items-center gap-4">
           {/* content */}
           <ProfileModal />
         </div>
