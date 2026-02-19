@@ -29,7 +29,6 @@ export function ProfileModal() {
       setProfilePhoto(res.data.data.image);
       setProfileName(res.data.data.name);
       setPhoneNumber(res.data.data.phone);
-      console.log(res.data.data);
     } catch (error) {
       console.log(error);
     } finally {
@@ -57,35 +56,38 @@ export function ProfileModal() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         {loading ? (
-          <div className="flex items-center justify-center p-3 w-[150px] h-[60px]">
+          <div className="flex items-center justify-center p-3 w-[180px] h-[60px]">
             <Loader2 className="animate-spin" />
           </div>
         ) : (
-            <div className="flex flex-col gap-2 px-3 py-2">
-              <div className="flex items-center gap-2">
-                <Avatar>
-                  <AvatarImage src={ProfilePhoto} alt="shadcn" />
-                  <AvatarFallback>
-                    <UserIcon />
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex flex-col">
-                  <p className="font-medium">{ProfileName}</p>
-                  <p className="text-xs text-gray-500">{PhoneNumber}</p>
-                </div>
+          <div className="flex flex-col min-w-[180px] gap-2 px-3 py-2">
+            <div className="flex items-center gap-2">
+              <Avatar>
+                <AvatarImage src={ProfilePhoto} alt="shadcn" />
+                <AvatarFallback>
+                  <UserIcon />
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col">
+                <p className="font-medium">{ProfileName}</p>
+                <p className="text-xs text-gray-500">{PhoneNumber}</p>
               </div>
-              <div className="flex gap-1 w-full justify-around">
-                <div className="cursor-pointer   w-full flex justify-center items-center border rounded-lg hover:bg-gray-100  dark:hover:bg-gray-800 p-1">
-                  <Link to="/user-profile" className="cursor-pointer p-1 w-full items-center flex justify-center ">
-                    <Pen size={20} />
-                  </Link>
-                </div>
-                <div className="cursor-pointer w-full flex justify-center items-center border rounded-lg hover:bg-gray-100  dark:hover:bg-gray-800">
-                  <AnimatedThemeToggler className=" w-full items-center cursor-pointer flex justify-center" />
-                </div>
-              </div>
-              <LogOutButton />
             </div>
+            <div className="flex gap-1 w-full justify-around">
+              <div className="cursor-pointer   w-full flex justify-center items-center border rounded-lg hover:bg-gray-100  dark:hover:bg-gray-800 p-1">
+                <Link
+                  to="/user-profile"
+                  className="cursor-pointer p-1 w-full items-center flex justify-center "
+                >
+                  <Pen size={20} />
+                </Link>
+              </div>
+              <div className="cursor-pointer w-full flex justify-center items-center border rounded-lg hover:bg-gray-100  dark:hover:bg-gray-800">
+                <AnimatedThemeToggler className=" w-full items-center cursor-pointer flex justify-center" />
+              </div>
+            </div>
+            <LogOutButton />
+          </div>
         )}
       </DropdownMenuContent>
     </DropdownMenu>
