@@ -40,7 +40,7 @@ apiClient.interceptors.response.use(
         return apiClient(originalRequest);
       } catch (err) {
         localStorage.removeItem("access_token");
-        window.location.href = "/sign-in";
+        window.location.href = "/";
       }
     }
 

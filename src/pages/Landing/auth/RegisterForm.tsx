@@ -410,7 +410,7 @@ const RegisterForm = () => {
             </div>
             <Button
               disabled={isFormInvalid || isloading}
-              className={`w-full !font-bold flex items-center justify-center gap-2 ${
+              className={`w-full cursor-pointer !font-bold flex items-center justify-center gap-2 ${
                 isloading
                   ? "bg-blue-400 cursor-not-allowed"
                   : "bg-blue-500 hover:bg-blue-500/85"
