@@ -16,117 +16,120 @@ import TeachersPage from "./pages/Teachers/TeachersPage";
 import Groups from "./pages/Groups/Groups";
 import CalendarPage from "./pages/Calendar/CalendarPage";
 import UserProfile from "./pages/UserProfile/userProfile";
+import { UserProvider } from "./context/UserContext";
 
 const App = () => {
   return (
     <BrowserRouter>
-      <ScrollToTop />
-      <Routes>
-        <Route
-          index
-          path="/"
-          element={
-            <GuestRoute>
-              <LandingPage />
-            </GuestRoute>
-          }
-        />
-        <Route element={<PublicLayout />}>
+      <UserProvider>
+        <ScrollToTop />
+        <Routes>
           <Route
-            path="/sign-in"
+            index
+            path="/"
             element={
               <GuestRoute>
-                <SignInForm />
+                <LandingPage />
               </GuestRoute>
             }
           />
-          <Route
-            path="/register"
-            element={
-              <GuestRoute>
-                <RegisterForm />
-              </GuestRoute>
-            }
-          />
-          <Route
-            path="info-users"
-            element={
-              <GuestRoute>
-                <ScrollToTop />
-                <InfoUsers />
-              </GuestRoute>
-            }
-          />
-          <Route
-            path="contact-us"
-            element={
-              <GuestRoute>
-                <ScrollToTop />
-                <ContactUs />
-              </GuestRoute>
-            }
-          />
-          <Route
-            path="about-us"
-            element={
-              <GuestRoute>
-                <ScrollToTop />
-                <AboutUs />
-              </GuestRoute>
-            }
-          />
-        </Route>
-        <Route element={<AppLayout />}>
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/students"
-            element={
-              <ProtectedRoute>
-                <StudentsPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/teachers"
-            element={
-              <ProtectedRoute>
-                <TeachersPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/groups"
-            element={
-              <ProtectedRoute>
-                <Groups />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/calendar"
-            element={
-              <ProtectedRoute>
-                <CalendarPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/user-profile"
-            element={
-              <ProtectedRoute>
-                <UserProfile />
-              </ProtectedRoute>
-            }
-          />
-        </Route>
-      </Routes>
+          <Route element={<PublicLayout />}>
+            <Route
+              path="/sign-in"
+              element={
+                <GuestRoute>
+                  <SignInForm />
+                </GuestRoute>
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <GuestRoute>
+                  <RegisterForm />
+                </GuestRoute>
+              }
+            />
+            <Route
+              path="info-users"
+              element={
+                <GuestRoute>
+                  <ScrollToTop />
+                  <InfoUsers />
+                </GuestRoute>
+              }
+            />
+            <Route
+              path="contact-us"
+              element={
+                <GuestRoute>
+                  <ScrollToTop />
+                  <ContactUs />
+                </GuestRoute>
+              }
+            />
+            <Route
+              path="about-us"
+              element={
+                <GuestRoute>
+                  <ScrollToTop />
+                  <AboutUs />
+                </GuestRoute>
+              }
+            />
+          </Route>
+          <Route element={<AppLayout />}>
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/students"
+              element={
+                <ProtectedRoute>
+                  <StudentsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/teachers"
+              element={
+                <ProtectedRoute>
+                  <TeachersPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/groups"
+              element={
+                <ProtectedRoute>
+                  <Groups />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/calendar"
+              element={
+                <ProtectedRoute>
+                  <CalendarPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/user-profile"
+              element={
+                <ProtectedRoute>
+                  <UserProfile />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
+        </Routes>
+      </UserProvider>
     </BrowserRouter>
   );
 };
