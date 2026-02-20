@@ -10,158 +10,223 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUser } from "@/context/UserContext";
 import { Eye, EyeOff, Pen } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+type UserType = {
+  name: string;
+  email: string;
+  phone: string;
+  login: string;
+};
 
 export function UserEditModal({ classname }: { classname: string }) {
   const api = import.meta.env.VITE_API_URL;
-  const { userData, loading } = useUser();
-  const [Username, setUserName] = useState(userData?.name);
-  const [UserEmail, setUserEmail] = useState(userData?.email);
-  const [UserPhone, setUserPhone] = useState(userData?.phone);
-  const [UserLogin, setUserLogin] = useState(userData?.login);
+  const { userData } = useUser();
+
+  const [Username, setUserName] = useState("");
+  const [UserEmail, setUserEmail] = useState("");
+  const [UserPhone, setUserPhone] = useState("");
+  const [UserLogin, setUserLogin] = useState("");
   const [password, setPassword] = useState("");
+
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
-  const updateData = async () => {
+
+  const [originalData, setOriginalData] = useState<UserType>({
+    name: "",
+    email: "",
+    phone: "",
+    login: "",
+  });
+
+  useEffect(() => {
+    if (userData) {
+      const data = {
+        name: userData.name || "",
+        email: userData.email || "",
+        phone: userData.phone || "",
+        login: userData.login || "",
+      };
+
+      setOriginalData(data);
+      setUserName(data.name);
+      setUserEmail(data.email);
+      setUserPhone(data.phone);
+      setUserLogin(data.login);
+    }
+  }, [userData]);
+
+  const updateData = async (): Promise<void> => {
     try {
+      if (!userData) return;
+
+      const formData = new FormData();
+      let hasChanges = false;
+
+      const currentName = Username.trim();
+      const currentEmail = UserEmail.trim();
+      const currentPhone = UserPhone.trim();
+      const currentLogin = UserLogin.trim();
+
+      const originalName = userData.name?.trim() || "";
+      const originalEmail = userData.email?.trim() || "";
+      const originalPhone = userData.phone?.trim() || "";
+      const originalLogin = userData.login?.trim() || "";
+
+      if (currentName !== originalName) {
+        formData.append("name", currentName);
+        hasChanges = true;
+      }
+
+      if (currentEmail !== originalEmail) {
+        formData.append("email", currentEmail);
+        hasChanges = true;
+      }
+
+      if (currentPhone !== originalPhone) {
+        formData.append("phone", currentPhone);
+        hasChanges = true;
+      }
+
+      if (currentLogin !== originalLogin) {
+        formData.append("login", currentLogin);
+        hasChanges = true;
+      }
+
+      if (password.trim() !== "") {
+        formData.append("password", password);
+        hasChanges = true;
+      }
+
+      if (!hasChanges) {
+        console.log("Hech narsa o'zgarmagan");
+        return;
+      }
+
       const res = await apiClient.patch(
-        `${api}/learning-center/${localStorage.getItem("id")}`,
-        {
-          name: Username,
-          email: UserEmail,
-          phone: UserPhone,
-          login: UserLogin,
-          password: password,
-        },
+        `${api}/auth/update/${localStorage.getItem("id")}`,
+        formData,
         {
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         },
       );
-      console.log(res);
-    } catch (error) {
-      console.log(error);
+
+      console.log(res.data);
+      setPassword("");
+    } catch (error: any) {
+      console.log(error.response?.data || error.message);
     }
   };
+
   const handleCancel = () => {
     setPassword("");
+    setUserName(originalData.name);
+    setUserEmail(originalData.email);
+    setUserPhone(originalData.phone);
+    setUserLogin(originalData.login);
   };
+
   const handleSave = async () => {
-    try {
-      console.log(
-        `data: ${UserEmail} ${Username} ${UserLogin} ${password} ${UserEmail}`,
-      );
-    } catch (error) {
-      console.log(error);
-    }
+    await updateData();
   };
+
   return (
     <AlertDialog>
       <AlertDialogTrigger className={classname}>
         <Pen size={18} />
         Tahrirlash
       </AlertDialogTrigger>
+
       <AlertDialogContent className="w-full">
         <AlertDialogHeader>
           <AlertDialogTitle className="!font-semibold text-[18px]">
             Tahrirlash
           </AlertDialogTitle>
-          <AlertDialogDescription>Shaxsiy ma'lumotlarni tahrirlash.</AlertDialogDescription>
+
+          <AlertDialogDescription>
+            Shaxsiy ma'lumotlarni tahrirlash.
+          </AlertDialogDescription>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5 mb-5 w-full">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="name">Nomi:</Label>
+              <Label>Nomi:</Label>
               <Input
                 value={Username}
                 onChange={(e) => setUserName(e.target.value)}
-                id="name"
-                className="!focus:outline-none text-black dark:text-white !min-w-[220px]"
               />
             </div>
+
             <div className="flex flex-col gap-2">
-              <Label htmlFor="name">Email</Label>
+              <Label>Email:</Label>
               <Input
                 value={UserEmail}
                 onChange={(e) => setUserEmail(e.target.value)}
-                id="name"
-                className="!focus:outline-none text-black dark:text-white !min-w-[220px]"
               />
             </div>
+
             <div className="flex flex-col gap-2">
-              <Label htmlFor="name">Login</Label>
+              <Label>Login:</Label>
               <Input
                 value={UserLogin}
                 onChange={(e) => setUserLogin(e.target.value)}
-                id="name"
-                className="!focus:outline-none text-black dark:text-white !min-w-[220px]"
               />
             </div>
+
             <div className="flex flex-col gap-2">
-              <Label htmlFor="name">Telefon Raqami:</Label>
+              <Label>Telefon:</Label>
               <Input
                 value={UserPhone}
                 onChange={(e) => setUserPhone(e.target.value)}
-                id="name"
-                className="!focus:outline-none text-black dark:text-white !min-w-[220px]"
               />
             </div>
-            <div className="flex flex-col gap-2 relative">
-              <Label htmlFor="pass">Yangi Parol</Label>
 
+            <div className="flex flex-col gap-2 relative">
+              <Label>Yangi Parol</Label>
               <Input
-                id="pass"
                 type={showPassword ? "text" : "password"}
-                placeholder="Parol"
                 value={password}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setPassword(value);
-                }}
-                className="!focus:outline-none text-black dark:text-white !min-w-[220px]"
+                onChange={(e) => setPassword(e.target.value)}
               />
               <button
                 type="button"
-                onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-3 top-10 cursor-pointer -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-10 -translate-y-1/2"
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
-            <div className="flex flex-col gap-2 relative">
-              <Label htmlFor="pass">Yangi Parol</Label>
 
-              <Input
-                id="pass"
-                type={showPassword2 ? "text" : "password"}
-                placeholder="Parol"
-                className="!focus:outline-none text-black dark:text-white !min-w-[220px]"
-              />
+            <div className="flex flex-col gap-2 relative">
+              <Label>Parolni tasdiqlash</Label>
+              <Input type={showPassword2 ? "text" : "password"} />
               <button
                 type="button"
-                onClick={() => setShowPassword2((prev) => !prev)}
-                className="absolute right-3 top-10 cursor-pointer -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                onClick={() => setShowPassword2(!showPassword2)}
+                className="absolute right-3 top-10 -translate-y-1/2"
               >
                 {showPassword2 ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
           </div>
         </AlertDialogHeader>
+
         <AlertDialogFooter>
           <AlertDialogCancel
-            onClick={() => handleCancel()}
-            className="cursor-pointer !dark:bg-red-500/70 !bg-red-500 text-white hover:!bg-red-500/80 hover:text-white"
+            onClick={handleCancel}
+            className="bg-red-500 text-white hover:bg-red-600"
           >
             Bekor qilish
           </AlertDialogCancel>
+
           <AlertDialogAction
-            onClick={() => handleSave()}
-            className="cursor-pointer !dark:bg-green-500/70 !bg-green-500 text-white hover:!bg-green-500/80 hover:text-white"
+            onClick={handleSave}
+            className="bg-green-500 text-white hover:bg-green-600"
           >
             Saqlash
           </AlertDialogAction>
