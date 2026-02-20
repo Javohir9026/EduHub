@@ -1,7 +1,6 @@
 import apiClient from "@/api/ApiClient";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -10,6 +9,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUser } from "@/context/UserContext";
@@ -25,14 +25,18 @@ type UserType = {
 
 export function UserEditModal({ classname }: { classname: string }) {
   const api = import.meta.env.VITE_API_URL;
-  const { userData } = useUser();
+  const { userData, setUserData, fetchData } = useUser();
+
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [Username, setUserName] = useState("");
   const [UserEmail, setUserEmail] = useState("");
   const [UserPhone, setUserPhone] = useState("");
   const [UserLogin, setUserLogin] = useState("");
   const [password, setPassword] = useState("");
-
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
 
@@ -60,9 +64,11 @@ export function UserEditModal({ classname }: { classname: string }) {
     }
   }, [userData]);
 
-  const updateData = async (): Promise<void> => {
+  const updateData = async (): Promise<boolean> => {
     try {
-      if (!userData) return;
+      if (!userData) return false;
+
+      setLoading(true);
 
       const formData = new FormData();
       let hasChanges = false;
@@ -103,11 +109,10 @@ export function UserEditModal({ classname }: { classname: string }) {
       }
 
       if (!hasChanges) {
-        console.log("Hech narsa o'zgarmagan");
-        return;
+        return true;
       }
 
-      const res = await apiClient.patch(
+      await apiClient.patch(
         `${api}/auth/update/${localStorage.getItem("id")}`,
         formData,
         {
@@ -117,10 +122,22 @@ export function UserEditModal({ classname }: { classname: string }) {
         },
       );
 
-      console.log(res.data);
+      setUserData((prev: any) => ({
+        ...prev,
+        name: currentName,
+        email: currentEmail,
+        phone: currentPhone,
+        login: currentLogin,
+      }));
+
       setPassword("");
+
+      return true;
     } catch (error: any) {
       console.log(error.response?.data || error.message);
+      return false;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -134,13 +151,19 @@ export function UserEditModal({ classname }: { classname: string }) {
 
   const handleSave = async () => {
     await updateData();
+
+    setOpen(false);
+
+    await fetchData();
   };
 
   return (
-    <AlertDialog>
-      <AlertDialogTrigger className={classname}>
-        <Pen size={18} />
-        Tahrirlash
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        <button className={classname}>
+          <Pen size={18} />
+          Tahrirlash
+        </button>
       </AlertDialogTrigger>
 
       <AlertDialogContent className="w-full">
@@ -204,7 +227,11 @@ export function UserEditModal({ classname }: { classname: string }) {
 
             <div className="flex flex-col gap-2 relative">
               <Label>Parolni tasdiqlash</Label>
-              <Input type={showPassword2 ? "text" : "password"} />
+              <Input
+                type={showPassword2 ? "text" : "password"}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
               <button
                 type="button"
                 onClick={() => setShowPassword2(!showPassword2)}
@@ -219,17 +246,26 @@ export function UserEditModal({ classname }: { classname: string }) {
         <AlertDialogFooter>
           <AlertDialogCancel
             onClick={handleCancel}
-            className="bg-red-500 text-white hover:bg-red-600"
+            disabled={loading}
+            className="cursor-pointer  bg-red-500 text-white hover:bg-red-600"
           >
             Bekor qilish
           </AlertDialogCancel>
 
-          <AlertDialogAction
+          <Button
             onClick={handleSave}
-            className="bg-green-500 text-white hover:bg-green-600"
+            disabled={loading}
+            className="cursor-pointer bg-green-500 text-white hover:bg-green-600 flex items-center gap-2 px-4 py-2 rounded-md"
           >
-            Saqlash
-          </AlertDialogAction>
+            {loading ? (
+              <>
+                <span className="animate-spin border-2 border-white border-t-transparent rounded-full w-4 h-4"></span>
+                Saqlanmoqda...
+              </>
+            ) : (
+              "Saqlash"
+            )}
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -18,6 +18,7 @@ type UserContextType = {
   loading: boolean;
   fetchData: () => Promise<void>;
 };
+
 const UserContext = createContext<UserContextType | null>(null);
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
@@ -25,12 +26,19 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(false);
 
   const fetchData = async () => {
-    const api = import.meta.env.VITE_API_URL;
     try {
       setLoading(true);
-      const res = await apiClient.get(
-        `${api}/auth/me/${localStorage.getItem("id")}`,
-      );
+
+      const id = localStorage.getItem("id");
+
+      if (!id) {
+        setUserData(null);
+        return;
+      }
+
+      const api = import.meta.env.VITE_API_URL;
+      const res = await apiClient.get(`${api}/auth/me/${id}`);
+
       setUserData(res.data.data);
     } catch (error) {
       console.log(error);
