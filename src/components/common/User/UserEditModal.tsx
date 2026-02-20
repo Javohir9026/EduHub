@@ -13,26 +13,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useUser } from "@/context/UserContext";
 import { Eye, EyeOff, Pen } from "lucide-react";
 import { useState } from "react";
 
-export function UserEditModal({
-  classname,
-  name,
-  email,
-  phone,
-  login,
-}: {
-  classname: string;
-  name: string;
-  email: string;
-  phone: string;
-  login: string;
-}) {
-  const [Username, setUserName] = useState(name);
-  const [UserEmail, setUserEmail] = useState(email);
-  const [UserPhone, setUserPhone] = useState(phone);
-  const [UserLogin, setUserLogin] = useState(login);
+export function UserEditModal({ classname }: { classname: string }) {
+  const { userData, loading } = useUser();
+  const [Username, setUserName] = useState(userData?.name);
+  const [UserEmail, setUserEmail] = useState(userData?.email);
+  const [UserPhone, setUserPhone] = useState(userData?.phone);
+  const [UserLogin, setUserLogin] = useState(userData?.login);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
@@ -43,15 +33,17 @@ export function UserEditModal({
     }
   };
   const handleCancel = () => {
-    setPassword("")
-  }
-  const handleSave = async() => {
+    setPassword("");
+  };
+  const handleSave = async () => {
     try {
-        console.log(`data: ${UserEmail} ${Username} ${UserLogin} ${password} ${UserEmail}`)
+      console.log(
+        `data: ${UserEmail} ${Username} ${UserLogin} ${password} ${UserEmail}`,
+      );
     } catch (error) {
-        console.log(error)
+      console.log(error);
     }
-  }
+  };
   return (
     <AlertDialog>
       <AlertDialogTrigger>
@@ -146,10 +138,16 @@ export function UserEditModal({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={()=> handleCancel()} className="cursor-pointer !dark:bg-red-500/70 !bg-red-500 text-white hover:!bg-red-500/80 hover:text-white">
+          <AlertDialogCancel
+            onClick={() => handleCancel()}
+            className="cursor-pointer !dark:bg-red-500/70 !bg-red-500 text-white hover:!bg-red-500/80 hover:text-white"
+          >
             Bekor qilish
           </AlertDialogCancel>
-          <AlertDialogAction onClick={()=> handleSave()} className="cursor-pointer !dark:bg-green-500/70 !bg-green-500 text-white hover:!bg-green-500/80 hover:text-white">
+          <AlertDialogAction
+            onClick={() => handleSave()}
+            className="cursor-pointer !dark:bg-green-500/70 !bg-green-500 text-white hover:!bg-green-500/80 hover:text-white"
+          >
             Saqlash
           </AlertDialogAction>
         </AlertDialogFooter>

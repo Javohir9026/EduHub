@@ -1,4 +1,3 @@
-import apiClient from "@/api/ApiClient";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,35 +6,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Info, UserIcon } from "lucide-react";
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AnimatedThemeToggler } from "../ui/animated-theme-toggler";
 import LogOutButton from "./LogOutButton";
+import { useUser } from "@/context/UserContext";
 
 export function ProfileModal() {
-  const [ProfilePhoto, setProfilePhoto] = useState();
-  const [ProfileName, setProfileName] = useState();
-  const [PhoneNumber, setPhoneNumber] = useState();
-  const [loading, setLoading] = useState(false);
-  const getUserData = async () => {
-    const api = import.meta.env.VITE_API_URL;
-    try {
-      setLoading(true);
-      const res = await apiClient.get(
-        `${api}/auth/me/${localStorage.getItem("id")}`,
-      );
-      setProfilePhoto(res.data.data.image);
-      setProfileName(res.data.data.name);
-      setPhoneNumber(res.data.data.phone);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    getUserData();
-  }, []);
+  const { userData, loading } = useUser();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -44,7 +21,7 @@ export function ProfileModal() {
       >
         <Button variant="ghost" size="icon" className="rounded-full">
           <Avatar>
-            <AvatarImage src={ProfilePhoto} alt="shadcn" />
+            <AvatarImage src={userData?.image} alt="shadcn" />
             <AvatarFallback>
               <UserIcon />
             </AvatarFallback>
@@ -74,14 +51,14 @@ export function ProfileModal() {
           <div className="flex flex-col min-w-[180px] gap-2 px-3 py-2">
             <div className="flex items-center gap-2">
               <Avatar>
-                <AvatarImage src={ProfilePhoto} alt="shadcn" />
+                <AvatarImage src={userData?.image} alt="shadcn" />
                 <AvatarFallback>
                   <UserIcon />
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-col">
-                <p className="font-medium">{ProfileName}</p>
-                <p className="text-xs text-gray-500">{PhoneNumber}</p>
+                <p className="font-medium">{userData?.name}</p>
+                <p className="text-xs text-gray-500">{userData?.phone}</p>
               </div>
             </div>
             <div className="flex gap-1 w-full justify-around">
