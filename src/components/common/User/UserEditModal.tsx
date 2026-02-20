@@ -18,6 +18,7 @@ import { Eye, EyeOff, Pen } from "lucide-react";
 import { useState } from "react";
 
 export function UserEditModal({ classname }: { classname: string }) {
+  const api = import.meta.env.VITE_API_URL;
   const { userData, loading } = useUser();
   const [Username, setUserName] = useState(userData?.name);
   const [UserEmail, setUserEmail] = useState(userData?.email);
@@ -28,6 +29,23 @@ export function UserEditModal({ classname }: { classname: string }) {
   const [showPassword2, setShowPassword2] = useState(false);
   const updateData = async () => {
     try {
+      const res = await apiClient.patch(
+        `${api}/learning-center/${localStorage.getItem("id")}`,
+        {
+          name: Username,
+          email: UserEmail,
+          phone: UserPhone,
+          login: UserLogin,
+          password: password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
+      console.log(res);
     } catch (error) {
       console.log(error);
     }
@@ -46,96 +64,93 @@ export function UserEditModal({ classname }: { classname: string }) {
   };
   return (
     <AlertDialog>
-      <AlertDialogTrigger>
-        <Button variant="outline" className={classname}>
-          <Pen />
-          Tahrirlash
-        </Button>
+      <AlertDialogTrigger className={classname}>
+        <Pen size={18} />
+        Tahrirlash
       </AlertDialogTrigger>
       <AlertDialogContent className="w-full">
         <AlertDialogHeader>
           <AlertDialogTitle className="!font-semibold text-[18px]">
             Tahrirlash
           </AlertDialogTitle>
-          <AlertDialogDescription className="mt-5 mb-5 w-full">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="name">Nomi:</Label>
-                <Input
-                  value={Username}
-                  onChange={(e) => setUserName(e.target.value)}
-                  id="name"
-                  className="!focus:outline-none text-black dark:text-white !min-w-[220px]"
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="name">Email</Label>
-                <Input
-                  value={UserEmail}
-                  onChange={(e) => setUserEmail(e.target.value)}
-                  id="name"
-                  className="!focus:outline-none text-black dark:text-white !min-w-[220px]"
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="name">Login</Label>
-                <Input
-                  value={UserLogin}
-                  onChange={(e) => setUserLogin(e.target.value)}
-                  id="name"
-                  className="!focus:outline-none text-black dark:text-white !min-w-[220px]"
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="name">Telefon Raqami:</Label>
-                <Input
-                  value={UserPhone}
-                  onChange={(e) => setUserPhone(e.target.value)}
-                  id="name"
-                  className="!focus:outline-none text-black dark:text-white !min-w-[220px]"
-                />
-              </div>
-              <div className="flex flex-col gap-2 relative">
-                <Label htmlFor="pass">Yangi Parol</Label>
-
-                <Input
-                  id="pass"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Parol"
-                  value={password}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setPassword(value);
-                  }}
-                  className="!focus:outline-none text-black dark:text-white !min-w-[220px]"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-3 top-10 cursor-pointer -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
-              <div className="flex flex-col gap-2 relative">
-                <Label htmlFor="pass">Yangi Parol</Label>
-
-                <Input
-                  id="pass"
-                  type={showPassword2 ? "text" : "password"}
-                  placeholder="Parol"
-                  className="!focus:outline-none text-black dark:text-white !min-w-[220px]"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword2((prev) => !prev)}
-                  className="absolute right-3 top-10 cursor-pointer -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                  {showPassword2 ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
+          <AlertDialogDescription>Shaxsiy ma'lumotlarni tahrirlash.</AlertDialogDescription>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5 mb-5 w-full">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="name">Nomi:</Label>
+              <Input
+                value={Username}
+                onChange={(e) => setUserName(e.target.value)}
+                id="name"
+                className="!focus:outline-none text-black dark:text-white !min-w-[220px]"
+              />
             </div>
-          </AlertDialogDescription>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="name">Email</Label>
+              <Input
+                value={UserEmail}
+                onChange={(e) => setUserEmail(e.target.value)}
+                id="name"
+                className="!focus:outline-none text-black dark:text-white !min-w-[220px]"
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="name">Login</Label>
+              <Input
+                value={UserLogin}
+                onChange={(e) => setUserLogin(e.target.value)}
+                id="name"
+                className="!focus:outline-none text-black dark:text-white !min-w-[220px]"
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="name">Telefon Raqami:</Label>
+              <Input
+                value={UserPhone}
+                onChange={(e) => setUserPhone(e.target.value)}
+                id="name"
+                className="!focus:outline-none text-black dark:text-white !min-w-[220px]"
+              />
+            </div>
+            <div className="flex flex-col gap-2 relative">
+              <Label htmlFor="pass">Yangi Parol</Label>
+
+              <Input
+                id="pass"
+                type={showPassword ? "text" : "password"}
+                placeholder="Parol"
+                value={password}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setPassword(value);
+                }}
+                className="!focus:outline-none text-black dark:text-white !min-w-[220px]"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-10 cursor-pointer -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+            <div className="flex flex-col gap-2 relative">
+              <Label htmlFor="pass">Yangi Parol</Label>
+
+              <Input
+                id="pass"
+                type={showPassword2 ? "text" : "password"}
+                placeholder="Parol"
+                className="!focus:outline-none text-black dark:text-white !min-w-[220px]"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword2((prev) => !prev)}
+                className="absolute right-3 top-10 cursor-pointer -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                {showPassword2 ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+          </div>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel
