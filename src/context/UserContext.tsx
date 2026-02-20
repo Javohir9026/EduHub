@@ -31,7 +31,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       const res = await apiClient.get(
         `${api}/auth/me/${localStorage.getItem("id")}`,
       );
-      console.log(res.data.data)
       setUserData(res.data.data);
     } catch (error) {
       console.log(error);
