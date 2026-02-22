@@ -61,7 +61,7 @@ const Dashboard = () => {
             <Calendar /> Bu oy
           </Button>
 
-          <Button className="flex items-center gap-2 bg-gradient-to-r text-white from-[#332a9b] via-[#490bb5] to-[#cc53ed]">
+          <Button className="flex items-center gap-2 bg-gradient-to-r text-white from-[#332a9b] via-[#490bb5] to-[#cc53ed] border-black border-1">
             <Plus /> yangi voqea
           </Button>
         </div>
@@ -84,7 +84,7 @@ const Dashboard = () => {
         ))}
       </div>
 
-      <AreaChart />
+      {/* <AreaChart /> */}
 
     </div>
   );
