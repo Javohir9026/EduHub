@@ -1,40 +1,9 @@
-import apiClient from "@/api/ApiClient";
 import { DefaultUserIcon } from "@/assets/exportImg";
 import { UserEditModal } from "@/components/common/User/UserEditModal";
-import { Button } from "@/components/ui/button";
-import { Loader2, Pen, User } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { useUser } from "@/context/UserContext";
 
-interface userType {
-  email: string;
-  image: string | null;
-  is_blocked: boolean;
-  login: string;
-  name: string;
-  password: string;
-  phone: string;
-  role: string;
-}
 const userProfile = () => {
-  const [userData, setUserData] = useState<userType | null>(null);
-  const [loading, setLoading] = useState(false);
-  const fetchdata = async () => {
-    const api = import.meta.env.VITE_API_URL;
-    try {
-      setLoading(true);
-      const res = await apiClient.get(
-        `${api}/auth/me/${localStorage.getItem("id")}`,
-      );
-      setUserData(res.data.data);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    fetchdata();
-  }, []);
+  const { userData, loading } = useUser();
   return (
     <div className="flex flex-col gap-5">
       <h1 className="text-[20px] !font-semibold">Shaxsiy Profil</h1>
@@ -115,7 +84,7 @@ flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
                   Nomi
                 </h1>
                 <h1>{userData?.name}</h1>
-              </div> 
+              </div>
 
               <div className="flex flex-col">
                 <h1 className="text-[15px] text-black/50 dark:text-white/50">
