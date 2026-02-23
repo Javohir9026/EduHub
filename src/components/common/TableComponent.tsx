@@ -164,7 +164,7 @@ export default function BasicTableOne() {
                           </AlertDialogCancel>
                           <AlertDialogAction
                             className="bg-red-600 hover:bg-red-700 text-white py-3 px-6 rounded-lg cursor-pointer flex items-center gap-2"
-                            onClick={handleDelete()}
+                            onClick={()=>handleDelete(student.id)}
                           >
                             Ha, O'chirish
                           </AlertDialogAction>
