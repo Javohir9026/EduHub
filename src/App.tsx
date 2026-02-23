@@ -18,6 +18,7 @@ import CalendarPage from "./pages/Calendar/CalendarPage";
 import UserProfile from "./pages/UserProfile/userProfile";
 import { UserProvider } from "./context/UserContext";
 import AppLayoutWithProvider from "./layout/AppLayoutWithProvider";
+import StudentInfoPage from "./pages/students/StudentInfoPage";
 
 const App = () => {
   return (
@@ -124,6 +125,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <UserProfile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student-info/:id"
+            element={
+              <ProtectedRoute>
+                <StudentInfoPage />
               </ProtectedRoute>
             }
           />
