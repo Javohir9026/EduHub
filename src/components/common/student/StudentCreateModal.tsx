@@ -145,7 +145,6 @@ export function StudentCreateModal({ classname }: { classname: string }) {
 
     try {
       setLoading(true);
-
       await apiClient.post(`${api}/students`, {
         fullName,
         phone,

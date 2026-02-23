@@ -50,7 +50,7 @@ flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 items-center sm:items-center text-center sm:text-left">
               <div className="border bg-fullbg dark:bg-fullbg rounded-full w-20 h-20 overflow-hidden shrink-0">
                 <img
-                  src={userData?.image ?? DefaultUserIcon}
+                  src={userData?.image || DefaultUserIcon}
                   alt="logo"
                   className="object-cover w-full h-full"
                 />

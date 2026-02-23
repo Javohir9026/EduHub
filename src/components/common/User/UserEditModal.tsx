@@ -1,4 +1,5 @@
 import apiClient from "@/api/ApiClient";
+import { DefaultUserIcon } from "@/assets/exportImg";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -13,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUser } from "@/context/UserContext";
-import { Eye, EyeOff, Pen } from "lucide-react";
+import { Eye, EyeOff, Pen, User, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -22,6 +23,7 @@ type UserType = {
   email: string;
   phone: string;
   login: string;
+  image: string;
 };
 
 export function UserEditModal({ classname }: { classname: string }) {
@@ -50,8 +52,12 @@ export function UserEditModal({ classname }: { classname: string }) {
     email: "",
     phone: "",
     login: "",
+    image: "",
   });
 
+  const [image, setImage] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string>("");
+  const [deleteImage, setDeleteImage] = useState(false);
   // Telefon formatlash
   const formatPhone = (value: string) => {
     let digits = value.replace(/\D/g, "");
@@ -149,6 +155,7 @@ export function UserEditModal({ classname }: { classname: string }) {
         email: userData.email || "",
         phone: userData.phone || "",
         login: userData.login || "",
+        image: userData.image || "",
       };
 
       setOriginalData(data);
@@ -156,9 +163,23 @@ export function UserEditModal({ classname }: { classname: string }) {
       setUserEmail(data.email);
       setUserPhone(data.phone);
       setUserLogin(data.login);
+      setPreview(data.image ? data.image : DefaultUserIcon);
     }
   }, [userData]);
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setImage(file);
+    setPreview(URL.createObjectURL(file));
+    setDeleteImage(false);
+  };
+  const handleDeleteImage = () => {
+    setImage(null);
+    setPreview(DefaultUserIcon);
+    setDeleteImage(true);
+  };
   const updateData = async (): Promise<boolean> => {
     try {
       setLoading(true);
@@ -191,6 +212,22 @@ export function UserEditModal({ classname }: { classname: string }) {
         hasChanges = true;
       }
 
+      if (image) {
+        formData.append("file", image);
+        hasChanges = true;
+      }
+
+      if (deleteImage) {
+        await apiClient.delete(
+          `${api}/learning-centers/${localStorage.getItem("id")}/profile-image`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          },
+        );
+        hasChanges = true;
+      }
       if (!hasChanges) return true;
 
       await apiClient.patch(
@@ -209,8 +246,9 @@ export function UserEditModal({ classname }: { classname: string }) {
         email: UserEmail,
         phone: UserPhone,
         login: UserLogin,
+        image: deleteImage ? "" : image,
       }));
-
+      setDeleteImage(false);
       setPassword("");
 
       return true;
@@ -277,7 +315,49 @@ export function UserEditModal({ classname }: { classname: string }) {
           <AlertDialogDescription>
             Shaxsiy ma'lumotlarni tahrirlash
           </AlertDialogDescription>
+          <div className="flex w-full justify-center mt-4">
+            <div className="relative group w-28 h-28">
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                id="imageUpload"
+                onChange={handleImageChange}
+              />
 
+              <div className="w-28 h-28 rounded-full overflow-hidden border-2 border-gray-300">
+                {preview ? (
+                  <img
+                    src={preview || DefaultUserIcon}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                    <User size={50} className="text-black/50" />
+                  </div>
+                )}
+              </div>
+
+              {/* Upload overlay */}
+              <label
+                htmlFor="imageUpload"
+                className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer transition"
+              >
+                <Pen className="text-white" size={24} />
+              </label>
+
+              {/* Delete button */}
+              {preview && (
+                <button
+                  type="button"
+                  onClick={handleDeleteImage}
+                  className="absolute cursor-pointer top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full text-xs opacity-0 group-hover:opacity-100"
+                >
+                  <X />
+                </button>
+              )}
+            </div>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 w-full">
             <div className="flex flex-col gap-2">
               <Label>Nomi</Label>
@@ -338,7 +418,7 @@ export function UserEditModal({ classname }: { classname: string }) {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-8"
+                className="absolute right-3 top-8 cursor-pointer"
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -357,7 +437,7 @@ export function UserEditModal({ classname }: { classname: string }) {
               <button
                 type="button"
                 onClick={() => setShowPassword2(!showPassword2)}
-                className="absolute right-3 top-8"
+                className="absolute right-3 top-8 cursor-pointer"
               >
                 {showPassword2 ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -366,11 +446,18 @@ export function UserEditModal({ classname }: { classname: string }) {
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={handleCancel} className="!bg-red-500 cursor-pointer text-white hover:text-white hover:!bg-red-500/80">
+          <AlertDialogCancel
+            onClick={handleCancel}
+            className="!bg-red-500 cursor-pointer text-white hover:text-white hover:!bg-red-500/80"
+          >
             Bekor qilish
           </AlertDialogCancel>
 
-          <Button onClick={handleSave} disabled={loading} className="bg-green-500 cursor-pointer text-white hover:bg-green-500/80">
+          <Button
+            onClick={handleSave}
+            disabled={loading}
+            className="bg-green-500 cursor-pointer text-white hover:bg-green-500/80"
+          >
             {loading ? "Saqlanmoqda..." : "Saqlash"}
           </Button>
         </AlertDialogFooter>
