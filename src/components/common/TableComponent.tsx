@@ -9,6 +9,9 @@ import {
 import apiClient from "@/api/ApiClient";
 import { useEffect, useState, useCallback } from "react";
 import type { Student } from "@/lib/types";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
+import { Button } from "../ui/button";
+import { Loader2, Trash } from "lucide-react";
 
 export default function BasicTableOne() {
   const [tableData, setTableData] = useState<Student[]>([]);
@@ -28,7 +31,7 @@ export default function BasicTableOne() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       setTableData(res.data.data || []);
@@ -48,7 +51,6 @@ export default function BasicTableOne() {
       });
 
       await fetchStudents();
-
     } catch (error) {
       console.log("ochirishda Xatolik", error);
     }
@@ -64,17 +66,28 @@ export default function BasicTableOne() {
         <Table className="table-fixed w-full">
           <TableHeader>
             <TableRow>
-              <TableCell isHeader className="px-5 py-4">Ism Familiya</TableCell>
-              <TableCell isHeader className="px-5 py-4">Telefon</TableCell>
-              <TableCell isHeader className="px-5 py-4">Tug'ilgan Sana</TableCell>
-              <TableCell isHeader className="px-5 py-4">Holati</TableCell>
-              <TableCell isHeader className="px-5 py-4">Guruhlar</TableCell>
-              <TableCell isHeader className="px-5 py-4">Qo'shimcha</TableCell>
+              <TableCell isHeader className="px-5 py-4">
+                Ism Familiya
+              </TableCell>
+              <TableCell isHeader className="px-5 py-4">
+                Telefon
+              </TableCell>
+              <TableCell isHeader className="px-5 py-4">
+                Tug'ilgan Sana
+              </TableCell>
+              <TableCell isHeader className="px-5 py-4">
+                Holati
+              </TableCell>
+              <TableCell isHeader className="px-5 py-4">
+                Guruhlar
+              </TableCell>
+              <TableCell isHeader className="px-5 py-4">
+                Qo'shimcha
+              </TableCell>
             </TableRow>
           </TableHeader>
 
           <TableBody>
-
             {loading &&
               [...Array(5)].map((_, index) => (
                 <TableRow key={index}>
@@ -119,12 +132,45 @@ export default function BasicTableOne() {
                   </TableCell>
 
                   <TableCell className="px-5 py-4">
-                    <button
-                      onClick={() => handleDelete(student.id)}
-                      className="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 transition"
-                    >
-                      O‘chirish
-                    </button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          disabled={loading}
+                          className="bg-red-600 hover:bg-red-700 text-white py-3 px-6 rounded-lg cursor-pointer flex items-center gap-2 w-full"
+                        >
+                          {loading ? (
+                            <>
+                              <Loader2 className="animate-spin w-4 h-4" />
+                              Chiqilmoqda...
+                            </>
+                          ) : (
+                            <>
+                              <Trash className="w-4 h-4" />
+                              <span>O'chirish</span>
+                            </>
+                          )}
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent size="sm">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Chiqish</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Buyruqni tasdiqlashga ishonchingiz komilmi?
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel className="cursor-pointer">
+                            Yo'q, Bekor qilish
+                          </AlertDialogCancel>
+                          <AlertDialogAction
+                            className="bg-red-600 hover:bg-red-700 text-white py-3 px-6 rounded-lg cursor-pointer flex items-center gap-2"
+                            onClick={handleDelete()}
+                          >
+                            Ha, O'chirish
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </TableCell>
                 </TableRow>
               ))}
@@ -137,7 +183,6 @@ export default function BasicTableOne() {
                 </TableCell>
               </TableRow>
             )}
-
           </TableBody>
         </Table>
       </div>
