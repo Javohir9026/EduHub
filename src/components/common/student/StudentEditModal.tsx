@@ -160,7 +160,6 @@ export function StudentEditModal({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>O'quvchini tahrirlash</AlertDialogTitle>
-
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 w-full">
             <div className="flex flex-col gap-1">
               <Label>Ism Familiya</Label>
@@ -237,12 +236,12 @@ export function StudentEditModal({
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel>Bekor qilish</AlertDialogCancel>
+          <AlertDialogCancel className="cursor-pointer">Bekor qilish</AlertDialogCancel>
 
           <Button
             onClick={handleSave}
             disabled={loading}
-            className="bg-green-500 text-white hover:bg-green-600"
+            className="bg-green-500 cursor-pointer text-white hover:bg-green-600"
           >
             {loading ? "Saqlanmoqda..." : "Yangilash"}
           </Button>

@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { UserPlus } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 export function StudentCreateModal({
@@ -72,16 +72,19 @@ export function StudentCreateModal({
     }
 
     if (name === "birthDate") {
-      if (!value.trim()) return "Tug'ilgan sana kiriting!";
+      if (!value) return "Tug'ilgan sana kiriting!";
 
-      const dateRegex =
-        /^(19|20)\d\d-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
+      const date = new Date(value);
 
-      if (!dateRegex.test(value)) {
-        return "Format yyyy-mm-dd bo'lishi kerak!";
+      if (isNaN(date.getTime())) {
+        return "Sana noto'g'ri!";
+      }
+
+      const today = new Date();
+      if (date > today) {
+        return "Kelajak sana kiritish mumkin emas!";
       }
     }
-
     if (name === "groupId") {
       if (!value.trim()) return "Guruh kiriting!";
     }
@@ -142,8 +145,12 @@ export function StudentCreateModal({
       address: validateField("address", address),
     };
 
-    setErrors(newErrors);
+    if (phone === parentPhone) {
+      newErrors.parentPhone =
+        "Ota-ona va o'quvchi telefoni bir xil bo'lishi mumkin emas!";
+    }
 
+    setErrors(newErrors);
     const hasError = Object.values(newErrors).some((e) => e);
     if (hasError) return;
 
@@ -163,8 +170,17 @@ export function StudentCreateModal({
       toast.success("O'quvchi qo'shildi!");
       onSuccess?.();
       handleCancel();
-    } catch (error) {
-      toast.error("Xatolik yuz berdi");
+    } catch (error: any) {
+      const message = error?.response?.data?.error?.message || "";
+
+      if (message.includes("duplicate")) {
+        setErrors((prev: any) => ({
+          ...prev,
+          phone: "Bu telefon raqam allaqachon mavjud!",
+        }));
+      } else {
+        toast.error("Xatolik yuz berdi");
+      }
     } finally {
       setLoading(false);
     }
