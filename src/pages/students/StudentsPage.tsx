@@ -1,6 +1,6 @@
 import apiClient from "@/api/ApiClient";
 import { StudentCreateModal } from "@/components/common/student/StudentCreateModal";
-import BasicTableOne from "@/components/common/TableComponent";
+import BasicTableOne from "@/components/common/tables/StudentTableComponent";
 
 const StudentsPage = () => {
   return (

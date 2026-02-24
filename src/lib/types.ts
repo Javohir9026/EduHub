@@ -9,6 +9,7 @@ export interface Student {
   learningCenterId: number;
   created_at: string;
   updated_at: string;
+  groupId?: number | null;
 
   learningCenter: LearningCenter;
   groupStudents: GroupStudent[];
