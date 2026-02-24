@@ -1,9 +1,36 @@
 import { DefaultUserIcon } from "@/assets/exportImg";
 import { UserEditModal } from "@/components/common/User/UserEditModal";
 import { useUser } from "@/context/UserContext";
+import { useState } from "react";
+import { Eye, Download, X } from "lucide-react";
 
 const userProfile = () => {
   const { userData, loading } = useUser();
+  const [openImage, setOpenImage] = useState(false);
+
+  const hasImage = !!userData?.image;
+
+  const handleDownload = async () => {
+    try {
+      if (!hasImage) return;
+
+      const response = await fetch(userData.image);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "profile-image.jpg";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Download error:", error);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-5">
       <h1 className="text-[20px] !font-semibold">Shaxsiy Profil</h1>
@@ -48,13 +75,32 @@ const userProfile = () => {
 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
           >
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 items-center sm:items-center text-center sm:text-left">
-              <div className="border bg-fullbg dark:bg-fullbg rounded-full w-20 h-20 overflow-hidden shrink-0">
-                <img
-                  src={userData?.image || DefaultUserIcon}
-                  alt="logo"
-                  className="object-cover w-full h-full"
-                />
-              </div>
+              {/* IMAGE */}
+              {hasImage ? (
+                <div
+                  className="relative border bg-fullbg dark:bg-fullbg rounded-full w-20 h-20 overflow-hidden shrink-0 group cursor-pointer"
+                  onClick={() => setOpenImage(true)}
+                >
+                  <img
+                    src={userData?.image}
+                    alt="logo"
+                    className="object-cover w-full h-full"
+                  />
+
+                  {/* Hover overlay */}
+                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                    <Eye className="text-white" size={22} />
+                  </div>
+                </div>
+              ) : (
+                <div className="border bg-fullbg dark:bg-fullbg rounded-full w-20 h-20 overflow-hidden shrink-0">
+                  <img
+                    src={DefaultUserIcon}
+                    alt="logo"
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+              )}
 
               <div>
                 <h1 className="text-[20px] !font-semibold">{userData?.name}</h1>
@@ -133,6 +179,36 @@ flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
                 </h1>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* IMAGE MODAL */}
+      {openImage && hasImage && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+          <div className="relative max-w-[90%] max-h-[90%]">
+            {/* BUTTONLAR */}
+            <div className="absolute top-3 right-3 flex gap-2">
+              <button
+                onClick={handleDownload}
+                className=" cursor-pointer bg-white/90 backdrop-blur p-2 rounded-full hover:bg-white dark:bg-blue-900"
+              >
+                <Download size={20} />
+              </button>
+
+              <button
+                onClick={() => setOpenImage(false)}
+                className=" cursor-pointer bg-white/90 backdrop-blur p-2 rounded-full hover:bg-white dark:bg-blue-900"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <img
+              src={userData?.image}
+              alt="preview"
+              className="max-w-[90vw] max-h-[90vh] rounded-lg"
+            />
           </div>
         </div>
       )}

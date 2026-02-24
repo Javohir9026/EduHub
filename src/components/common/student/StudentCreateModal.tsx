@@ -11,8 +11,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Pen } from "lucide-react";
-import { useState } from "react";
+import { UserPlus } from "lucide-react";
+import { useCallback, useState } from "react";
 import { toast } from "sonner";
 
 export function StudentCreateModal({ classname }: { classname: string }) {
@@ -22,7 +22,6 @@ export function StudentCreateModal({ classname }: { classname: string }) {
   const [loading, setLoading] = useState(false);
 
   const [fullName, setFullName] = useState("");
-
   const [birthDate, setBirthDate] = useState("");
   const [groupId, setGroupId] = useState("");
   const [address, setAddress] = useState("");
@@ -34,7 +33,6 @@ export function StudentCreateModal({ classname }: { classname: string }) {
   const formatPhone = (value: string) => {
     let digits = value.replace(/\D/g, "");
 
-    // Har doim 998 bilan boshlansin
     if (!digits.startsWith("998")) {
       digits = "998";
     }
@@ -74,7 +72,7 @@ export function StudentCreateModal({ classname }: { classname: string }) {
         /^(19|20)\d\d-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
 
       if (!dateRegex.test(value)) {
-        return "Format yyyy-mm-dd bo'lishi kerak! (2010-05-15)";
+        return "Format yyyy-mm-dd bo'lishi kerak!";
       }
     }
 
@@ -145,11 +143,12 @@ export function StudentCreateModal({ classname }: { classname: string }) {
 
     try {
       setLoading(true);
+
       await apiClient.post(`${api}/students`, {
         fullName,
         phone,
         parentPhone,
-        birthDate,
+        birthDate, // yyyy-mm-dd formatda ketadi
         learningCenterId: localStorage.getItem("id"),
         groupId,
         address,
@@ -168,7 +167,7 @@ export function StudentCreateModal({ classname }: { classname: string }) {
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         <button className={classname}>
-          <Pen size={18} />
+          <UserPlus size={18} />
           Qo'shish
         </button>
       </AlertDialogTrigger>
@@ -212,8 +211,9 @@ export function StudentCreateModal({ classname }: { classname: string }) {
             </div>
 
             <div className="flex flex-col gap-2">
-              <Label>Tugilgan sana (yyyy-mm-dd)</Label>
+              <Label>Tug'ilgan sana</Label>
               <Input
+                type="date"
                 value={birthDate}
                 onChange={(e) => handleChange("birthDate", e.target.value)}
               />
