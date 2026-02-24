@@ -7,121 +7,105 @@ import {
 } from "../ui/table";
 
 import apiClient from "@/api/ApiClient";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import type { Student } from "@/lib/types";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
+import { Button } from "../ui/button";
+import { Loader2, Trash } from "lucide-react";
 
 export default function BasicTableOne() {
   const [tableData, setTableData] = useState<Student[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const fetchStudents = async () => {
+  const api = import.meta.env.VITE_API_URL;
+  const token = localStorage.getItem("access_token");
+  const centerId = localStorage.getItem("id");
+
+  const fetchStudents = useCallback(async () => {
     try {
       setLoading(true);
 
-      const api = import.meta.env.VITE_API_URL;
-
       const res = await apiClient.get(
-        `${api}/students/learning-center/${localStorage.getItem("id")}`,
+        `${api}/students/learning-center/${centerId}`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            Authorization: `Bearer ${token}`,
           },
         },
       );
 
-      setTableData(res.data.data);
+      setTableData(res.data.data || []);
     } catch (error) {
-      console.log(error);
+      console.log("FETCH ERROR:", error);
     } finally {
       setLoading(false);
+    }
+  }, [api, centerId, token]);
+
+  const handleDelete = async (id: string | number) => {
+    try {
+      await apiClient.delete(`${api}/students/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      await fetchStudents();
+    } catch (error) {
+      console.log("ochirishda Xatolik", error);
     }
   };
 
   useEffect(() => {
     fetchStudents();
-  }, []);
+  }, [fetchStudents]);
 
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="max-w-full overflow-x-auto">
         <Table className="table-fixed w-full">
-          {/* TABLE HEADER */}
-          <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
+          <TableHeader>
             <TableRow>
-              <TableCell
-                isHeader
-                className="px-5 py-4 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-              >
+              <TableCell isHeader className="px-5 py-4">
                 Ism Familiya
               </TableCell>
-
-              <TableCell
-                isHeader
-                className="px-5 py-4 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-              >
-                Telefon Raqam
+              <TableCell isHeader className="px-5 py-4">
+                Telefon
               </TableCell>
-
-              <TableCell
-                isHeader
-                className="px-5 py-4 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-              >
+              <TableCell isHeader className="px-5 py-4">
                 Tug'ilgan Sana
               </TableCell>
-
-              <TableCell
-                isHeader
-                className="px-5 py-4 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-              >
+              <TableCell isHeader className="px-5 py-4">
                 Holati
               </TableCell>
-
-              <TableCell
-                isHeader
-                className="px-5 py-4 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-              >
-                Guruhlar Soni
+              <TableCell isHeader className="px-5 py-4">
+                Guruhlar
               </TableCell>
-
-              <TableCell
-                isHeader
-                className="px-5 py-4 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-              >
+              <TableCell isHeader className="px-5 py-4">
                 Qo'shimcha
               </TableCell>
             </TableRow>
           </TableHeader>
 
-          {/* TABLE BODY */}
-          <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-            {/* LOADER */}
+          <TableBody>
             {loading &&
               [...Array(5)].map((_, index) => (
                 <TableRow key={index}>
-                  <TableCell className="px-5 py-4">
-                    <div className="h-7 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                  </TableCell>
-
-                  <TableCell className="px-5 py-4">
-                    <div className="h-7 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                  </TableCell>
-
-                  <TableCell className="px-5 py-4">
-                    <div className="h-7 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                  </TableCell>
-
-                  <TableCell className="px-5 py-4">
-                    <div className="h-7 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                  </TableCell>
-
-                  <TableCell className="px-5 py-4">
-                    <div className="h-7 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                  </TableCell>
-                  <TableCell className="px-5 py-4 flex  gap-2 ">
-                    <div className="h-7 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                    <div className="h-7 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                    <div className="h-7 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                  </TableCell>
+                  {[...Array(6)].map((_, i) => (
+                    <TableCell key={i} className="px-5 py-4">
+                      <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    </TableCell>
+                  ))}
                 </TableRow>
               ))}
 
@@ -129,19 +113,19 @@ export default function BasicTableOne() {
             {!loading &&
               tableData.map((student) => (
                 <TableRow key={student.id}>
-                  <TableCell className="px-5 py-4 text-start">
+                  <TableCell className="px-5 py-4">
                     {student.fullName}
                   </TableCell>
 
-                  <TableCell className="px-5 py-4 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                  <TableCell className="px-5 py-4 text-gray-500">
                     {student.phone}
                   </TableCell>
 
-                  <TableCell className="px-5 py-4 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                  <TableCell className="px-5 py-4 text-gray-500">
                     {student.birthDate}
                   </TableCell>
 
-                  <TableCell className="px-5 py-4 text-start">
+                  <TableCell className="px-5 py-4">
                     <span
                       className={`px-3 py-1 rounded-full text-xs font-medium ${
                         student.isActive
@@ -153,17 +137,61 @@ export default function BasicTableOne() {
                     </span>
                   </TableCell>
 
-                  <TableCell className="px-5 py-4 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                  <TableCell className="px-5 py-4 text-gray-500">
                     {student.groupStudents?.length || 0} ta
+                  </TableCell>
+
+                  <TableCell className="px-5 py-4">
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          disabled={loading}
+                          className="bg-red-600 hover:bg-red-700 text-white py-3 px-6 rounded-lg cursor-pointer flex items-center gap-2 w-full"
+                        >
+                          {loading ? (
+                            <>
+                              <Loader2 className="animate-spin w-4 h-4" />
+                              Chiqilmoqda...
+                            </>
+                          ) : (
+                            <>
+                              <Trash className="w-4 h-4" />
+                              <span>O'chirish</span>
+                            </>
+                          )}
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent size="sm">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Chiqish</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Buyruqni tasdiqlashga ishonchingiz komilmi?
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel className="cursor-pointer">
+                            Yo'q, Bekor qilish
+                          </AlertDialogCancel>
+                          <AlertDialogAction
+                            className="bg-red-600 hover:bg-red-700 text-white py-3 px-6 rounded-lg cursor-pointer flex items-center gap-2"
+                            onClick={() => handleDelete(student.id)}
+                          >
+                            Ha, O'chirish
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </TableCell>
                 </TableRow>
               ))}
 
-            {/* EMPTY STATE */}
+            {/* EMPTY */}
             {!loading && tableData.length === 0 && (
-              <div className=" border border-red-500 text-center flex justify-center w-full items-center h-[400px]">
-                <h1>Studentlar Topilmadi!</h1>
-              </div>
+              <TableRow>
+                <TableCell className="text-center py-6 text-gray-500">
+                  Studentlar topilmadi
+                </TableCell>
+              </TableRow>
             )}
           </TableBody>
         </Table>
