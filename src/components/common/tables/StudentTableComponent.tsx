@@ -36,6 +36,7 @@ export default function BasicTableOne() {
   const token = localStorage.getItem("access_token");
   const centerId = localStorage.getItem("id");
   const navigate = useNavigate();
+  const [deletingId, setDeletingId] = useState<string | number | null>(null);
   const fetchStudents = useCallback(async () => {
     try {
       setLoading(true);
@@ -59,6 +60,8 @@ export default function BasicTableOne() {
 
   const handleDelete = async (id: string | number) => {
     try {
+      setDeletingId(id);
+
       await apiClient.delete(`${api}/students/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -66,8 +69,10 @@ export default function BasicTableOne() {
       });
 
       await fetchStudents();
+      setDeletingId(null);
     } catch (error) {
       console.log("O‘chirishda xatolik:", error);
+      setDeletingId(null);
     }
   };
 
@@ -79,7 +84,7 @@ export default function BasicTableOne() {
     <div>
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl !font-bold">O'quvchilar</h1>
-        <StudentCreateModal classname="flex items-center px-2 justify-center gap-2 rounded-lg text-white border py-2 bg-blue-500 hover:bg-blue-500/80 cursor-pointer" />
+        <StudentCreateModal onSuccess={fetchStudents} classname="flex items-center px-2 justify-center gap-2 rounded-lg text-white border py-2 bg-blue-500 hover:bg-blue-500/80 cursor-pointer" />
       </div>
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
         <div className="max-w-full overflow-x-auto">
@@ -197,47 +202,51 @@ export default function BasicTableOne() {
                     </TableCell>
 
                     <TableCell className="px-5 py-4 flex sm:gap-2 justify-center">
-                        <StudentEditModal
-                          student={student}
-                          onSuccess={fetchStudents}
-                          classname="bg-blue-500 hover:bg-blue-500/80 hover:text-white cursor-pointer text-white rounded-lg flex items-center justify-center gap-2"
-                        />
+                      <StudentEditModal
+                        student={student}
+                        onSuccess={fetchStudents}
+                        classname="bg-blue-500 hover:bg-blue-500/80 hover:text-white cursor-pointer text-white rounded-lg flex items-center justify-center gap-2"
+                      />
                       <Button
                         onClick={() => navigate(`/student-info/${student.id}`)}
                         className="bg-blue-500 hover:bg-blue-500/80 hover:text-white cursor-pointer text-white rounded-lg flex items-center justify-center gap-2"
                       >
                         <Info className="w-4 h-4" />
                       </Button>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button className="bg-red-600 hover:bg-red-700 hover:text-white cursor-pointer text-white rounded-lg flex items-center justify-center gap-2">
-                              <Trash className="w-4 h-4" />
-                            </Button>
-                          </AlertDialogTrigger>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button className="bg-red-600 hover:bg-red-700 hover:text-white cursor-pointer text-white rounded-lg flex items-center justify-center gap-2">
+                            <Trash className="w-4 h-4" />
+                          </Button>
+                        </AlertDialogTrigger>
 
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                O'chirishni tasdiqlaysizmi?
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Haqiqatdan ham ishonchingiz komilmi?
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              O'chirishni tasdiqlaysizmi?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Haqiqatdan ham ishonchingiz komilmi?
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
 
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>
-                                Bekor qilish
-                              </AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={() => handleDelete(student.id)}
-                                className="bg-red-600 hover:bg-red-700 hover:text-white cursor-pointer text-white"
-                              >
-                                Ha, O'chirish
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Bekor qilish</AlertDialogCancel>
+                            <AlertDialogAction
+                              disabled={deletingId === student.id}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleDelete(student.id);
+                              }}
+                              className="bg-red-600 hover:bg-red-700 hover:text-white cursor-pointer text-white"
+                            >
+                              {deletingId === student.id
+                                ? "O'chirilmoqda..."
+                                : "Ha, O'chirish"}
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </TableCell>
                   </TableRow>
                 ))}

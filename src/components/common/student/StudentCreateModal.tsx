@@ -15,7 +15,13 @@ import { UserPlus } from "lucide-react";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 
-export function StudentCreateModal({ classname }: { classname: string }) {
+export function StudentCreateModal({
+  classname,
+  onSuccess,
+}: {
+  classname: string;
+  onSuccess: () => void;
+}) {
   const api = import.meta.env.VITE_API_URL;
 
   const [open, setOpen] = useState(false);
@@ -155,6 +161,7 @@ export function StudentCreateModal({ classname }: { classname: string }) {
       });
 
       toast.success("O'quvchi qo'shildi!");
+      onSuccess?.();
       handleCancel();
     } catch (error) {
       toast.error("Xatolik yuz berdi");
