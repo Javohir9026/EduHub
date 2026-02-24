@@ -7,121 +7,82 @@ import {
 } from "../ui/table";
 
 import apiClient from "@/api/ApiClient";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import type { Student } from "@/lib/types";
 
 export default function BasicTableOne() {
   const [tableData, setTableData] = useState<Student[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const fetchStudents = async () => {
+  const api = import.meta.env.VITE_API_URL;
+  const token = localStorage.getItem("access_token");
+  const centerId = localStorage.getItem("id");
+
+  const fetchStudents = useCallback(async () => {
     try {
       setLoading(true);
 
-      const api = import.meta.env.VITE_API_URL;
-
       const res = await apiClient.get(
-        `${api}/students/learning-center/${localStorage.getItem("id")}`,
+        `${api}/students/learning-center/${centerId}`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            Authorization: `Bearer ${token}`,
           },
-        },
+        }
       );
 
-      setTableData(res.data.data);
+      setTableData(res.data.data || []);
     } catch (error) {
-      console.log(error);
+      console.log("FETCH ERROR:", error);
     } finally {
       setLoading(false);
+    }
+  }, [api, centerId, token]);
+
+  const handleDelete = async (id: string | number) => {
+    try {
+      await apiClient.delete(`${api}/students/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      await fetchStudents();
+
+    } catch (error) {
+      console.log("ochirishda Xatolik", error);
     }
   };
 
   useEffect(() => {
     fetchStudents();
-  }, []);
+  }, [fetchStudents]);
 
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="max-w-full overflow-x-auto">
         <Table className="table-fixed w-full">
-          {/* TABLE HEADER */}
-          <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
+          <TableHeader>
             <TableRow>
-              <TableCell
-                isHeader
-                className="px-5 py-4 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-              >
-                Ism Familiya
-              </TableCell>
-
-              <TableCell
-                isHeader
-                className="px-5 py-4 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-              >
-                Telefon Raqam
-              </TableCell>
-
-              <TableCell
-                isHeader
-                className="px-5 py-4 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-              >
-                Tug'ilgan Sana
-              </TableCell>
-
-              <TableCell
-                isHeader
-                className="px-5 py-4 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-              >
-                Holati
-              </TableCell>
-
-              <TableCell
-                isHeader
-                className="px-5 py-4 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-              >
-                Guruhlar Soni
-              </TableCell>
-
-              <TableCell
-                isHeader
-                className="px-5 py-4 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-              >
-                Qo'shimcha
-              </TableCell>
+              <TableCell isHeader className="px-5 py-4">Ism Familiya</TableCell>
+              <TableCell isHeader className="px-5 py-4">Telefon</TableCell>
+              <TableCell isHeader className="px-5 py-4">Tug'ilgan Sana</TableCell>
+              <TableCell isHeader className="px-5 py-4">Holati</TableCell>
+              <TableCell isHeader className="px-5 py-4">Guruhlar</TableCell>
+              <TableCell isHeader className="px-5 py-4">Qo'shimcha</TableCell>
             </TableRow>
           </TableHeader>
 
-          {/* TABLE BODY */}
-          <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-            {/* LOADER */}
+          <TableBody>
+
             {loading &&
               [...Array(5)].map((_, index) => (
                 <TableRow key={index}>
-                  <TableCell className="px-5 py-4">
-                    <div className="h-7 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                  </TableCell>
-
-                  <TableCell className="px-5 py-4">
-                    <div className="h-7 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                  </TableCell>
-
-                  <TableCell className="px-5 py-4">
-                    <div className="h-7 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                  </TableCell>
-
-                  <TableCell className="px-5 py-4">
-                    <div className="h-7 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                  </TableCell>
-
-                  <TableCell className="px-5 py-4">
-                    <div className="h-7 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                  </TableCell>
-                  <TableCell className="px-5 py-4 flex  gap-2 ">
-                    <div className="h-7 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                    <div className="h-7 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                    <div className="h-7 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                  </TableCell>
+                  {[...Array(6)].map((_, i) => (
+                    <TableCell key={i} className="px-5 py-4">
+                      <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    </TableCell>
+                  ))}
                 </TableRow>
               ))}
 
@@ -129,19 +90,19 @@ export default function BasicTableOne() {
             {!loading &&
               tableData.map((student) => (
                 <TableRow key={student.id}>
-                  <TableCell className="px-5 py-4 text-start">
+                  <TableCell className="px-5 py-4">
                     {student.fullName}
                   </TableCell>
 
-                  <TableCell className="px-5 py-4 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                  <TableCell className="px-5 py-4 text-gray-500">
                     {student.phone}
                   </TableCell>
 
-                  <TableCell className="px-5 py-4 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                  <TableCell className="px-5 py-4 text-gray-500">
                     {student.birthDate}
                   </TableCell>
 
-                  <TableCell className="px-5 py-4 text-start">
+                  <TableCell className="px-5 py-4">
                     <span
                       className={`px-3 py-1 rounded-full text-xs font-medium ${
                         student.isActive
@@ -153,20 +114,30 @@ export default function BasicTableOne() {
                     </span>
                   </TableCell>
 
-                  <TableCell className="px-5 py-4 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                  <TableCell className="px-5 py-4 text-gray-500">
                     {student.groupStudents?.length || 0} ta
+                  </TableCell>
+
+                  <TableCell className="px-5 py-4">
+                    <button
+                      onClick={() => handleDelete(student.id)}
+                      className="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 transition"
+                    >
+                      O‘chirish
+                    </button>
                   </TableCell>
                 </TableRow>
               ))}
 
-            {/* EMPTY STATE */}
+            {/* EMPTY */}
             {!loading && tableData.length === 0 && (
               <TableRow>
-                <TableCell className="text-center py-6 text-gray-500 dark:text-gray-400">
+                <TableCell className="text-center py-6 text-gray-500">
                   Studentlar topilmadi
                 </TableCell>
               </TableRow>
             )}
+
           </TableBody>
         </Table>
       </div>
