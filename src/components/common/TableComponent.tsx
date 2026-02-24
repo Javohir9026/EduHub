@@ -161,11 +161,9 @@ export default function BasicTableOne() {
 
             {/* EMPTY STATE */}
             {!loading && tableData.length === 0 && (
-              <TableRow>
-                <TableCell className="text-center py-6 text-gray-500 dark:text-gray-400">
-                  Studentlar topilmadi
-                </TableCell>
-              </TableRow>
+              <div className=" border border-red-500 text-center flex justify-center w-full items-center h-[400px]">
+                <h1>Studentlar Topilmadi!</h1>
+              </div>
             )}
           </TableBody>
         </Table>
