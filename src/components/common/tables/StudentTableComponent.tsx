@@ -44,6 +44,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import SearchInput from "@/components/ui/SearchInput";
 
 export default function BasicTableOne() {
   const [tableData, setTableData] = useState<Student[]>([]);
@@ -82,27 +83,48 @@ export default function BasicTableOne() {
       await fetchStudents();
       setDeletingId(null);
     } catch (error) {
-      console.log("O‘chirishda xatolik:", error);
+      console.log("O'chirishda xatolik:", error);
       setDeletingId(null);
     }
   };
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     fetchStudents();
   }, [fetchStudents]);
+  const normalize = (value: string) => value.replace(/\s+/g, "").toLowerCase();
+  const filteredData = tableData.filter(
+    (student) =>
+      student.fullName.toLowerCase().includes(search.toLowerCase()) ||
+      normalize(student.phone).includes(normalize(search)) ||
+      student.birthDate.includes(search),
+  );
 
-  const totalPages = Math.ceil(tableData.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentData = tableData.slice(startIndex, endIndex);
+  const currentData = filteredData.slice(startIndex, endIndex);
   useEffect(() => {
     setCurrentPage(1);
   }, [itemsPerPage]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl !font-bold">O'quvchilar</h1>
-        <div className="flex gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 w-full sm:w-auto">
+          <h1 className="text-2xl sm:text-start text-center font-bold mb-2 sm:mb-0">O'quvchilar</h1>
+
+          <SearchInput
+            placeholder="Qidirish..."
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full"
+          />
+        </div>
+
+        <div className="flex gap-2 flex-wrap justify-between">
           <Select
             onValueChange={(value) => setItemsPerPage(Number(value))}
             defaultValue="5"
@@ -118,9 +140,10 @@ export default function BasicTableOne() {
               </SelectGroup>
             </SelectContent>
           </Select>
+
           <StudentCreateModal
             onSuccess={fetchStudents}
-            classname="flex items-center px-2 justify-center gap-2 rounded-lg text-white border py-2 bg-blue-500 hover:bg-blue-500/80 cursor-pointer"
+            classname="flex items-center gap-2 px-3 py-1 rounded-lg bg-blue-500 text-white hover:bg-blue-500/80 cursor-pointer"
           />
         </div>
       </div>
@@ -130,7 +153,10 @@ export default function BasicTableOne() {
           <Table className="w-full">
             <TableHeader>
               <TableRow className="text-center">
-                <TableCell isHeader className="px-5 py-4 whitespace-nowrap">
+                <TableCell
+                  isHeader
+                  className="px-4 py-4 whitespace-nowrap text-start sm:text-center"
+                >
                   Ism Familiya
                 </TableCell>
                 <TableCell className="hidden md:table-cell px-5 py-4 text-center whitespace-nowrap">
@@ -156,7 +182,7 @@ export default function BasicTableOne() {
                 [...Array(itemsPerPage)].map((_, index) => (
                   <TableRow
                     key={index}
-                    className="text-center border-b border-gray-200 dark:border-white/[0.05] last:border-b-0"
+                    className="text-center border-b h-[70px] border-gray-200 dark:border-white/[0.05] last:border-b-0"
                   >
                     {[...Array(6)].map((_, i) => (
                       <TableCell key={i} className="px-5 py-4">
@@ -170,7 +196,7 @@ export default function BasicTableOne() {
                 currentData.map((student, idx) => (
                   <TableRow
                     key={student.id}
-                    className={`text-center border-b border-gray-200 dark:border-white/[0.05] last:border-b-0 ${
+                    className={` text-start sm:text-center  border-b border-gray-200 dark:border-white/[0.05] last:border-b-0 ${
                       idx % 2 === 0
                         ? "bg-gray-50 dark:bg-white/5"
                         : "bg-white dark:bg-white/0"
@@ -203,7 +229,7 @@ export default function BasicTableOne() {
                       <StudentEditModal
                         student={student}
                         onSuccess={fetchStudents}
-                        classname="bg-blue-500 hover:bg-blue-500/80 hover:text-white cursor-pointer text-white rounded-lg flex items-center justify-center gap-2"
+                        classname="hidden sm:flex dark:bg-blue-500 bg-blue-500 hover:bg-blue-500/80 hover:text-white cursor-pointer text-white rounded-lg  items-center justify-center gap-2"
                       />
                       <Button
                         onClick={() => navigate(`/student-info/${student.id}`)}
@@ -211,47 +237,52 @@ export default function BasicTableOne() {
                       >
                         <Info className="w-4 h-4" />
                       </Button>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button className="bg-red-600 hover:bg-red-700 hover:text-white cursor-pointer text-white rounded-lg flex items-center justify-center gap-2">
-                            <Trash className="w-4 h-4" />
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              O'chirishni tasdiqlaysizmi?
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Haqiqatdan ham ishonchingiz komilmi?
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel className="cursor-pointer">
-                              Bekor qilish
-                            </AlertDialogCancel>
-                            <AlertDialogAction
-                              disabled={deletingId === student.id}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                handleDelete(student.id);
-                              }}
-                              className="bg-red-600 hover:bg-red-700 hover:text-white cursor-pointer text-white"
-                            >
-                              {deletingId === student.id
-                                ? "O'chirilmoqda..."
-                                : "Ha, O'chirish"}
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
+                      <div className="hidden sm:block">
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button className="bg-red-600 hover:bg-red-700 hover:text-white cursor-pointer text-white rounded-lg flex items-center justify-center gap-2">
+                              <Trash className="w-4 h-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                O'chirishni tasdiqlaysizmi?
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Haqiqatdan ham ishonchingiz komilmi?
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel className="cursor-pointer">
+                                Bekor qilish
+                              </AlertDialogCancel>
+                              <AlertDialogAction
+                                disabled={deletingId === student.id}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  handleDelete(student.id);
+                                }}
+                                className="bg-red-600 hover:bg-red-700 hover:text-white cursor-pointer text-white"
+                              >
+                                {deletingId === student.id
+                                  ? "O'chirilmoqda..."
+                                  : "Ha, O'chirish"}
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
 
-              {!loading && tableData.length === 0 && (
+              {!loading && filteredData.length === 0 && (
                 <TableRow>
-                  <TableCell className="text-center py-6 text-gray-500">
+                  <TableCell
+                    colSpan={6}
+                    className="text-center py-6 text-gray-500"
+                  >
                     Studentlar topilmadi
                   </TableCell>
                 </TableRow>

@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { UserPlus } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import StudentUpdateGroupSelect from "./StudentGroupSelect";
 
 export function StudentCreateModal({
   classname,
@@ -161,7 +162,7 @@ export function StudentCreateModal({
         fullName,
         phone,
         parentPhone,
-        birthDate, // yyyy-mm-dd formatda ketadi
+        birthDate,
         learningCenterId: localStorage.getItem("id"),
         groupId,
         address,
@@ -191,7 +192,7 @@ export function StudentCreateModal({
       <AlertDialogTrigger asChild>
         <button className={classname}>
           <UserPlus size={18} />
-          Qo'shish
+          <span className="hidden md:inline">Qo'shish</span>
         </button>
       </AlertDialogTrigger>
 
@@ -246,11 +247,8 @@ export function StudentCreateModal({
             </div>
 
             <div className="flex flex-col gap-2">
-              <Label>Guruh ID</Label>
-              <Input
-                value={groupId}
-                onChange={(e) => handleChange("groupId", e.target.value)}
-              />
+              <Label>Guruh </Label>
+              <StudentUpdateGroupSelect />
               {errors.groupId && (
                 <p className="text-red-500 text-xs">{errors.groupId}</p>
               )}
