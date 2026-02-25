@@ -14,9 +14,17 @@ interface GroupType {
   id: number;
   name: string;
 }
-const StudentUpdateGroupSelect = () => {
+interface StudentUpdateGroupSelectProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+const StudentUpdateGroupSelect: React.FC<StudentUpdateGroupSelectProps> = ({
+  value,
+  onChange,
+}) => {
   const [groups, setGroups] = useState<GroupType[]>([]);
   const [loading, setLoading] = useState(false);
+
   const getGroups = async () => {
     const api = import.meta.env.VITE_API_URL;
     try {
@@ -32,20 +40,26 @@ const StudentUpdateGroupSelect = () => {
       setGroups(response.data.data);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
+
   useEffect(() => {
     getGroups();
   }, []);
+
   return (
-    <Select>
+    <Select value={value} onValueChange={onChange}>
       <SelectTrigger className="w-full">
-        <SelectValue placeholder="Guruhni Tanlang" />
+        <SelectValue
+          placeholder={loading ? "Yuklanmoqda..." : "Guruhni Tanlang"}
+        />
       </SelectTrigger>
       <SelectContent className="top-[30px]">
         <SelectGroup>
           <SelectLabel>Guruhlar</SelectLabel>
-          {groups.map((group: GroupType) => (
+          {groups.map((group) => (
             <SelectItem key={group.id} value={group.id.toString()}>
               {group.name}
             </SelectItem>

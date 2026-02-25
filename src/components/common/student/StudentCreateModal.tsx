@@ -164,7 +164,7 @@ export function StudentCreateModal({
         parentPhone,
         birthDate,
         learningCenterId: localStorage.getItem("id"),
-        groupId,
+        groupId: Number(groupId),
         address,
       });
 
@@ -248,7 +248,7 @@ export function StudentCreateModal({
 
             <div className="flex flex-col gap-2">
               <Label>Guruh </Label>
-              <StudentUpdateGroupSelect />
+              <StudentUpdateGroupSelect value={groupId} onChange={setGroupId} />
               {errors.groupId && (
                 <p className="text-red-500 text-xs">{errors.groupId}</p>
               )}
