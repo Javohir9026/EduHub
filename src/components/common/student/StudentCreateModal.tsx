@@ -11,18 +11,24 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Pen } from "lucide-react";
+import { UserPlus } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import StudentUpdateGroupSelect from "./StudentGroupSelect";
 
-export function StudentCreateModal({ classname }: { classname: string }) {
+export function StudentCreateModal({
+  classname,
+  onSuccess,
+}: {
+  classname: string;
+  onSuccess: () => void;
+}) {
   const api = import.meta.env.VITE_API_URL;
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const [fullName, setFullName] = useState("");
-
   const [birthDate, setBirthDate] = useState("");
   const [groupId, setGroupId] = useState("");
   const [address, setAddress] = useState("");
@@ -34,7 +40,6 @@ export function StudentCreateModal({ classname }: { classname: string }) {
   const formatPhone = (value: string) => {
     let digits = value.replace(/\D/g, "");
 
-    // Har doim 998 bilan boshlansin
     if (!digits.startsWith("998")) {
       digits = "998";
     }
@@ -68,16 +73,19 @@ export function StudentCreateModal({ classname }: { classname: string }) {
     }
 
     if (name === "birthDate") {
-      if (!value.trim()) return "Tug'ilgan sana kiriting!";
+      if (!value) return "Tug'ilgan sana kiriting!";
 
-      const dateRegex =
-        /^(19|20)\d\d-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
+      const date = new Date(value);
 
-      if (!dateRegex.test(value)) {
-        return "Format yyyy-mm-dd bo'lishi kerak! (2010-05-15)";
+      if (isNaN(date.getTime())) {
+        return "Sana noto'g'ri!";
+      }
+
+      const today = new Date();
+      if (date > today) {
+        return "Kelajak sana kiritish mumkin emas!";
       }
     }
-
     if (name === "groupId") {
       if (!value.trim()) return "Guruh kiriting!";
     }
@@ -138,27 +146,42 @@ export function StudentCreateModal({ classname }: { classname: string }) {
       address: validateField("address", address),
     };
 
-    setErrors(newErrors);
+    if (phone === parentPhone) {
+      newErrors.parentPhone =
+        "Ota-ona va o'quvchi telefoni bir xil bo'lishi mumkin emas!";
+    }
 
+    setErrors(newErrors);
     const hasError = Object.values(newErrors).some((e) => e);
     if (hasError) return;
 
     try {
       setLoading(true);
+
       await apiClient.post(`${api}/students`, {
         fullName,
         phone,
         parentPhone,
         birthDate,
         learningCenterId: localStorage.getItem("id"),
-        groupId,
+        groupId: Number(groupId),
         address,
       });
 
       toast.success("O'quvchi qo'shildi!");
+      onSuccess?.();
       handleCancel();
-    } catch (error) {
-      toast.error("Xatolik yuz berdi");
+    } catch (error: any) {
+      const message = error?.response?.data?.error?.message || "";
+
+      if (message.includes("duplicate")) {
+        setErrors((prev: any) => ({
+          ...prev,
+          phone: "Bu telefon raqam allaqachon mavjud!",
+        }));
+      } else {
+        toast.error("Xatolik yuz berdi");
+      }
     } finally {
       setLoading(false);
     }
@@ -168,8 +191,8 @@ export function StudentCreateModal({ classname }: { classname: string }) {
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         <button className={classname}>
-          <Pen size={18} />
-          Qo'shish
+          <UserPlus size={18} />
+          <span className="hidden md:inline">Qo'shish</span>
         </button>
       </AlertDialogTrigger>
 
@@ -212,8 +235,9 @@ export function StudentCreateModal({ classname }: { classname: string }) {
             </div>
 
             <div className="flex flex-col gap-2">
-              <Label>Tugilgan sana (yyyy-mm-dd)</Label>
+              <Label>Tug'ilgan sana</Label>
               <Input
+                type="date"
                 value={birthDate}
                 onChange={(e) => handleChange("birthDate", e.target.value)}
               />
@@ -223,11 +247,8 @@ export function StudentCreateModal({ classname }: { classname: string }) {
             </div>
 
             <div className="flex flex-col gap-2">
-              <Label>Guruh ID</Label>
-              <Input
-                value={groupId}
-                onChange={(e) => handleChange("groupId", e.target.value)}
-              />
+              <Label>Guruh </Label>
+              <StudentUpdateGroupSelect value={groupId} onChange={setGroupId} />
               {errors.groupId && (
                 <p className="text-red-500 text-xs">{errors.groupId}</p>
               )}
