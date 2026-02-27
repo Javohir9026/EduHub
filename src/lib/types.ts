@@ -34,12 +34,24 @@ export interface GroupStudent {
   created_at: string;
   updated_at: string;
   joinedAt: string;
-  group: Group;
+  group: Groupforstudent;
 }
 
-export interface Group {
+export interface Groupforstudent {
   id: number;
   name: string;
   created_at?: string;
   updated_at?: string;
+}
+export interface LearningCenter {
+  id: number;
+  name: string;
+}
+export interface Group {
+  id: number;
+  name: string;
+  lessonDays: number;
+  lessonTime: string;
+  currentStudents: number;
+  learningCenter: LearningCenter;
 }

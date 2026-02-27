@@ -1,7 +1,8 @@
+import TeacherTableComponent from "@/components/common/tables/TeacherTableComponent"
 
 const TeachersPage = () => {
   return (
-    <div>TeachersPage</div>
+    <div><TeacherTableComponent /></div>
   )
 }
 

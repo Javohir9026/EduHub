@@ -87,7 +87,7 @@ export function StudentCreateModal({
       }
     }
     if (name === "groupId") {
-      if (!value.trim()) return "Guruh kiriting!";
+      if (!value.trim()) return "Guruhni tanlang!";
     }
 
     if (name === "address") {

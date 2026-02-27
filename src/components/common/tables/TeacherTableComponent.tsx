@@ -46,7 +46,7 @@ import {
 } from "@/components/ui/select";
 import SearchInput from "@/components/ui/SearchInput";
 
-export default function StudentTableComponent() {
+export default function TeacherTableComponent() {
   const [tableData, setTableData] = useState<Student[]>([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -115,7 +115,9 @@ export default function StudentTableComponent() {
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
         <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 w-full sm:w-auto">
-          <h1 className="text-2xl sm:text-start text-center font-bold mb-2 sm:mb-0">O'quvchilar</h1>
+          <h1 className="text-2xl sm:text-start text-center font-bold mb-2 sm:mb-0">
+            O'quvchilar
+          </h1>
 
           <SearchInput
             placeholder="Qidirish..."

@@ -53,7 +53,7 @@ const StudentUpdateGroupSelect: React.FC<StudentUpdateGroupSelectProps> = ({
     <Select value={value} onValueChange={onChange}>
       <SelectTrigger className="w-full">
         <SelectValue
-          placeholder={loading ? "Yuklanmoqda..." : "Guruhni Tanlang"}
+          placeholder={groups.length > 0 ? (loading ? "Yuklanmoqda..." : "Guruhni Tanlang") : "Guruhlar mavjud emas"}
         />
       </SelectTrigger>
       <SelectContent className="top-[30px]">
