@@ -161,22 +161,26 @@ export default function TeacherTableComponent() {
               <TableRow className="text-center">
                 <TableCell
                   isHeader
-                  className="px-4 py-4 whitespace-nowrap text-start sm:text-center"
+                  className="px-4 py-4 whitespace-nowrap text-center"
                 >
                   Ism Familiya
                 </TableCell>
-                <TableCell className="hidden md:table-cell px-5 py-4 text-center whitespace-nowrap">
+
+                {/* md dan boshlab */}
+                <TableCell className="hidden sm:table-cell px-5 py-4 text-center whitespace-nowrap">
                   Telefon
                 </TableCell>
-                <TableCell className="hidden lg:table-cell px-5 py-4 text-center whitespace-nowrap">
+
+                {/* xl dan boshlab (sidebar sabab lg emas) */}
+                <TableCell className="hidden xl:table-cell px-5 py-4 text-center whitespace-nowrap">
                   Email
                 </TableCell>
-                <TableCell className="hidden xl:table-cell px-5 py-4 text-center whitespace-nowrap">
+
+                {/* 2xl dan boshlab */}
+                <TableCell className="hidden 2xl:table-cell px-5 py-4 text-center whitespace-nowrap">
                   Fan
                 </TableCell>
-                <TableCell className="hidden xl:table-cell px-5 py-4 text-center whitespace-nowrap">
-                  Login
-                </TableCell>
+
                 <TableCell className="px-5 py-4 whitespace-nowrap text-center">
                   Qo'shimcha
                 </TableCell>
@@ -202,27 +206,39 @@ export default function TeacherTableComponent() {
                 currentData.map((teacher, idx) => (
                   <TableRow
                     key={teacher.id}
-                    className={` text-start sm:text-center  border-b border-gray-200 dark:border-white/[0.05] last:border-b-0 ${
+                    className={` text-center   border-b border-gray-200 dark:border-white/[0.05] last:border-b-0 ${
                       idx % 2 === 0
                         ? "bg-gray-50 dark:bg-white/5"
                         : "bg-white dark:bg-white/0"
                     } hover:bg-gray-100 dark:hover:bg-white/10`}
                   >
                     <TableCell className="px-5 py-4 whitespace-nowrap">
-                      {teacher.name + teacher.lastName}
+                      {/* kichik ekranda qisqa */}
+                      <span className="md:hidden">
+                        {teacher.lastName[0]}.{teacher.name}
+                      </span>
+
+                      {/* kattaroqda to'liq */}
+                      <span className="hidden md:inline">
+                        {teacher.name} {teacher.lastName}
+                      </span>
                     </TableCell>
-                    <TableCell className="hidden md:table-cell px-5 py-4">
+
+                    {/* md */}
+                    <TableCell className="hidden sm:table-cell px-5 py-4">
                       {teacher.phone}
                     </TableCell>
-                    <TableCell className="hidden lg:table-cell px-5 py-4">
+
+                    {/* xl */}
+                    <TableCell className="hidden xl:table-cell px-5 py-4">
                       {teacher.email}
                     </TableCell>
-                    <TableCell className="hidden lg:table-cell px-5 py-4">
+
+                    {/* 2xl */}
+                    <TableCell className="hidden 2xl:table-cell px-5 py-4">
                       {teacher.subject}
                     </TableCell>
-                    <TableCell className="hidden xl:table-cell px-5 py-4">
-                      {teacher.login}
-                    </TableCell>
+
                     <TableCell className="px-5 py-4 flex sm:gap-2 justify-center">
                       <TeacherEditModal
                         teacher={teacher}
