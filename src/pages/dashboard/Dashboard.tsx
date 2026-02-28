@@ -57,11 +57,11 @@ const Dashboard = () => {
         </div>
 
         <div className="flex gap-4">
-          <Button className="flex items-center gap-2 bg-white border border-black text-black hover:bg-purple-500 hover:text-white hover:border-purple-500 dark:bg-gray-800 dark:text-white">
+          <Button className="flex items-center cursor-pointer gap-2 bg-white border border-black text-black hover:bg-purple-500 hover:text-white hover:border-purple-500 dark:bg-gray-800 dark:text-white">
             <Calendar /> Bu oy
           </Button>
 
-          <Button className="flex items-center gap-2 bg-gradient-to-r text-white from-[#332a9b] via-[#490bb5] to-[#cc53ed] border-black border-1">
+          <Button className="flex items-center cursor-pointer gap-2 bg-gradient-to-r text-white from-[#332a9b] via-[#490bb5] to-[#cc53ed] border-black border-1">
             <Plus /> yangi voqea
           </Button>
         </div>
