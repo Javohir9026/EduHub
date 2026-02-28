@@ -119,8 +119,8 @@ const StudentInfoPage = () => {
         <div className="p-4 rounded-xl shadow hover:shadow-lg transition-shadow flex items-center gap-3 bg-transparent">
           <Cake className="text-2xl text-blue-500" />
           <div>
-            <p className="text-gray-500 font-medium text-sm">Tug‘ilgan sana</p>
-            <p className="font-bold text-lg text-gray-800">
+            <p className="text-gray-500 font-medium text-sm">Tugilgan sana</p>
+            <p className="font-bold text-lg text-gray-800 ">
               {student.birthDate}
             </p>
           </div>
