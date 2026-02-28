@@ -61,7 +61,7 @@ export default function StudentTableComponent() {
     try {
       setLoading(true);
       const res = await apiClient.get(
-        `${api}/students/learning-center/${centerId}`,
+        `${api}/learning-centers/${centerId}/students`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },
@@ -283,7 +283,7 @@ export default function StudentTableComponent() {
                     colSpan={6}
                     className="text-center py-6 text-gray-500"
                   >
-                    Studentlar topilmadi
+                    O'quvchilar topilmadi
                   </TableCell>
                 </TableRow>
               )}

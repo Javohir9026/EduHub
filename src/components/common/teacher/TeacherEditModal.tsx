@@ -14,15 +14,15 @@ import { Label } from "@/components/ui/label";
 import { Pen } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import type { Student } from "@/lib/types";
+import type { Teacher } from "@/lib/types";
 
-export function StudentEditModal({
+export function TeacherEditModal({
   classname,
-  student,
+  teacher,
   onSuccess,
 }: {
   classname: string;
-  student: Student;
+  teacher: Teacher;
   onSuccess?: () => void;
 }) {
   const api = import.meta.env.VITE_API_URL;
@@ -30,35 +30,29 @@ export function StudentEditModal({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const [fullName, setFullName] = useState("");
-  const [birthDate, setBirthDate] = useState("");
-  const [groupId, setGroupId] = useState<number | null>(null);
-  const [address, setAddress] = useState("");
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("+998");
-  const [parentPhone, setParentPhone] = useState("+998");
+  const [salary, setSalary] = useState(0);
+  const [password, setPassword] = useState("");
+  const [login, setLogin] = useState("");
+  const [subject, setSubject] = useState("");
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    if (student && open) {
-      setFullName(student.fullName || "");
-      setPhone(student.phone || "+998");
-      setParentPhone(student.parentPhone || "+998");
-      setAddress(student.address || "");
-
-      const formattedDate = student.birthDate
-        ? student.birthDate.split("T")[0]
-        : "";
-
-      setBirthDate(formattedDate);
-
-      const firstGroupId = student.groupStudents?.[0]?.group?.id || null;
-
-      setGroupId(firstGroupId);
-
+    if (teacher && open) {
+      setEmail(teacher.email || "");
+      setName(teacher.name || "");
+      setLastName(teacher.lastName || "");
+      setPhone(teacher.phone || "+998");
+      setSalary(teacher.salary || 0);
+      setLogin(teacher.login || "");
+      setSubject(teacher.subject || "");
       setErrors({});
     }
-  }, [student, open]);
+  }, [teacher, open]);
 
   const formatPhone = (value: string) => {
     let digits = value.replace(/\D/g, "");
@@ -83,32 +77,40 @@ export function StudentEditModal({
   const validate = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!fullName.trim()) {
-      newErrors.fullName = "Ism familiya majburiy";
+    if (!name.trim()) {
+      newErrors.name = "Ism kiriting!";
+    }
+
+    if (!lastName.trim()) {
+      newErrors.lastName = "Familiya kiriting!";
     }
 
     if (!phone || phone.length < 17) {
-      newErrors.phone = "Telefon to‘liq kiritilishi kerak";
+      newErrors.phone = "Telefon to'liq kiritilishi kerak";
     }
 
-    if (!parentPhone || parentPhone.length < 17) {
-      newErrors.parentPhone = "Ota-ona telefoni majburiy";
+    if (!email.trim()) {
+      newErrors.email = "Email kiriting!";
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        newErrors.email = "Email noto‘g‘ri kiritildi!";
+      }
     }
 
-    if (!birthDate) {
-      newErrors.birthDate = "Tug‘ilgan sana majburiy";
+    if (!login.trim()) {
+      newErrors.login = "Login kiriting!";
     }
 
-    if (!groupId) {
-      newErrors.groupId = "Guruh ID majburiy";
+    if (!subject.trim()) {
+      newErrors.subject = "Fanni kiriting!";
     }
 
-    if (!address.trim()) {
-      newErrors.address = "Manzil majburiy";
+    if (!salary || salary <= 0) {
+      newErrors.salary = "Maosh kiriting!";
     }
 
     setErrors(newErrors);
-
     return Object.keys(newErrors).length === 0;
   };
 
@@ -118,16 +120,19 @@ export function StudentEditModal({
     try {
       setLoading(true);
 
-      await apiClient.patch(`${api}/students/${student.id}`, {
-        fullName,
+      await apiClient.patch(`${api}/teachers/${teacher.id}`, {
+        email,
+        name,
+        lastName,
         phone,
-        parentPhone,
-        birthDate, // yyyy-mm-dd
-        groupId,
-        address,
+        salary,
+        login,
+        subject,
+        password,
+        learningCenterId: localStorage.getItem("id"),
       });
 
-      toast.success("O'quvchi yangilandi!");
+      toast.success("O‘qituvchi muvaffaqiyatli yangilandi!");
       setOpen(false);
       onSuccess?.();
     } catch (error: any) {
@@ -154,16 +159,33 @@ export function StudentEditModal({
 
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>O'quvchini tahrirlash</AlertDialogTitle>
+          <AlertDialogTitle>O‘qituvchini tahrirlash</AlertDialogTitle>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 w-full">
             <div className="flex flex-col gap-1">
-              <Label>Ism Familiya</Label>
+              <Label>Ism</Label>
+              <Input value={name} onChange={(e) => setName(e.target.value)} />
+              {errors.name && (
+                <span className="text-red-500 text-sm">{errors.name}</span>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <Label>Familiya</Label>
               <Input
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
               />
-              {errors.fullName && (
-                <span className="text-red-500 text-sm">{errors.fullName}</span>
+              {errors.lastName && (
+                <span className="text-red-500 text-sm">{errors.lastName}</span>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <Label>Email</Label>
+              <Input value={email} onChange={(e) => setEmail(e.target.value)} />
+              {errors.email && (
+                <span className="text-red-500 text-sm">{errors.email}</span>
               )}
             </div>
 
@@ -179,64 +201,54 @@ export function StudentEditModal({
             </div>
 
             <div className="flex flex-col gap-1">
-              <Label>Ota-ona telefoni</Label>
-              <Input
-                value={parentPhone}
-                onChange={(e) => setParentPhone(formatPhone(e.target.value))}
-              />
-              {errors.parentPhone && (
-                <span className="text-red-500 text-sm">
-                  {errors.parentPhone}
-                </span>
+              <Label>Login</Label>
+              <Input value={login} onChange={(e) => setLogin(e.target.value)} />
+              {errors.login && (
+                <span className="text-red-500 text-sm">{errors.login}</span>
               )}
             </div>
 
             <div className="flex flex-col gap-1">
-              <Label>Tug'ilgan sana</Label>
+              <Label>Fan</Label>
               <Input
-                type="date"
-                value={birthDate}
-                onChange={(e) => setBirthDate(e.target.value)}
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
               />
-              {errors.birthDate && (
-                <span className="text-red-500 text-sm">{errors.birthDate}</span>
+              {errors.subject && (
+                <span className="text-red-500 text-sm">{errors.subject}</span>
               )}
             </div>
 
             <div className="flex flex-col gap-1">
-              <Label>Guruh ID</Label>
+              <Label>Maosh</Label>
               <Input
                 type="number"
-                value={groupId ?? ""}
-                onChange={(e) =>
-                  setGroupId(e.target.value ? Number(e.target.value) : null)
-                }
+                value={salary}
+                onChange={(e) => setSalary(Number(e.target.value))}
               />
-              {errors.groupId && (
-                <span className="text-red-500 text-sm">{errors.groupId}</span>
+              {errors.salary && (
+                <span className="text-red-500 text-sm">{errors.salary}</span>
               )}
             </div>
 
             <div className="flex flex-col gap-1">
-              <Label>Manzil</Label>
+              <Label>Yangi Parol (ixtiyoriy)</Label>
               <Input
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
-              {errors.address && (
-                <span className="text-red-500 text-sm">{errors.address}</span>
-              )}
             </div>
           </div>
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel className="cursor-pointer">Bekor qilish</AlertDialogCancel>
+          <AlertDialogCancel>Bekor qilish</AlertDialogCancel>
 
           <Button
             onClick={handleSave}
             disabled={loading}
-            className="bg-green-500 cursor-pointer text-white hover:bg-green-600"
+            className="bg-green-500 text-white hover:bg-green-600"
           >
             {loading ? "Saqlanmoqda..." : "Yangilash"}
           </Button>

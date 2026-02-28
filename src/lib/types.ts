@@ -43,15 +43,17 @@ export interface Groupforstudent {
   created_at?: string;
   updated_at?: string;
 }
-export interface LearningCenter {
+export type Teacher = {
   id: number;
   name: string;
-}
-export interface Group {
-  id: number;
-  name: string;
-  lessonDays: number;
-  lessonTime: string;
-  currentStudents: number;
-  learningCenter: LearningCenter;
-}
+  email:string;
+  lastName: string;
+  login:string;
+  phone: string;
+  subject: string;
+  salary: number;
+  role: "TEACHER";
+  learningCenterId: number;
+  isActive: boolean;
+  createdAt: string;
+};

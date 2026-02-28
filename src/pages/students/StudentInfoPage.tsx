@@ -43,8 +43,27 @@ const StudentInfoPage = () => {
 
   if (loading)
     return (
-      <div className="flex justify-center items-center h-screen text-xl font-semibold">
-        Yuklanmoqda...
+      <div className="min-h-screen p-6 flex flex-col md:flex-row gap-8 justify-center items-start animate-pulse">
+        <div className="flex flex-col items-center gap-6 md:w-1/4">
+          <div className="w-36 h-36 rounded-full bg-gray-300 dark:bg-gray-700"></div>
+          <div className="h-6 w-40 bg-gray-300 dark:bg-gray-700 rounded"></div>
+          <div className="h-6 w-24 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
+        </div>
+
+        <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+          {[...Array(5)].map((_, i) => (
+            <div
+              key={i}
+              className="p-4 rounded-xl shadow bg-transparent flex items-center gap-3"
+            >
+              <div className="w-8 h-8 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
+              <div className="flex flex-col gap-2 w-full">
+                <div className="h-4 w-24 bg-gray-300 dark:bg-gray-700 rounded"></div>
+                <div className="h-5 w-40 bg-gray-300 dark:bg-gray-700 rounded"></div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     );
   if (!student)
@@ -56,7 +75,6 @@ const StudentInfoPage = () => {
 
   return (
     <div className="min-h-screen p-6 flex flex-col md:flex-row gap-8 justify-center items-start">
-      
       {/* Profil bo‘limi */}
       <div className="flex flex-col items-center gap-6 md:w-1/4">
         <div className="w-36 h-36 rounded-full bg-blue-400 flex items-center justify-center text-white text-5xl font-bold shadow-lg hover:scale-105 transition-transform">
@@ -67,7 +85,9 @@ const StudentInfoPage = () => {
         </h1>
         <span
           className={`px-6 py-2 rounded-full text-sm font-semibold ${
-            student.isActive ? "bg-green-200 text-green-900" : "bg-red-200 text-red-900"
+            student.isActive
+              ? "bg-green-200 text-green-900"
+              : "bg-red-200 text-red-900"
           }`}
         >
           {student.isActive ? "Faol" : "Faol emas"}
@@ -87,8 +107,12 @@ const StudentInfoPage = () => {
         <div className="p-4 rounded-xl shadow hover:shadow-lg transition-shadow flex items-center gap-3 bg-transparent">
           <Voicemail className="text-2xl text-blue-500" />
           <div>
-            <p className="text-gray-500 font-medium text-sm">Ota/onasi telefoni</p>
-            <p className="font-bold text-lg text-gray-800">{student.parentPhone}</p>
+            <p className="text-gray-500 font-medium text-sm">
+              Ota/onasi telefoni
+            </p>
+            <p className="font-bold text-lg text-gray-800">
+              {student.parentPhone}
+            </p>
           </div>
         </div>
 
@@ -96,7 +120,9 @@ const StudentInfoPage = () => {
           <Cake className="text-2xl text-blue-500" />
           <div>
             <p className="text-gray-500 font-medium text-sm">Tug‘ilgan sana</p>
-            <p className="font-bold text-lg text-gray-800">{student.birthDate}</p>
+            <p className="font-bold text-lg text-gray-800">
+              {student.birthDate}
+            </p>
           </div>
         </div>
 

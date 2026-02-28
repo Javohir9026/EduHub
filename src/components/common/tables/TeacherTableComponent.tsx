@@ -8,7 +8,7 @@ import {
 
 import apiClient from "@/api/ApiClient";
 import { useEffect, useState, useCallback } from "react";
-import type { Student } from "@/lib/types";
+import type { Teacher } from "@/lib/types";
 
 import {
   AlertDialog,
@@ -26,7 +26,6 @@ import { Button } from "../../ui/button";
 import { Info, Trash } from "lucide-react";
 import { StudentEditModal } from "../student/StudentEditModal";
 import { useNavigate } from "react-router-dom";
-import { StudentCreateModal } from "../student/StudentCreateModal";
 
 import {
   Pagination,
@@ -45,9 +44,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import SearchInput from "@/components/ui/SearchInput";
+import { TeacherCreateModal } from "../teacher/TeacherCreateModal";
+import { TeacherEditModal } from "../teacher/TeacherEditModal";
 
 export default function TeacherTableComponent() {
-  const [tableData, setTableData] = useState<Student[]>([]);
+  const [tableData, setTableData] = useState<Teacher[]>([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -57,11 +58,11 @@ export default function TeacherTableComponent() {
   const navigate = useNavigate();
   const [deletingId, setDeletingId] = useState<string | number | null>(null);
   const [itemsPerPage, setItemsPerPage] = useState(5);
-  const fetchStudents = useCallback(async () => {
+  const fetchTeachers = useCallback(async () => {
     try {
       setLoading(true);
       const res = await apiClient.get(
-        `${api}/students/learning-center/${centerId}`,
+        `${api}/learning-centers/${centerId}/teachers`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },
@@ -77,10 +78,10 @@ export default function TeacherTableComponent() {
   const handleDelete = async (id: string | number) => {
     try {
       setDeletingId(id);
-      await apiClient.delete(`${api}/students/${id}`, {
+      await apiClient.delete(`${api}/teachers/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      await fetchStudents();
+      await fetchTeachers();
       setDeletingId(null);
     } catch (error) {
       console.log("O'chirishda xatolik:", error);
@@ -90,14 +91,17 @@ export default function TeacherTableComponent() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    fetchStudents();
-  }, [fetchStudents]);
+    fetchTeachers();
+  }, [fetchTeachers]);
+
   const normalize = (value: string) => value.replace(/\s+/g, "").toLowerCase();
   const filteredData = tableData.filter(
-    (student) =>
-      student.fullName.toLowerCase().includes(search.toLowerCase()) ||
-      normalize(student.phone).includes(normalize(search)) ||
-      student.birthDate.includes(search),
+    (teacher) =>
+      teacher.name.toLowerCase().includes(search.toLowerCase()) ||
+      teacher.lastName.toLowerCase().includes(search.toLocaleLowerCase()) ||
+      normalize(teacher.phone).includes(normalize(search)) ||
+      teacher.subject.toLowerCase().includes(search.toLowerCase()) ||
+      teacher.email.toLowerCase().includes(search.toLowerCase()),
   );
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -116,7 +120,7 @@ export default function TeacherTableComponent() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
         <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 w-full sm:w-auto">
           <h1 className="text-2xl sm:text-start text-center font-bold mb-2 sm:mb-0">
-            O'quvchilar
+            O'qituvchilar
           </h1>
 
           <SearchInput
@@ -143,8 +147,8 @@ export default function TeacherTableComponent() {
             </SelectContent>
           </Select>
 
-          <StudentCreateModal
-            onSuccess={fetchStudents}
+          <TeacherCreateModal
+            onSuccess={fetchTeachers}
             classname="flex items-center gap-2 px-3 py-1 rounded-lg bg-blue-500 text-white hover:bg-blue-500/80 cursor-pointer"
           />
         </div>
@@ -165,13 +169,13 @@ export default function TeacherTableComponent() {
                   Telefon
                 </TableCell>
                 <TableCell className="hidden lg:table-cell px-5 py-4 text-center whitespace-nowrap">
-                  Tug'ilgan sana
+                  Email
                 </TableCell>
                 <TableCell className="hidden xl:table-cell px-5 py-4 text-center whitespace-nowrap">
-                  Holati
+                  Fan
                 </TableCell>
                 <TableCell className="hidden xl:table-cell px-5 py-4 text-center whitespace-nowrap">
-                  Guruhlar
+                  Login
                 </TableCell>
                 <TableCell className="px-5 py-4 whitespace-nowrap text-center">
                   Qo'shimcha
@@ -195,9 +199,9 @@ export default function TeacherTableComponent() {
                 ))}
 
               {!loading &&
-                currentData.map((student, idx) => (
+                currentData.map((teacher, idx) => (
                   <TableRow
-                    key={student.id}
+                    key={teacher.id}
                     className={` text-start sm:text-center  border-b border-gray-200 dark:border-white/[0.05] last:border-b-0 ${
                       idx % 2 === 0
                         ? "bg-gray-50 dark:bg-white/5"
@@ -205,36 +209,28 @@ export default function TeacherTableComponent() {
                     } hover:bg-gray-100 dark:hover:bg-white/10`}
                   >
                     <TableCell className="px-5 py-4 whitespace-nowrap">
-                      {student.fullName}
+                      {teacher.name + teacher.lastName}
                     </TableCell>
                     <TableCell className="hidden md:table-cell px-5 py-4">
-                      {student.phone}
+                      {teacher.phone}
                     </TableCell>
                     <TableCell className="hidden lg:table-cell px-5 py-4">
-                      {student.birthDate}
+                      {teacher.email}
+                    </TableCell>
+                    <TableCell className="hidden lg:table-cell px-5 py-4">
+                      {teacher.subject}
                     </TableCell>
                     <TableCell className="hidden xl:table-cell px-5 py-4">
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium inline-block ${
-                          student.isActive
-                            ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
-                            : "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300"
-                        }`}
-                      >
-                        {student.isActive ? "Active" : "Inactive"}
-                      </span>
-                    </TableCell>
-                    <TableCell className="hidden xl:table-cell px-5 py-4">
-                      {student.groupStudents?.length || 0} ta
+                      {teacher.login}
                     </TableCell>
                     <TableCell className="px-5 py-4 flex sm:gap-2 justify-center">
-                      <StudentEditModal
-                        student={student}
-                        onSuccess={fetchStudents}
+                      <TeacherEditModal
+                        teacher={teacher}
+                        onSuccess={fetchTeachers}
                         classname="hidden sm:flex dark:bg-blue-500 bg-blue-500 hover:bg-blue-500/80 hover:text-white cursor-pointer text-white rounded-lg  items-center justify-center gap-2"
                       />
                       <Button
-                        onClick={() => navigate(`/student-info/${student.id}`)}
+                        onClick={() => navigate(`/teacher-info/${teacher.id}`)}
                         className="bg-blue-500 hover:bg-blue-500/80 hover:text-white cursor-pointer text-white rounded-lg flex items-center justify-center gap-2"
                       >
                         <Info className="w-4 h-4" />
@@ -260,14 +256,14 @@ export default function TeacherTableComponent() {
                                 Bekor qilish
                               </AlertDialogCancel>
                               <AlertDialogAction
-                                disabled={deletingId === student.id}
+                                disabled={deletingId === teacher.id}
                                 onClick={(e) => {
                                   e.preventDefault();
-                                  handleDelete(student.id);
+                                  handleDelete(teacher.id);
                                 }}
                                 className="bg-red-600 hover:bg-red-700 hover:text-white cursor-pointer text-white"
                               >
-                                {deletingId === student.id
+                                {deletingId === teacher.id
                                   ? "O'chirilmoqda..."
                                   : "Ha, O'chirish"}
                               </AlertDialogAction>
@@ -285,7 +281,7 @@ export default function TeacherTableComponent() {
                     colSpan={6}
                     className="text-center py-6 text-gray-500"
                   >
-                    Studentlar topilmadi
+                    O'qituvchilar topilmadi
                   </TableCell>
                 </TableRow>
               )}

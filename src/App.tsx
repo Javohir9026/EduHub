@@ -19,6 +19,7 @@ import UserProfile from "./pages/UserProfile/userProfile";
 import { UserProvider } from "./context/UserContext";
 import AppLayoutWithProvider from "./layout/AppLayoutWithProvider";
 import StudentInfoPage from "./pages/students/StudentInfoPage";
+import TeacherInfoPage from "./pages/Teachers/TeacherInfoPage";
 
 const App = () => {
   return (
@@ -133,6 +134,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <StudentInfoPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/teacher-info/:id"
+            element={
+              <ProtectedRoute>
+                <TeacherInfoPage />
               </ProtectedRoute>
             }
           />
