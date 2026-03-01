@@ -1,18 +1,8 @@
 import { useEffect, useState } from "react";
 import apiClient from "@/api/ApiClient";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Cake, GroupIcon, Home, PhoneCall, Voicemail } from "lucide-react";
-
-type Student = {
-  id: number;
-  fullName: string;
-  phone: string;
-  parentPhone: string;
-  birthDate: string;
-  address: string;
-  isActive: boolean;
-  groupStudents?: { id: number; name: string }[];
-};
+import type { Student } from "@/lib/types";
 
 const StudentInfoPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -31,6 +21,7 @@ const StudentInfoPage = () => {
         });
 
         setStudent(res.data.data);
+        console.log(res.data.data);
       } catch (error) {
         console.error("Xatolik:", error);
       } finally {
@@ -140,7 +131,15 @@ const StudentInfoPage = () => {
           </p>
           <p className="font-bold text-lg text-gray-800">
             {student.groupStudents && student.groupStudents.length > 0
-              ? student.groupStudents.map((g) => g.name).join(", ")
+              ? student.groupStudents.map((g) => (
+                  <Link
+                    key={g.id}
+                    to={`/group-info/${g.group.id}`}
+                    className="block text-blue-600 hover:underline"
+                  >
+                    {g.group.name}
+                  </Link>
+                ))
               : "Hech qanday guruh yo‘q"}
           </p>
         </div>
