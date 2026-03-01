@@ -1,18 +1,8 @@
 import { useEffect, useState } from "react";
 import apiClient from "@/api/ApiClient";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Cake, GroupIcon, Home, PhoneCall, Voicemail } from "lucide-react";
-
-type Student = {
-  id: number;
-  fullName: string;
-  phone: string;
-  parentPhone: string;
-  birthDate: string;
-  address: string;
-  isActive: boolean;
-  groupStudents?: { id: number; name: string }[];
-};
+import type { Student } from "@/lib/types";
 
 const StudentInfoPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -31,6 +21,7 @@ const StudentInfoPage = () => {
         });
 
         setStudent(res.data.data);
+        console.log(res.data.data);
       } catch (error) {
         console.error("Xatolik:", error);
       } finally {
@@ -80,7 +71,7 @@ const StudentInfoPage = () => {
         <div className="w-36 h-36 rounded-full bg-blue-400 flex items-center justify-center text-white text-5xl font-bold shadow-lg hover:scale-105 transition-transform">
           {student.fullName[0].toUpperCase()}
         </div>
-        <h1 className="text-3xl font-extrabold text-gray-900 text-center">
+        <h1 className="text-3xl font-extrabold text-gray-900 text-center dark:text-white">
           {student.fullName}
         </h1>
         <span
@@ -95,52 +86,60 @@ const StudentInfoPage = () => {
       </div>
 
       {/* Ma’lumotlar bo‘limi */}
-      <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <div className="p-4 rounded-xl shadow hover:shadow-lg transition-shadow flex items-center gap-3 bg-transparent">
+      <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6 ">
+        <div className="p-4 rounded-xl shadow hover:shadow-lg transition-shadow flex items-center gap-3 dark:!bg-fullbg">
           <PhoneCall className="text-2xl text-blue-500" />
           <div>
             <p className="text-gray-500 font-medium text-sm">Telefon</p>
-            <p className="font-bold text-lg text-gray-800">{student.phone}</p>
+            <p className="font-bold text-lg text-gray-800 dark:text-white">{student.phone}</p>
           </div>
         </div>
 
-        <div className="p-4 rounded-xl shadow hover:shadow-lg transition-shadow flex items-center gap-3 bg-transparent">
+        <div className="p-4 rounded-xl shadow hover:shadow-lg transition-shadow flex items-center gap-3 dark:!bg-fullbg">
           <Voicemail className="text-2xl text-blue-500" />
           <div>
             <p className="text-gray-500 font-medium text-sm">
               Ota/onasi telefoni
             </p>
-            <p className="font-bold text-lg text-gray-800">
+            <p className="font-bold text-lg text-gray-800  dark:text-white ">
               {student.parentPhone}
             </p>
           </div>
         </div>
 
-        <div className="p-4 rounded-xl shadow hover:shadow-lg transition-shadow flex items-center gap-3 bg-transparent">
+        <div className="p-4 rounded-xl shadow hover:shadow-lg transition-shadow flex items-center gap-3 dark:!bg-fullbg">
           <Cake className="text-2xl text-blue-500" />
           <div>
             <p className="text-gray-500 font-medium text-sm">Tugilgan sana</p>
-            <p className="font-bold text-lg text-gray-800 ">
+            <p className="font-bold text-lg text-gray-800  dark:text-white ">
               {student.birthDate}
             </p>
           </div>
         </div>
 
-        <div className="p-4 rounded-xl shadow hover:shadow-lg transition-shadow flex items-center gap-3 sm:col-span-2 bg-transparent">
+        <div className="p-4 rounded-xl shadow hover:shadow-lg transition-shadow flex items-center gap-3 sm:col-span-2 dark:!bg-fullbg">
           <Home className="text-2xl text-blue-500" />
           <div>
             <p className="text-gray-500 font-medium text-sm">Manzil</p>
-            <p className="font-bold text-lg text-gray-800">{student.address}</p>
+            <p className="font-bold text-lg text-gray-800  dark:text-white ">{student.address}</p>
           </div>
         </div>
 
-        <div className="p-4 rounded-xl shadow hover:shadow-lg transition-shadow flex flex-col sm:col-span-2 gap-2 bg-transparent">
+        <div className="p-4 rounded-xl shadow hover:shadow-lg transition-shadow flex flex-col sm:col-span-2 gap-2 dark:!bg-fullbg">
           <p className="text-gray-500 font-medium text-sm flex items-center gap-2">
             <GroupIcon className="text-blue-500 text-2xl" /> Guruhlar
           </p>
           <p className="font-bold text-lg text-gray-800">
             {student.groupStudents && student.groupStudents.length > 0
-              ? student.groupStudents.map((g) => g.name).join(", ")
+              ? student.groupStudents.map((g) => (
+                  <Link
+                    key={g.id}
+                    to={`/group-info/${g.group.id}`}
+                    className="block text-blue-600 hover:underline"
+                  >
+                    {g.group.name}
+                  </Link>
+                ))
               : "Hech qanday guruh yo‘q"}
           </p>
         </div>

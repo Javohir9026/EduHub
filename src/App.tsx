@@ -20,6 +20,7 @@ import { UserProvider } from "./context/UserContext";
 import AppLayoutWithProvider from "./layout/AppLayoutWithProvider";
 import StudentInfoPage from "./pages/students/StudentInfoPage";
 import TeacherInfoPage from "./pages/Teachers/TeacherInfoPage";
+import { GroupInfo } from "./pages/Groups/GorupInfo";
 
 const App = () => {
   return (
@@ -142,6 +143,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <TeacherInfoPage />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/group-info/:id"
+            element={
+              <ProtectedRoute>
+                <GroupInfo />
               </ProtectedRoute>
             }
           />
