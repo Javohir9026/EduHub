@@ -19,9 +19,6 @@ export const GroupInfo = () => {
         const res = await apiClient.get(`${api}/groups/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        console.log(res.data.data);
-        
-
         setGroup(res.data.data);
       } catch (error) {
         console.log(error);
@@ -33,10 +30,32 @@ export const GroupInfo = () => {
     if (id) fetchGroup();
   }, [id]);
 
+  // Sana format
+  const formatDate = (date: string) =>
+    new Date(date).toLocaleDateString("uz-UZ");
+
+  // ----- SKELETON LOADING -----
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-lg font-semibold animate-pulse">
-        Yuklanmoqda...
+      <div className="min-h-screen p-6 space-y-8 animate-pulse">
+        {/* Header skeleton */}
+        <div className="h-40 bg-gray-300 dark:bg-gray-700 rounded-2xl w-full md:w-3/4 mx-auto"></div>
+
+        {/* Info Cards skeleton */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="h-24 bg-gray-300  dark:bg-gray-700 rounded-xl w-full"></div>
+          ))}
+        </div>
+
+        {/* Teacher & Center skeleton */}
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="h-40 bg-gray-300 rounded-xl  dark:bg-gray-700 w-full"></div>
+          <div className="h-40 bg-gray-300 rounded-xl  dark:bg-gray-700 w-full"></div>
+        </div>
+
+        {/* Students skeleton */}
+        <div className="h-64 bg-gray-300  dark:bg-gray-700 rounded-xl w-full"></div>
       </div>
     );
   }
@@ -49,17 +68,12 @@ export const GroupInfo = () => {
     );
   }
 
-  // Sana format
-  const formatDate = (date: string) =>
-    new Date(date).toLocaleDateString("uz-UZ");
-
   return (
     <div className="min-h-screen p-6 space-y-8">
       {/* HEADER */}
       <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-8 rounded-2xl shadow-xl">
         <h1 className="text-4xl font-extrabold">{group.name}</h1>
         <p className="mt-2 text-blue-100">{group.description}</p>
-
         <div className="mt-4 flex gap-4 flex-wrap">
           <span className="bg-white/20 px-4 py-1 rounded-full text-sm">
             {group.isActive ? "Faol" : "Faol emas"}
@@ -132,14 +146,12 @@ export const GroupInfo = () => {
                 to={`/student-info/${gs.student.id}`}
                 className="p-4 border rounded-xl hover:shadow-md transition bg-gray-50 hover:bg-blue-50 flex justify-between group items-center dark:!bg-fullbg"
               >
-                 <div className="flex flex-col">
-                    <p className="font-semibold">
-                    {gs.student.fullName}
-                </p>
-                <p className="text-sm text-gray-500">{gs.student.phone}</p>
+                <div className="flex flex-col">
+                  <p className="font-semibold">{gs.student.fullName}</p>
+                  <p className="text-sm text-gray-500">{gs.student.phone}</p>
                 </div>
                 <span className="hidden group-hover:block">
-                    <ChevronRight/>
+                  <ChevronRight />
                 </span>
               </Link>
             ))}
