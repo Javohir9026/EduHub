@@ -24,7 +24,6 @@ import {
 
 import { Button } from "../../ui/button";
 import { Info, Trash } from "lucide-react";
-import { StudentEditModal } from "../student/StudentEditModal";
 import { useNavigate } from "react-router-dom";
 
 import {

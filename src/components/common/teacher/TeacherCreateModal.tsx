@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { UserPlus } from "lucide-react";
+import { Eye, EyeOff, UserPlus } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -31,12 +31,13 @@ export function TeacherCreateModal({
   const [name, setName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("+998");
-  const [salary, setSalary] = useState<Number>(0);
+  const [salary, setSalary] = useState("");
   const [password, setPassword] = useState("");
   const [login, setLogin] = useState("");
   const [subject, setSubject] = useState("");
   const learningCenterId = localStorage.getItem("id");
   const [errors, setErrors] = useState<any>({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const formatPhone = (value: string) => {
     let digits = value.replace(/\D/g, "");
@@ -87,11 +88,21 @@ export function TeacherCreateModal({
     }
 
     if (name === "salary") {
-      if (!value) return "Maoshni kiriting!";
+      if (!value.trim()) return "Maoshni kiriting!";
+      if (isNaN(Number(value))) return "Faqat raqam kiriting!";
     }
 
     if (name === "password") {
-      if (!value.trim()) return "Parolni kiriting!";
+      if (!value.trim()) {
+        return "Parolni kiriting!";
+      }
+
+      const strongPasswordRegex =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[.,!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
+
+      if (!strongPasswordRegex.test(value)) {
+        return "Parol kuchli bo'lishi kerak! (Masalan: Password1.)";
+      }
     }
 
     if (name === "login") {
@@ -118,7 +129,8 @@ export function TeacherCreateModal({
     } else if (name === "email") {
       setEmail(value);
     } else if (name === "salary") {
-      setSalary(Number(value));
+      const onlyNumbers = value.replace(/\D/g, "");
+      setSalary(onlyNumbers);
     } else if (name === "password") {
       setPassword(value);
     } else if (name === "login") {
@@ -144,7 +156,7 @@ export function TeacherCreateModal({
     setSubject("");
     setLogin("");
     setPassword("");
-    setSalary(0);
+    setSalary("");
     setErrors({});
   };
 
@@ -154,7 +166,7 @@ export function TeacherCreateModal({
       name: validateField("name", name),
       lastName: validateField("lastName", lastName),
       phone: validateField("phone", phone),
-      salary: validateField("salary", String(salary)),
+      salary: validateField("salary", salary),
       password: validateField("password", password),
       login: validateField("login", login),
       subject: validateField("subject", subject),
@@ -172,7 +184,7 @@ export function TeacherCreateModal({
         name,
         lastName,
         phone,
-        salary,
+        salary: Number(salary),
         password,
         login,
         subject,
@@ -185,10 +197,10 @@ export function TeacherCreateModal({
     } catch (error: any) {
       const message = error?.response?.data?.error?.message || "";
 
-      if (message.includes("duplicate")) {
+      if (message.includes("login")) {
         setErrors((prev: any) => ({
           ...prev,
-          phone: "Bu telefon raqam allaqachon mavjud!",
+          login: "Bu login allaqachon mavjud!",
         }));
       } else {
         toast.error("Xatolik yuz berdi");
@@ -258,7 +270,7 @@ export function TeacherCreateModal({
             <div className="flex flex-col gap-2">
               <Label>Oylik Maosh</Label>
               <Input
-                value={String(salary)}
+                value={salary}
                 onChange={(e) => handleChange("salary", e.target.value)}
               />
               {errors.salary && (
@@ -288,10 +300,24 @@ export function TeacherCreateModal({
             </div>
             <div className="flex flex-col gap-2">
               <Label>Parol</Label>
-              <Input
-                value={password}
-                onChange={(e) => handleChange("password", e.target.value)}
-              />
+
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => handleChange("password", e.target.value)}
+                  className="pr-10"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+
               {errors.password && (
                 <p className="text-red-500 text-xs">{errors.password}</p>
               )}
