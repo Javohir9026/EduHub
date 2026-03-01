@@ -45,19 +45,53 @@ const TeacherInfoPage = () => {
     if (id) fetchTeacher();
   }, [id]);
 
-  if (loading)
+  // ----- SKELETON LOADING -----
+  if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center animate-pulse text-lg font-semibold">
-        Yuklanmoqda...
+      <div className="min-h-screen p-6 space-y-8 animate-pulse">
+        {/* Header Skeleton */}
+        <div className="flex flex-col md:flex-row items-center gap-6">
+          <div className="w-32 h-32 rounded-full bg-gray-300 dark:bg-gray-700"></div>
+          <div className="flex-1 space-y-3">
+            <div className="h-8 w-64 bg-gray-300 dark:bg-gray-700 rounded"></div>
+            <div className="h-6 w-48 bg-gray-300 dark:bg-gray-700 rounded"></div>
+            <div className="flex gap-2 mt-2">
+              <div className="h-5 w-24 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
+              <div className="h-5 w-16 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Info Cards Skeleton */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <div
+              key={i}
+              className="h-24 bg-gray-300 dark:bg-gray-700 rounded-xl w-full"
+            ></div>
+          ))}
+        </div>
+
+        {/* Dates Skeleton */}
+        <div className="grid md:grid-cols-2 gap-6">
+          {[...Array(2)].map((_, i) => (
+            <div
+              key={i}
+              className="h-24 bg-gray-300 dark:bg-gray-700 rounded-xl w-full"
+            ></div>
+          ))}
+        </div>
       </div>
     );
+  }
 
-  if (!teacher)
+  if (!teacher) {
     return (
       <div className="min-h-screen flex items-center justify-center text-red-600 text-xl font-bold">
         O‘qituvchi topilmadi
       </div>
     );
+  }
 
   const formatDate = (date: string) =>
     new Date(date).toLocaleDateString("uz-UZ");
