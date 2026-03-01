@@ -193,14 +193,14 @@ export default function TeacherTableComponent() {
                     key={index}
                     className="text-center border-b h-[70px] border-gray-200 dark:border-white/[0.05] last:border-b-0"
                   >
-                    {/* Ism */}
+                    {/* Ism */} 
                     <TableCell className="px-5 py-4">
                       <div className="h-6 w-24 mx-auto bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                     </TableCell>
 
                     {/* Telefon - sm */}
                     <TableCell className="hidden sm:table-cell px-5 py-4">
-                      <div className="h-6 w-28 mx-auto bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                      <div className="h-6 w-28 mx-auto bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div> 
                     </TableCell>
 
                     {/* Email - xl */}
