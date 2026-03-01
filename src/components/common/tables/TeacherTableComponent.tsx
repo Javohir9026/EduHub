@@ -193,11 +193,30 @@ export default function TeacherTableComponent() {
                     key={index}
                     className="text-center border-b h-[70px] border-gray-200 dark:border-white/[0.05] last:border-b-0"
                   >
-                    {[...Array(6)].map((_, i) => (
-                      <TableCell key={i} className="px-5 py-4">
-                        <div className="h-6 w-full mx-auto bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                      </TableCell>
-                    ))}
+                    {/* Ism */}
+                    <TableCell className="px-5 py-4">
+                      <div className="h-6 w-24 mx-auto bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    </TableCell>
+
+                    {/* Telefon - sm */}
+                    <TableCell className="hidden sm:table-cell px-5 py-4">
+                      <div className="h-6 w-28 mx-auto bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    </TableCell>
+
+                    {/* Email - xl */}
+                    <TableCell className="hidden xl:table-cell px-5 py-4">
+                      <div className="h-6 w-36 mx-auto bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    </TableCell>
+
+                    {/* Fan - 2xl */}
+                    <TableCell className="hidden 2xl:table-cell px-5 py-4">
+                      <div className="h-6 w-20 mx-auto bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    </TableCell>
+
+                    {/* Actions */}
+                    <TableCell className="px-5 py-4">
+                      <div className="h-6 w-16 mx-auto bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    </TableCell>
                   </TableRow>
                 ))}
 

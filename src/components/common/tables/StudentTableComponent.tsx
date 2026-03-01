@@ -115,7 +115,9 @@ export default function StudentTableComponent() {
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
         <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 w-full sm:w-auto">
-          <h1 className="text-2xl sm:text-start text-center font-bold mb-2 sm:mb-0">O'quvchilar</h1>
+          <h1 className="text-2xl sm:text-start text-center font-bold mb-2 sm:mb-0">
+            O'quvchilar
+          </h1>
 
           <SearchInput
             placeholder="Qidirish..."
@@ -184,11 +186,35 @@ export default function StudentTableComponent() {
                     key={index}
                     className="text-center border-b h-[70px] border-gray-200 dark:border-white/[0.05] last:border-b-0"
                   >
-                    {[...Array(6)].map((_, i) => (
-                      <TableCell key={i} className="px-5 py-4">
-                        <div className="h-6 w-full mx-auto bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                      </TableCell>
-                    ))}
+                    {/* Ism Familiya */}
+                    <TableCell className="px-5 py-4">
+                      <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    </TableCell>
+
+                    {/* Telefon */}
+                    <TableCell className="hidden md:table-cell px-5 py-4">
+                      <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    </TableCell>
+
+                    {/* Tug'ilgan sana */}
+                    <TableCell className="hidden lg:table-cell px-5 py-4">
+                      <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    </TableCell>
+
+                    {/* Holati */}
+                    <TableCell className="hidden xl:table-cell px-5 py-4">
+                      <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    </TableCell>
+
+                    {/* Guruhlar */}
+                    <TableCell className="hidden xl:table-cell px-5 py-4">
+                      <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    </TableCell>
+
+                    {/* Qo'shimcha */}
+                    <TableCell className="px-5 py-4">
+                      <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    </TableCell>
                   </TableRow>
                 ))}
 

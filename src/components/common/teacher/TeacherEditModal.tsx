@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Pen } from "lucide-react";
+import { Eye, EyeOff, Pen } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import type { Teacher } from "@/lib/types";
@@ -38,7 +38,7 @@ export function TeacherEditModal({
   const [password, setPassword] = useState("");
   const [login, setLogin] = useState("");
   const [subject, setSubject] = useState("");
-
+  const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -120,7 +120,7 @@ export function TeacherEditModal({
     try {
       setLoading(true);
 
-      await apiClient.patch(`${api}/teachers/${teacher.id}`, {
+      const data: any = {
         email,
         name,
         lastName,
@@ -128,11 +128,20 @@ export function TeacherEditModal({
         salary,
         login,
         subject,
-        password,
         learningCenterId: localStorage.getItem("id"),
+      };
+
+      if (password.trim()) {
+        data.password = password;
+      }
+
+      await apiClient.patch(`${api}/teachers/${teacher.id}`, data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
 
-      toast.success("O‘qituvchi muvaffaqiyatli yangilandi!");
+      toast.success("O'qituvchi muvaffaqiyatli yangilandi!");
       setOpen(false);
       onSuccess?.();
     } catch (error: any) {
@@ -159,7 +168,7 @@ export function TeacherEditModal({
 
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>O‘qituvchini tahrirlash</AlertDialogTitle>
+          <AlertDialogTitle>O'qituvchini tahrirlash</AlertDialogTitle>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 w-full">
             <div className="flex flex-col gap-1">
@@ -233,11 +242,23 @@ export function TeacherEditModal({
 
             <div className="flex flex-col gap-1">
               <Label>Yangi Parol (ixtiyoriy)</Label>
-              <Input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="pr-10"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
             </div>
           </div>
         </AlertDialogHeader>
