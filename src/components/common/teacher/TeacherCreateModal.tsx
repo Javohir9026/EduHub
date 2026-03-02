@@ -190,7 +190,6 @@ export function TeacherCreateModal({
         subject,
         learningCenterId: learningCenterId,
       });
-      console.log(res);
       toast.success("O'qituvchi qo'shildi!");
       onSuccess?.();
       handleCancel();

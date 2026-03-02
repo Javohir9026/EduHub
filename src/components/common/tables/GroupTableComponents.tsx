@@ -45,6 +45,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import SearchInput from "@/components/ui/SearchInput";
+import { toast } from "sonner";
 
 export default function GroupTableComponent() {
   const [tableData, setTableData] = useState<Group[]>([]);
@@ -67,7 +68,6 @@ export default function GroupTableComponent() {
         },
       );
       setTableData(res.data.data || []);
-      console.log(res.data.data);
     } catch (error) {
       console.log("FETCH ERROR:", error);
     } finally {
@@ -81,6 +81,7 @@ export default function GroupTableComponent() {
       await apiClient.delete(`${api}/groups/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      toast.success("Guruh muvaffaqqiyatli o'chirildi!");
       await fetchGroups();
       setDeletingId(null);
     } catch (error) {

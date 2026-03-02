@@ -111,7 +111,6 @@ const RegisterForm = () => {
       setFile(null);
       setPreview(null);
     } catch (error: any) {
-      console.log(error.response?.data);
       toast.error(error.response?.data.error.message);
     } finally {
       setisloading(false);

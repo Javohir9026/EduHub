@@ -21,7 +21,6 @@ const StudentInfoPage = () => {
         });
 
         setStudent(res.data.data);
-        console.log(res.data.data);
       } catch (error) {
         console.error("Xatolik:", error);
       } finally {
