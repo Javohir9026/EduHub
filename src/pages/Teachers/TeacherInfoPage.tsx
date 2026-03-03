@@ -174,6 +174,7 @@ const InfoCard = ({
     <div>
       <p className="text-sm text-gray-500">{title}</p>
       <p className="font-bold text-lg">{children}</p>
+      
     </div>
   </div>
 );
