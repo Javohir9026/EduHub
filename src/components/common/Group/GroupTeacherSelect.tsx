@@ -49,6 +49,7 @@ const GroupTeacherSelect: React.FC<TeacherGroupSelectProps> = ({
 
   useEffect(() => {
     getTeacher();
+    console.log(value);
   }, []);
 
   return (

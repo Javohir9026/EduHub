@@ -98,6 +98,7 @@ export interface Group {
   currentStudents: number;
   monthlyPrice: string;
   isActive: boolean;
+  teacher_id: number;
   created_at: string;
   updated_at: string;
 }
