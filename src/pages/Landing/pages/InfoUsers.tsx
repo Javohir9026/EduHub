@@ -1,4 +1,10 @@
-import { Coins, GraduationCapIcon, SquareUserRound, User, Users } from "lucide-react";
+import {
+  Coins,
+  GraduationCapIcon,
+  SquareUserRound,
+  User,
+  Users,
+} from "lucide-react";
 
 export default function UsersPage() {
   return (
@@ -23,24 +29,24 @@ export default function UsersPage() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
           {[
             [
-              <SquareUserRound className="text-blue-500"/>,
+              <SquareUserRound className="text-blue-500" />,
               "Ustozlar",
-              "Ustozlar uchun yaratilgan boshqaruv paneli orqali dars jadvali, guruhlar, o‘quvchilar natijalari, davomat statistikasi va baholash tizimi to‘liq nazorat qilinadi. Shuningdek, ustozlar o‘quvchilarga individual izoh va tavsiyalar berishi mumkin.",
+              "Ustozlar uchun yaratilgan boshqaruv paneli orqali dars jadvali, guruhlar, o'quvchilar natijalari, davomat statistikasi va baholash tizimi to'liq nazorat qilinadi. Shuningdek, ustozlar o'quvchilarga individual izoh va tavsiyalar berishi mumkin.",
             ],
             [
-              <Users className="text-blue-500"/>,
-              "O‘quvchilar",
-              "O‘quvchilar shaxsiy kabinet orqali kurslar jadvali, baholari, davomati, to‘lov holati va ustozlar tomonidan berilgan izohlarni kuzatishi mumkin. Bu o‘quv jarayonini shaffof va nazorat qilinadigan qiladi.",
+              <Users className="text-blue-500" />,
+              "O'quvchilar",
+              "O'quvchilar shaxsiy kabinet orqali kurslar jadvali, baholari, davomati, to'lov holati va ustozlar tomonidan berilgan izohlarni kuzatishi mumkin. Bu o'quv jarayonini shaffof va nazorat qilinadigan qiladi.",
             ],
             [
-              <GraduationCapIcon className="text-blue-500"/>,
+              <GraduationCapIcon className="text-blue-500" />,
               "Guruhlar",
-              "Har bir guruh uchun alohida boshqaruv tizimi mavjud bo‘lib, unda jadval, ustoz biriktirish, o‘quvchilar ro‘yxati, davomati va statistika jamlanadi. Bu markaz rahbariyatiga to‘liq nazorat imkonini beradi.",
+              "Har bir guruh uchun alohida boshqaruv tizimi mavjud bo'lib, unda jadval, ustoz biriktirish, o'quvchilar ro'yxati, davomati va statistika jamlanadi. Bu markaz rahbariyatiga to'liq nazorat imkonini beradi.",
             ],
             [
-              <Coins className="text-blue-500"/>,
-              "To‘lovlar",
-              "Moliyaviy modul barcha to‘lovlarni avtomatik hisoblab boradi. Qarzdorlik nazorati, hisobotlar, statistikalar va tranzaksiya tarixlari bir joyda saqlanadi va real vaqt rejimida yangilanadi.",
+              <Coins className="text-blue-500" />,
+              "To'lovlar",
+              "Moliyaviy modul barcha to'lovlarni avtomatik hisoblab boradi. Qarzdorlik nazorati, hisobotlar, statistikalar va tranzaksiya tarixlari bir joyda saqlanadi va real vaqt rejimida yangilanadi.",
             ],
           ].map(([icon, title, desc]) => (
             <div className="group bg-white p-8 rounded-3xl border shadow-sm hover:shadow-2xl transition">

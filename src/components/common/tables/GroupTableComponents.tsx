@@ -46,6 +46,7 @@ import {
 } from "@/components/ui/select";
 import SearchInput from "@/components/ui/SearchInput";
 import { toast } from "sonner";
+import { GroupCreateModal } from "../Group/GroupCreateModal";
 
 export default function GroupTableComponent() {
   const [tableData, setTableData] = useState<Group[]>([]);
@@ -141,7 +142,7 @@ export default function GroupTableComponent() {
             </SelectContent>
           </Select>
 
-          <StudentCreateModal
+          <GroupCreateModal
             onSuccess={fetchGroups}
             classname="flex items-center gap-2 px-3 py-1 rounded-lg bg-blue-500 text-white hover:bg-blue-500/80 cursor-pointer"
           />

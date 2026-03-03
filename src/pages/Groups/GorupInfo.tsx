@@ -2,7 +2,15 @@ import apiClient from "@/api/ApiClient";
 import type { GroupDetail } from "@/lib/types";
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Users, Calendar, Clock, DollarSign, Home, User, ChevronRight } from "lucide-react";
+import {
+  Users,
+  Calendar,
+  Clock,
+  DollarSign,
+  Home,
+  User,
+  ChevronRight,
+} from "lucide-react";
 
 export const GroupInfo = () => {
   const { id } = useParams<{ id: string }>();
@@ -44,7 +52,10 @@ export const GroupInfo = () => {
         {/* Info Cards skeleton */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="h-24 bg-gray-300  dark:bg-gray-700 rounded-xl w-full"></div>
+            <div
+              key={i}
+              className="h-24 bg-gray-300  dark:bg-gray-700 rounded-xl w-full"
+            ></div>
           ))}
         </div>
 
@@ -79,7 +90,7 @@ export const GroupInfo = () => {
             {group.isActive ? "Faol" : "Faol emas"}
           </span>
           <span className="bg-white/20 px-4 py-1 rounded-full text-sm">
-            {group.currentStudents}/{group.maxStudents} o‘quvchi
+            {group.currentStudents}/{group.maxStudents} o'quvchi
           </span>
         </div>
       </div>
@@ -98,23 +109,26 @@ export const GroupInfo = () => {
           {group.lessonTime} | {group.lessonDays} kun/hafta
         </InfoCard>
 
-        <InfoCard icon={<DollarSign />} title="Oylik to‘lov">
-          {group.monthlyPrice.toLocaleString()} so‘m
+        <InfoCard icon={<DollarSign />} title="Oylik to'lov">
+          {group.monthlyPrice.toLocaleString()} so'm
         </InfoCard>
 
         <InfoCard icon={<Home />} title="Xona">
           {group.room}
         </InfoCard>
 
-        <InfoCard icon={<User />} title="O‘qituvchi">
+        <InfoCard icon={<User />} title="O'qituvchi">
           {group.teacher.name} {group.teacher.lastName}
         </InfoCard>
       </div>
 
       {/* TEACHER & CENTER */}
       <div className="grid md:grid-cols-2 gap-6">
-        <Link to={`/teacher-info/${group.teacher.id}`} className="bg-white shadow-lg rounded-xl p-6 dark:!bg-fullbg">
-          <h2 className="text-xl font-bold mb-4">O‘qituvchi</h2>
+        <Link
+          to={`/teacher-info/${group.teacher.id}`}
+          className="bg-white shadow-lg rounded-xl p-6 dark:!bg-fullbg"
+        >
+          <h2 className="text-xl font-bold mb-4">O'qituvchi</h2>
           <p className="font-semibold">
             {group.teacher.name} {group.teacher.lastName}
           </p>
@@ -123,7 +137,7 @@ export const GroupInfo = () => {
         </Link>
 
         <div className="bg-white shadow-lg rounded-xl p-6 dark:!bg-fullbg">
-          <h2 className="text-xl font-bold mb-4">O‘quv markaz</h2>
+          <h2 className="text-xl font-bold mb-4">O'quv markaz</h2>
           <p className="font-semibold">{group.learningCenter.name}</p>
           <p className="text-gray-500">{group.learningCenter.address}</p>
           <p className="text-gray-500">{group.learningCenter.phone}</p>
@@ -133,11 +147,11 @@ export const GroupInfo = () => {
       {/* STUDENTS */}
       <div className="bg-white shadow-xl rounded-xl p-6 dark:!bg-background">
         <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-          <Users /> O‘quvchilar
+          <Users /> O'quvchilar
         </h2>
 
         {group.groupStudents.length === 0 ? (
-          <p className="text-gray-500">Hozircha o‘quvchilar yo‘q</p>
+          <p className="text-gray-500">Hozircha o'quvchilar yo'q</p>
         ) : (
           <div className="grid md:grid-cols-2 gap-4">
             {group.groupStudents.map((gs) => (

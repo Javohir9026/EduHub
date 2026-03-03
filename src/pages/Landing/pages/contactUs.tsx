@@ -9,15 +9,18 @@ const ContactPage = () => {
           Biz bilan bog'lanish
         </h1>
         <p className="text-center text-black/70 mb-16 max-w-2xl mx-auto">
-          Sizning savollaringiz yoki takliflaringiz bormi? Biz har doim yordam berishga tayyormiz. 
-          Quyidagi shakl orqali biz bilan bog‘lanishingiz mumkin.
+          Sizning savollaringiz yoki takliflaringiz bormi? Biz har doim yordam
+          berishga tayyormiz. Quyidagi shakl orqali biz bilan bog'lanishingiz
+          mumkin.
         </p>
 
         <div className="flex flex-col lg:flex-row gap-12">
           {/* Contact Form */}
           <form className="flex-1 bg-white shadow-xl rounded-2xl p-8 space-y-6">
             <div>
-              <label className="block text-black/70 font-medium mb-2">Ismingiz</label>
+              <label className="block text-black/70 font-medium mb-2">
+                Ismingiz
+              </label>
               <input
                 type="text"
                 placeholder="Ismingizni kiriting"
@@ -26,7 +29,9 @@ const ContactPage = () => {
             </div>
 
             <div>
-              <label className="block text-black/70 font-medium mb-2">Email</label>
+              <label className="block text-black/70 font-medium mb-2">
+                Email
+              </label>
               <input
                 type="email"
                 placeholder="Email manzilingiz"
@@ -35,7 +40,9 @@ const ContactPage = () => {
             </div>
 
             <div>
-              <label className="block text-black/70 font-medium mb-2">Xabar</label>
+              <label className="block text-black/70 font-medium mb-2">
+                Xabar
+              </label>
               <textarea
                 placeholder="Xabaringizni yozing"
                 className="w-full border border-blue-200 rounded-lg px-4 py-2 h-32 focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -53,7 +60,9 @@ const ContactPage = () => {
               <MapPin className="text-black/70 w-6 h-6 mt-1" />
               <div>
                 <h3 className="font-semibold text-black/70">Manzilimiz</h3>
-                <p className="text-black/70">Toshkent sh., Chilonzor tumani, Amir Temur ko'chasi 12</p>
+                <p className="text-black/70">
+                  Toshkent sh., Chilonzor tumani, Amir Temur ko'chasi 12
+                </p>
               </div>
             </div>
 

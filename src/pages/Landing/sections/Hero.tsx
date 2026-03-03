@@ -98,7 +98,8 @@ const Hero = () => {
   hover:before:top-[-35%] hover:before:bg-purple-500 hover:before:scale-y-[1.3] hover:before:scale-x-[0.8]
   hover:after:top-[-45%] hover:after:bg-purple-500 hover:after:scale-y-[1.3] hover:after:scale-x-[0.8]
   w-full md:w-auto"
-            onClick={()=>navigate('/sign-in')}>
+              onClick={() => navigate("/sign-in")}
+            >
               Kirish
             </Button>
           </div>
@@ -144,7 +145,7 @@ const Hero = () => {
               <GraduationCap className="text-blue-600 size-10" />
               <h1 className="!font-bold text-1xl">Guruhlar boshqaruvi</h1>
               <p className="text-gray-400 text-sm">
-                Guruhlarni yaratish va tartibga solish, o‘qituvchilarni
+                Guruhlarni yaratish va tartibga solish, o'qituvchilarni
                 tayinlash, jadvallarni belgilash va guruh ma’lumotlarini
                 boshqarish.
               </p>
@@ -308,7 +309,8 @@ const Hero = () => {
   hover:before:top-[-35%] hover:before:bg-purple-500 hover:before:scale-y-[1.3] hover:before:scale-x-[0.8]
   hover:after:top-[-45%] hover:after:bg-purple-500 hover:after:scale-y-[1.3] hover:after:scale-x-[0.8] !font-semibold
   w-full md:w-auto"
-            onClick={()=>navigate('/sign-in')}>
+              onClick={() => navigate("/sign-in")}
+            >
               Kirish
             </Button>
           </div>
