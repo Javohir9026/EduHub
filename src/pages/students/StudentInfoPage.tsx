@@ -65,7 +65,7 @@ const StudentInfoPage = () => {
 
   return (
     <div className="min-h-screen p-6 flex flex-col md:flex-row gap-8 justify-center items-start">
-      {/* Profil bo‘limi */}
+      {/* Profil bo'limi */}
       <div className="flex flex-col items-center gap-6 md:w-1/4">
         <div className="w-36 h-36 rounded-full bg-blue-400 flex items-center justify-center text-white text-5xl font-bold shadow-lg hover:scale-105 transition-transform">
           {student.fullName[0].toUpperCase()}
@@ -84,13 +84,15 @@ const StudentInfoPage = () => {
         </span>
       </div>
 
-      {/* Ma’lumotlar bo‘limi */}
+      {/* Ma’lumotlar bo'limi */}
       <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6 ">
         <div className="p-4 rounded-xl shadow hover:shadow-lg transition-shadow flex items-center gap-3 dark:!bg-fullbg">
           <PhoneCall className="text-2xl text-blue-500" />
           <div>
             <p className="text-gray-500 font-medium text-sm">Telefon</p>
-            <p className="font-bold text-lg text-gray-800 dark:text-white">{student.phone}</p>
+            <p className="font-bold text-lg text-gray-800 dark:text-white">
+              {student.phone}
+            </p>
           </div>
         </div>
 
@@ -120,7 +122,9 @@ const StudentInfoPage = () => {
           <Home className="text-2xl text-blue-500" />
           <div>
             <p className="text-gray-500 font-medium text-sm">Manzil</p>
-            <p className="font-bold text-lg text-gray-800  dark:text-white ">{student.address}</p>
+            <p className="font-bold text-lg text-gray-800  dark:text-white ">
+              {student.address}
+            </p>
           </div>
         </div>
 
@@ -139,7 +143,7 @@ const StudentInfoPage = () => {
                     {g.group.name}
                   </Link>
                 ))
-              : "Hech qanday guruh yo‘q"}
+              : "Hech qanday guruh yo'q"}
           </p>
         </div>
       </div>

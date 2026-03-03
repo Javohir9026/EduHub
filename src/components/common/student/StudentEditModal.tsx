@@ -88,7 +88,7 @@ export function StudentEditModal({
     }
 
     if (!phone || phone.length < 17) {
-      newErrors.phone = "Telefon to‘liq kiritilishi kerak";
+      newErrors.phone = "Telefon to'liq kiritilishi kerak";
     }
 
     if (!parentPhone || parentPhone.length < 17) {
@@ -96,7 +96,7 @@ export function StudentEditModal({
     }
 
     if (!birthDate) {
-      newErrors.birthDate = "Tug‘ilgan sana majburiy";
+      newErrors.birthDate = "Tug'ilgan sana majburiy";
     }
 
     if (!groupId) {
@@ -231,7 +231,9 @@ export function StudentEditModal({
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel className="cursor-pointer">Bekor qilish</AlertDialogCancel>
+          <AlertDialogCancel className="cursor-pointer">
+            Bekor qilish
+          </AlertDialogCancel>
 
           <Button
             onClick={handleSave}

@@ -14,20 +14,20 @@ const AboutUsPage = () => {
             Biz haqimizda
           </h1>
           <p className="text-black/70 text-lg lg:text-xl mb-8">
-            EduHub ta'lim markazlarini raqamli boshqarish va o‘quv jarayonini
+            EduHub ta'lim markazlarini raqamli boshqarish va o'quv jarayonini
             soddalashtirishga ixtisoslashgan yetakchi platformadir. Bizning
-            maqsadimiz – har bir o‘quv markazi va o‘quvchi uchun eng qulay va
+            maqsadimiz – har bir o'quv markazi va o'quvchi uchun eng qulay va
             interaktiv muhit yaratish.
           </p>
           <Button
             className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg cursor-pointer"
             onClick={() => navigate("/contact-us")}
           >
-            Biz bilan bog‘lanish
+            Biz bilan bog'lanish
           </Button>
         </div>
         <div className="flex-1 w-[200px] overflow-hidden flex items-center justify-center cursor-pointer h-[350px]">
-          <img src={EduHubLogo} alt="About Us" className="object-contain"/>
+          <img src={EduHubLogo} alt="About Us" className="object-contain" />
         </div>
       </section>
 

@@ -46,6 +46,8 @@ import {
 } from "@/components/ui/select";
 import SearchInput from "@/components/ui/SearchInput";
 import { toast } from "sonner";
+import { GroupCreateModal } from "../Group/GroupCreateModal";
+import { GroupEditModal } from "../Group/GroupEditModal";
 
 export default function GroupTableComponent() {
   const [tableData, setTableData] = useState<Group[]>([]);
@@ -141,7 +143,7 @@ export default function GroupTableComponent() {
             </SelectContent>
           </Select>
 
-          <StudentCreateModal
+          <GroupCreateModal
             onSuccess={fetchGroups}
             classname="flex items-center gap-2 px-3 py-1 rounded-lg bg-blue-500 text-white hover:bg-blue-500/80 cursor-pointer"
           />
@@ -231,11 +233,11 @@ export default function GroupTableComponent() {
                       {group.lessonTime}
                     </TableCell>
                     <TableCell className="px-5 py-4 flex sm:gap-2 justify-center">
-                      {/* <StudentEditModal
-                        student={group}
-                        onSuccess={fetchStudents}
+                      <GroupEditModal
+                        group={group}
+                        onSuccess={fetchGroups}
                         classname="hidden sm:flex dark:bg-blue-500 bg-blue-500 hover:bg-blue-500/80 hover:text-white cursor-pointer text-white rounded-lg  items-center justify-center gap-2"
-                      /> */}
+                      />
                       <Button
                         onClick={() => navigate(`/group-info/${group.id}`)}
                         className="bg-blue-500 hover:bg-blue-500/80 hover:text-white cursor-pointer text-white rounded-lg flex items-center justify-center gap-2"

@@ -94,7 +94,7 @@ export function TeacherEditModal({
     } else {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
-        newErrors.email = "Email noto‘g‘ri kiritildi!";
+        newErrors.email = "Email noto'g'ri kiritildi!";
       }
     }
 

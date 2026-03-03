@@ -88,7 +88,7 @@ const TeacherInfoPage = () => {
   if (!teacher) {
     return (
       <div className="min-h-screen flex items-center justify-center text-red-600 text-xl font-bold">
-        O‘qituvchi topilmadi
+        O'qituvchi topilmadi
       </div>
     );
   }
@@ -98,7 +98,6 @@ const TeacherInfoPage = () => {
 
   return (
     <div className="min-h-screen p-6 space-y-8">
-
       {/* HEADER WITH AVATAR */}
       <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-8 rounded-2xl shadow-xl flex flex-col md:flex-row items-center gap-6">
         <div className="w-32 h-32 rounded-full bg-blue-400 flex items-center justify-center text-white text-5xl font-bold shadow-lg">
@@ -139,7 +138,7 @@ const TeacherInfoPage = () => {
         </InfoCard>
 
         <InfoCard icon={<DollarSign />} title="Maosh">
-          {teacher.salary.toLocaleString()} so‘m
+          {teacher.salary.toLocaleString()} so'm
         </InfoCard>
 
         <InfoCard icon={<User />} title="Rol">

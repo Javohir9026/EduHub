@@ -61,7 +61,7 @@ export function StudentCreateModal({
   const validateField = (name: string, value: string): string | undefined => {
     if (name === "fullName") {
       if (!value.trim()) return "Ism Familiya kiriting!";
-      if (value.trim().length < 3) return "Kamida 3 ta harf bo‘lishi kerak!";
+      if (value.trim().length < 3) return "Kamida 3 ta harf bo'lishi kerak!";
     }
 
     if (name === "phone" || name === "parentPhone") {
@@ -69,7 +69,7 @@ export function StudentCreateModal({
         /^\+998 (90|91|93|94|95|97|98|99|88|33|77|50) \d{3} \d{2} \d{2}$/;
 
       if (!value.trim()) return "Telefon kiriting!";
-      if (!phoneRegex.test(value)) return "Telefon noto‘g‘ri!";
+      if (!phoneRegex.test(value)) return "Telefon noto'g'ri!";
     }
 
     if (name === "birthDate") {
