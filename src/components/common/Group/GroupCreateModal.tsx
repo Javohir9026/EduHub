@@ -252,9 +252,26 @@ export function GroupCreateModal({
             {/* LESSON TIME */}
             <div className="flex flex-col gap-2">
               <Label>Boshlanish Vaqti</Label>
-              <DatePickerTime
-                onChange={(time) => handleChange("lessonTime", time)}
+              <Input
+                type="text"
+                inputMode="numeric"
+                placeholder="09:30"
+                value={lessonTime}
+                onChange={(e) => {
+                  let value = e.target.value.replace(/\D/g, "");
+
+                  if (value.length > 4) {
+                    value = value.slice(0, 4);
+                  }
+
+                  if (value.length >= 3) {
+                    value = value.slice(0, 2) + ":" + value.slice(2);
+                  }
+
+                  handleChange("lessonTime", value);
+                }}
               />
+
               {errors.lessonTime && (
                 <p className="text-red-500 text-xs">{errors.lessonTime}</p>
               )}
@@ -262,13 +279,13 @@ export function GroupCreateModal({
 
             {/* MONTHLY PRICE */}
             <div className="flex flex-col gap-2">
-              <Label>Oylik Summa</Label>
+              <Label>Oylik Summa (so'm)</Label>
               <Input
                 type="text"
                 placeholder="3.000.000"
                 value={monthlyPrice}
                 onChange={(e) => {
-                  const numeric = e.target.value.replace(/\D/g, ""); 
+                  const numeric = e.target.value.replace(/\D/g, "");
                   const formatted = numeric
                     ? new Intl.NumberFormat("uz-UZ").format(Number(numeric))
                     : "";
@@ -282,7 +299,7 @@ export function GroupCreateModal({
 
             {/* MAX STUDENTS */}
             <div className="flex flex-col gap-2">
-              <Label>Sig'imi</Label>
+              <Label>O'quvchi Sig'imi</Label>
               <Input
                 type="number"
                 value={maxStudents}

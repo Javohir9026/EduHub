@@ -41,7 +41,6 @@ export function GroupEditModal({
   const [room, setRoom] = useState("");
   const [description, setDescription] = useState("");
   const [teacher_id, setTeacherId] = useState("");
-
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -53,8 +52,7 @@ export function GroupEditModal({
       setMaxStudents(String(group.maxStudents) || "");
       setRoom(group.room || "");
       setDescription(group.description || "");
-      setTeacherId(String(group.teacher_id) || "");
-
+      setTeacherId(String(group.teacher.id || ""));
       const formattedStartDate = group.startDate
         ? group.startDate.split("T")[0]
         : "";
@@ -109,7 +107,6 @@ export function GroupEditModal({
 
     try {
       setLoading(true);
-
       await apiClient.patch(`${api}/groups/${group.id}`, {
         name,
         startDate,
