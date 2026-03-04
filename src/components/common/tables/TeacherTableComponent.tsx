@@ -195,27 +195,27 @@ export default function TeacherTableComponent() {
                   >
                     {/* Ism */} 
                     <TableCell className="px-5 py-4">
-                      <div className="h-6 w-24 mx-auto bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                      <div className="h-6 w-full mx-auto bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                     </TableCell>
 
                     {/* Telefon - sm */}
                     <TableCell className="hidden sm:table-cell px-5 py-4">
-                      <div className="h-6 w-28 mx-auto bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div> 
+                      <div className="h-6 w-full mx-auto bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div> 
                     </TableCell>
 
                     {/* Email - xl */}
                     <TableCell className="hidden xl:table-cell px-5 py-4">
-                      <div className="h-6 w-36 mx-auto bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                      <div className="h-6 w-full mx-auto bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                     </TableCell>
 
                     {/* Fan - 2xl */}
                     <TableCell className="hidden 2xl:table-cell px-5 py-4">
-                      <div className="h-6 w-20 mx-auto bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                      <div className="h-6 w-full mx-auto bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                     </TableCell>
 
                     {/* Actions */}
                     <TableCell className="px-5 py-4">
-                      <div className="h-6 w-16 mx-auto bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                      <div className="h-6 w-full mx-auto bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                     </TableCell>
                   </TableRow>
                 ))}

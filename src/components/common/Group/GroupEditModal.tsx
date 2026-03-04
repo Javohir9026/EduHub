@@ -106,6 +106,7 @@ export function GroupEditModal({
     if (!validate()) return;
 
     try {
+      const numericPrice = Number(monthlyPrice.replace(/\D/g, ""));
       setLoading(true);
       await apiClient.patch(`${api}/groups/${group.id}`, {
         name,
@@ -113,7 +114,7 @@ export function GroupEditModal({
         endDate,
         lessonDays,
         lessonTime,
-        monthlyPrice,
+        monthlyPrice: numericPrice,
         maxStudents,
         room,
         description,
