@@ -14,10 +14,12 @@ interface GroupType {
   id: number;
   name: string;
 }
+
 interface StudentUpdateGroupSelectProps {
   value: string;
-  onChange: (value: string) => void;
+  onChange: (value: number) => void;
 }
+
 const StudentUpdateGroupSelect: React.FC<StudentUpdateGroupSelectProps> = ({
   value,
   onChange,
@@ -50,12 +52,19 @@ const StudentUpdateGroupSelect: React.FC<StudentUpdateGroupSelectProps> = ({
   }, []);
 
   return (
-    <Select value={value} onValueChange={onChange}>
+    <Select value={value} onValueChange={(val) => onChange(Number(val))}>
       <SelectTrigger className="w-full">
         <SelectValue
-          placeholder={groups.length > 0 ? (loading ? "Yuklanmoqda..." : "Guruhni Tanlang") : "Guruhlar mavjud emas"}
+          placeholder={
+            groups.length > 0
+              ? loading
+                ? "Yuklanmoqda..."
+                : "Guruhni Tanlang"
+              : "Guruhlar mavjud emas"
+          }
         />
       </SelectTrigger>
+
       <SelectContent className="top-[30px]">
         <SelectGroup>
           <SelectLabel>Guruhlar</SelectLabel>
