@@ -69,6 +69,7 @@ export default function GroupTableComponent() {
           headers: { Authorization: `Bearer ${token}` },
         },
       );
+      console.log(res.data.data)
       setTableData(res.data.data || []);
     } catch (error) {
       console.log("FETCH ERROR:", error);

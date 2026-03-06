@@ -178,13 +178,13 @@ export function TeacherCreateModal({
 
     try {
       setLoading(true);
-
-      const res = await apiClient.post(`${api}/teachers`, {
+      const numericSalary = Number(salary.replace(/,/g, ""));
+      await apiClient.post(`${api}/teachers`, {
         email,
         name,
         lastName,
         phone,
-        salary: Number(salary),
+        salary: Number(numericSalary),
         password,
         login,
         subject,
@@ -227,6 +227,7 @@ export function TeacherCreateModal({
               <Label>Ism</Label>
               <Input
                 value={name}
+                placeholder="O'qituvchi Ismi"
                 onChange={(e) => handleChange("name", e.target.value)}
               />
               {errors.name && (
@@ -236,6 +237,7 @@ export function TeacherCreateModal({
             <div className="flex flex-col gap-2">
               <Label>Familiya</Label>
               <Input
+                placeholder="O'qituvchi Familiyasi"
                 value={lastName}
                 onChange={(e) => handleChange("lastName", e.target.value)}
               />
@@ -247,6 +249,7 @@ export function TeacherCreateModal({
             <div className="flex flex-col gap-2">
               <Label>Telefon</Label>
               <Input
+                placeholder="O'qituvchi Telefon Raqami"
                 value={phone}
                 onChange={(e) => handleChange("phone", e.target.value)}
               />
@@ -258,6 +261,7 @@ export function TeacherCreateModal({
             <div className="flex flex-col gap-2">
               <Label>Email</Label>
               <Input
+                placeholder="O'qituvchi Emaili"
                 value={email}
                 onChange={(e) => handleChange("email", e.target.value)}
               />
@@ -267,11 +271,20 @@ export function TeacherCreateModal({
             </div>
 
             <div className="flex flex-col gap-2">
-              <Label>Oylik Maosh</Label>
+              <Label>Oylik Maosh (so'm)</Label>
               <Input
+                type="text"
+                placeholder="3.000.000"
                 value={salary}
-                onChange={(e) => handleChange("salary", e.target.value)}
+                onChange={(e) => {
+                  const numeric = e.target.value.replace(/\D/g, "");
+                  const formatted = numeric
+                    ? new Intl.NumberFormat("uz-UZ").format(Number(numeric))
+                    : "";
+                  setSalary(formatted);
+                }}
               />
+
               {errors.salary && (
                 <p className="text-red-500 text-xs">{errors.salary}</p>
               )}
@@ -280,6 +293,7 @@ export function TeacherCreateModal({
             <div className="flex flex-col gap-2">
               <Label>Fan</Label>
               <Input
+                placeholder="O'qituvchi Fani"
                 value={subject}
                 onChange={(e) => handleChange("subject", e.target.value)}
               />
@@ -290,6 +304,7 @@ export function TeacherCreateModal({
             <div className="flex flex-col gap-2">
               <Label>Login</Label>
               <Input
+                placeholder="O'qituvchi Logini"
                 value={login}
                 onChange={(e) => handleChange("login", e.target.value)}
               />
@@ -302,6 +317,7 @@ export function TeacherCreateModal({
 
               <div className="relative">
                 <Input
+                  placeholder="O'qituvchi Paroli"
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => handleChange("password", e.target.value)}

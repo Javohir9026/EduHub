@@ -1,49 +1,38 @@
+import apiClient from "@/api/ApiClient";
 import { Button } from "@/components/ui/button";
 import { Calendar, ChevronUpSquareIcon, Coins, Plus, Users } from "lucide-react";
+import { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
-
-export const stats = [
-  {id:1, icon:<Users />, title: 'Jami o`quvchilar' , count: '285', persend: "+ O'tgan oyga nisbatan 12%" },
-  {id:2, icon:<Coins />, title: 'Oylik daromad' , count: '$25,480', persend: "+ 8,5% ga o'sish" },
-  {id:3, icon:<Users />, title: "O'rtacha ishtirok" , count: "92%", persend: "+ O'tgan haftada 2% ga oshgan" },
-  {id:4, icon:<ChevronUpSquareIcon />, title: "Faol ustozlar" , count: "42", persend: "+ Bu chorakda 5 ta yangi kurslar" },
-];
 
 const Dashboard = () => {
 
-  const AreaChart = () => {
-    const options :any ={
-      chart: { type: "area", height: 350 },
-      dataLabels: { enabled: false },
-      stroke: { curve: "smooth" },
-      xaxis: {
-        type: "datetime",
-        categories: [
-          "2018-09-19T00:00:00.000Z",
-          "2018-09-19T01:30:00.000Z",
-          "2018-09-19T02:30:00.000Z",
-          "2018-09-19T03:30:00.000Z",
-          "2018-09-19T04:30:00.000Z",
-          "2018-09-19T05:30:00.000Z",
-          "2018-09-19T06:30:00.000Z"
-        ]
-      },
-      tooltip: {
-        x: { format: "dd/MM/yy HH:mm" }
-      }
-    };
+  const [studentCount, setStudentCount] = useState<number>(0);
 
-    const series = [
-      { name: "series1", data: [31,40,28,51,42,109,100] },
-      { name: "series2", data: [11,32,45,32,34,52,41] }
-    ];
+  useEffect(() => {
+  const getStudents = async () => {
+    try {
+      const token = localStorage.getItem("access_token");
 
-    return (
-      <div className="bg-white rounded-xl p-4 shadow-md dark:bg-gray-800 mt-8">
-        <Chart options={options} series={series} type="area" height={350} />
-      </div>
-    );
+      const res = await apiClient.get("/students", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setStudentCount(res.data.length);
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  getStudents();
+}, []);
+
+  const stats = [
+    { id:1, icon:<Users />, title:"Jami o`quvchilar", count: studentCount, persend:"+ O'tgan oyga nisbatan 12%" },
+    { id:2, icon:<Coins />, title:"Oylik daromad", count:"$25,480", persend:"+ 8,5% ga o'sish" },
+    { id:3, icon:<Users />, title:"O'rtacha ishtirok", count:"92%", persend:"+ O'tgan haftada 2% ga oshgan" },
+    { id:4, icon:<ChevronUpSquareIcon />, title:"Faol ustozlar", count:"42", persend:"+ Bu chorakda 5 ta yangi kurslar" },
+  ];
 
   return (
     <div>
@@ -57,11 +46,11 @@ const Dashboard = () => {
         </div>
 
         <div className="flex gap-4">
-          <Button className="flex items-center cursor-pointer gap-2 bg-white border border-black text-black hover:bg-purple-500 hover:text-white hover:border-purple-500 dark:bg-gray-800 dark:text-white">
+          <Button className="flex items-center gap-2 bg-white border border-black text-black hover:bg-purple-500 hover:text-white hover:border-purple-500">
             <Calendar /> Bu oy
           </Button>
 
-          <Button className="flex items-center cursor-pointer gap-2 bg-gradient-to-r text-white from-[#332a9b] via-[#490bb5] to-[#cc53ed] border-black border-1">
+          <Button className="flex items-center gap-2 bg-gradient-to-r text-white from-[#332a9b] via-[#490bb5] to-[#cc53ed] border-black border">
             <Plus /> yangi voqea
           </Button>
         </div>
@@ -83,8 +72,6 @@ const Dashboard = () => {
           </div>
         ))}
       </div>
-
-      {/* <AreaChart /> */}
 
     </div>
   );

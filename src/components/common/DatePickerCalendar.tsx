@@ -1,9 +1,8 @@
-import { useState } from "react";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { useEffect, useState } from "react";
+import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
 interface DatePickerProps {
-  label?: string;
   defaultValue?: string;
   onChange?: (date: string) => void;
 }
@@ -16,13 +15,17 @@ export function DatePickerCalendar({
 
   const [date, setDate] = useState(defaultValue || today);
 
+  // 🔥 MUHIM QISM
+  useEffect(() => {
+    if (!defaultValue && onChange) {
+      onChange(today); // parent ga bugungi sanani yuboramiz
+    }
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setDate(value);
-
-    if (onChange) {
-      onChange(value);
-    }
+    onChange?.(value);
   };
 
   return (
@@ -30,7 +33,6 @@ export function DatePickerCalendar({
       <Field className="w-full">
         <Input
           type="date"
-          id="date-picker"
           value={date}
           onChange={handleChange}
           className="bg-background"

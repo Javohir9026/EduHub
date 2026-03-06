@@ -15,22 +15,25 @@ interface TeacherType {
   name: string;
   lastName: string;
 }
+
 interface TeacherGroupSelectProps {
   value: string;
   onChange: (value: string) => void;
 }
-``;
+
 const GroupTeacherSelect: React.FC<TeacherGroupSelectProps> = ({
   value,
   onChange,
 }) => {
-  const [teacher, setTeacher] = useState<TeacherType[]>([]);
+  const [teachers, setTeachers] = useState<TeacherType[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const getTeacher = async () => {
+  const getTeachers = async () => {
     const api = import.meta.env.VITE_API_URL;
+
     try {
       setLoading(true);
+
       const response = await apiClient.get(
         `${api}/learning-centers/${localStorage.getItem("id")}/teachers`,
         {
@@ -39,7 +42,8 @@ const GroupTeacherSelect: React.FC<TeacherGroupSelectProps> = ({
           },
         },
       );
-      setTeacher(response.data.data);
+
+      setTeachers(response.data.data);
     } catch (error) {
       console.log(error);
     } finally {
@@ -48,8 +52,7 @@ const GroupTeacherSelect: React.FC<TeacherGroupSelectProps> = ({
   };
 
   useEffect(() => {
-    getTeacher();
-    console.log(value);
+    getTeachers();
   }, []);
 
   return (
@@ -59,18 +62,19 @@ const GroupTeacherSelect: React.FC<TeacherGroupSelectProps> = ({
           placeholder={
             loading
               ? "Yuklanmoqda..."
-              : teacher.length > 0
-                ? "Ustozni Tanlang"
-                : "Ustozlar majud emas!"
+              : teachers.length > 0
+                ? "Ustozni tanlang"
+                : "Ustozlar mavjud emas!"
           }
         />
       </SelectTrigger>
-      <SelectContent className="top-[30px]">
+
+      <SelectContent>
         <SelectGroup>
           <SelectLabel>Ustozlar</SelectLabel>
-          {teacher.map((teach) => (
-            <SelectItem key={teach.id} value={teach.id.toString()}>
-              {teach.name + " " + teach.lastName}
+          {teachers.map((teacher) => (
+            <SelectItem key={teacher.id} value={teacher.id.toString()}>
+              {teacher.name} {teacher.lastName}
             </SelectItem>
           ))}
         </SelectGroup>

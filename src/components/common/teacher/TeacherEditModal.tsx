@@ -34,7 +34,7 @@ export function TeacherEditModal({
   const [name, setName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("+998");
-  const [salary, setSalary] = useState(0);
+  const [salary, setSalary] = useState("");
   const [password, setPassword] = useState("");
   const [login, setLogin] = useState("");
   const [subject, setSubject] = useState("");
@@ -47,9 +47,14 @@ export function TeacherEditModal({
       setName(teacher.name || "");
       setLastName(teacher.lastName || "");
       setPhone(teacher.phone || "+998");
-      setSalary(teacher.salary || 0);
       setLogin(teacher.login || "");
       setSubject(teacher.subject || "");
+      setSalary(
+        teacher.salary
+          ? new Intl.NumberFormat("uz-UZ").format(teacher.salary)
+          : "",
+      );
+      setPassword("");
       setErrors({});
     }
   }, [teacher, open]);
@@ -77,17 +82,10 @@ export function TeacherEditModal({
   const validate = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!name.trim()) {
-      newErrors.name = "Ism kiriting!";
-    }
-
-    if (!lastName.trim()) {
-      newErrors.lastName = "Familiya kiriting!";
-    }
-
-    if (!phone || phone.length < 17) {
+    if (!name.trim()) newErrors.name = "Ism kiriting!";
+    if (!lastName.trim()) newErrors.lastName = "Familiya kiriting!";
+    if (!phone || phone.length < 17)
       newErrors.phone = "Telefon to'liq kiritilishi kerak";
-    }
 
     if (!email.trim()) {
       newErrors.email = "Email kiriting!";
@@ -98,17 +96,9 @@ export function TeacherEditModal({
       }
     }
 
-    if (!login.trim()) {
-      newErrors.login = "Login kiriting!";
-    }
-
-    if (!subject.trim()) {
-      newErrors.subject = "Fanni kiriting!";
-    }
-
-    if (!salary || salary <= 0) {
-      newErrors.salary = "Maosh kiriting!";
-    }
+    if (!login.trim()) newErrors.login = "Login kiriting!";
+    if (!subject.trim()) newErrors.subject = "Fanni kiriting!";
+    if (!salary.trim()) newErrors.salary = "Maosh kiriting!";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -120,27 +110,30 @@ export function TeacherEditModal({
     try {
       setLoading(true);
 
-      const data: any = {
-        email,
-        name,
-        lastName,
-        phone,
-        salary,
-        login,
-        subject,
-        learningCenterId: localStorage.getItem("id"),
-      };
+      const numericSalary = Number(salary.replace(/\D/g, ""));
+
+      const data: any = {};
+      if (email !== teacher.email) {
+        data.email = email;
+      }
+      if (name !== teacher.name) data.name = name;
+      if (lastName !== teacher.lastName) data.lastName = lastName;
+      if (phone !== teacher.phone) data.phone = phone;
+      if (login !== teacher.login) data.login = login;
+      if (subject !== teacher.subject) data.subject = subject;
+      if (numericSalary !== teacher.salary) data.salary = numericSalary;
 
       if (password.trim()) {
         data.password = password;
       }
 
-      await apiClient.patch(`${api}/teachers/${teacher.id}`, data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      if (Object.keys(data).length === 0) {
+        toast.info("Hech qanday o'zgarish kiritilmadi");
+        return;
+      }
 
+      console.log(data);
+      await apiClient.patch(`${api}/teachers/${teacher.id}`, data);
       toast.success("O'qituvchi muvaffaqiyatli yangilandi!");
       setOpen(false);
       onSuccess?.();
@@ -149,6 +142,16 @@ export function TeacherEditModal({
         setErrors((prev) => ({
           ...prev,
           phone: "Bu telefon raqam allaqachon mavjud",
+        }));
+      } else if (error.response?.data?.message?.includes("email")) {
+        setErrors((prev) => ({
+          ...prev,
+          email: "Bu email allaqachon mavjud",
+        }));
+      } else if (error.response?.data?.message?.includes("login")) {
+        setErrors((prev) => ({
+          ...prev,
+          login: "Bu login allaqachon mavjud",
         }));
       } else {
         toast.error("Xatolik yuz berdi");
@@ -231,9 +234,16 @@ export function TeacherEditModal({
             <div className="flex flex-col gap-1">
               <Label>Maosh</Label>
               <Input
-                type="number"
+                type="text"
+                placeholder="3 000 000"
                 value={salary}
-                onChange={(e) => setSalary(Number(e.target.value))}
+                onChange={(e) => {
+                  const numeric = e.target.value.replace(/\D/g, "");
+                  const formatted = numeric
+                    ? new Intl.NumberFormat("uz-UZ").format(Number(numeric))
+                    : "";
+                  setSalary(formatted);
+                }}
               />
               {errors.salary && (
                 <span className="text-red-500 text-sm">{errors.salary}</span>
