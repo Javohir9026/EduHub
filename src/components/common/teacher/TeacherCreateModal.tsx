@@ -89,7 +89,6 @@ export function TeacherCreateModal({
 
     if (name === "salary") {
       if (!value.trim()) return "Maoshni kiriting!";
-      if (isNaN(Number(value))) return "Faqat raqam kiriting!";
     }
 
     if (name === "password") {

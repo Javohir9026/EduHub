@@ -106,8 +106,20 @@ export function GroupEditModal({
     if (!validate()) return;
 
     try {
-      const numericPrice = Number(monthlyPrice.replace(/\D/g, ""));
+      const numericPrice = Number(monthlyPrice.replace(/\D/g, "")).toFixed(1);
       setLoading(true);
+      console.log(
+        name,
+        startDate,
+        endDate,
+        lessonDays,
+        lessonTime,
+        numericPrice,
+        maxStudents,
+        room,
+        description,
+        teacher_id,
+      );
       await apiClient.patch(`${api}/groups/${group.id}`, {
         name,
         startDate,
@@ -118,8 +130,8 @@ export function GroupEditModal({
         maxStudents,
         room,
         description,
-        teacher_id,
-        learning_center_id: localStorage.getItem("id"),
+        teacher_id: Number(teacher_id),
+        learning_center_id: Number(localStorage.getItem("id")),
       });
 
       toast.success("Guruh yangilandi!");
