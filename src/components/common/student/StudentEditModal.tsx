@@ -33,7 +33,6 @@ export function StudentEditModal({
 
   const [fullName, setFullName] = useState("");
   const [birthDate, setBirthDate] = useState("");
-  const [groupId, setGroupId] = useState<number | null>(null);
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("+998");
   const [parentPhone, setParentPhone] = useState("+998");
@@ -51,9 +50,6 @@ export function StudentEditModal({
         ? student.birthDate.split("T")[0]
         : "";
       setBirthDate(formattedDate);
-
-      const firstGroupId = student.groupStudents?.[0]?.group?.id || null;
-      setGroupId(firstGroupId);
 
       setErrors({});
     }
@@ -86,7 +82,6 @@ export function StudentEditModal({
     if (!parentPhone || parentPhone.length < 17)
       newErrors.parentPhone = "Ota-ona telefoni majburiy";
     if (!birthDate) newErrors.birthDate = "Tug'ilgan sana majburiy";
-    if (!groupId) newErrors.groupId = "Guruh ID majburiy";
     if (!address.trim()) newErrors.address = "Manzil majburiy";
 
     setErrors(newErrors);
@@ -112,7 +107,6 @@ export function StudentEditModal({
       if (phone !== student.phone) data.phone = phone;
       if (parentPhone !== student.parentPhone) data.parentPhone = parentPhone;
       if (birthDate !== originalBirthDate) data.birthDate = birthDate;
-      if (groupId !== originalGroupId) data.groupId = Number(groupId);
       if (address !== student.address) data.address = address;
 
       if (Object.keys(data).length === 0) {
@@ -195,17 +189,6 @@ export function StudentEditModal({
               />
               {errors.birthDate && (
                 <span className="text-red-500 text-sm">{errors.birthDate}</span>
-              )}
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <Label>Guruh</Label>
-              <StudentUpdateGroupSelect
-                value={groupId ? String(groupId) : ""}
-                onChange={(val) => setGroupId(val)}
-              />
-              {errors.groupId && (
-                <span className="text-red-500 text-sm">{errors.groupId}</span>
               )}
             </div>
 
