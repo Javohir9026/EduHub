@@ -140,20 +140,6 @@ const TeacherInfoPage = () => {
         <InfoCard icon={<DollarSign />} title="Maosh">
           {teacher.salary.toLocaleString()} so'm
         </InfoCard>
-
-        <InfoCard icon={<User />} title="Rol">
-          {teacher.role}
-        </InfoCard>
-      </div>
-
-      {/* DATES */}
-      <div className="grid md:grid-cols-2 gap-6">
-        <InfoCard icon={<CalendarIcon />} title="Yaratilgan vaqti">
-          {formatDate(teacher.created_at)}
-        </InfoCard>
-        <InfoCard icon={<CalendarIcon />} title="Yangilangan vaqti">
-          {formatDate(teacher.updated_at)}
-        </InfoCard>
       </div>
     </div>
   );
