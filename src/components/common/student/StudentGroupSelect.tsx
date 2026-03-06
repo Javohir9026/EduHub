@@ -52,7 +52,10 @@ const StudentUpdateGroupSelect: React.FC<StudentUpdateGroupSelectProps> = ({
   }, []);
 
   return (
-    <Select value={value} onValueChange={(val) => onChange(Number(val))}>
+    <Select
+      value={value ? value.toString() : ""}
+      onValueChange={(val) => onChange(Number(val))}
+    >
       <SelectTrigger className="w-full">
         <SelectValue
           placeholder={

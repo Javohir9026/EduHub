@@ -30,13 +30,12 @@ export function StudentCreateModal({
 
   const [fullName, setFullName] = useState("");
   const [birthDate, setBirthDate] = useState("");
-  const [groupId, setGroupId] = useState("");
+  const [groupId, setGroupId] = useState<number | null>(null);
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("+998");
   const [parentPhone, setParentPhone] = useState("+998");
   const [errors, setErrors] = useState<any>({});
 
-  // Telefon formatlash
   const formatPhone = (value: string) => {
     let digits = value.replace(/\D/g, "");
 
@@ -57,8 +56,7 @@ export function StudentCreateModal({
     return "+" + parts.join(" ");
   };
 
-  // Validatsiya
-  const validateField = (name: string, value: string): string | undefined => {
+  const validateField = (name: string, value: any): string | undefined => {
     if (name === "fullName") {
       if (!value.trim()) return "Ism Familiya kiriting!";
       if (value.trim().length < 3) return "Kamida 3 ta harf bo'lishi kerak!";
@@ -86,8 +84,9 @@ export function StudentCreateModal({
         return "Kelajak sana kiritish mumkin emas!";
       }
     }
+
     if (name === "groupId") {
-      if (!value.trim()) return "Guruhni tanlang!";
+      if (!value) return "Guruhni tanlang!";
     }
 
     if (name === "address") {
@@ -97,7 +96,6 @@ export function StudentCreateModal({
     return undefined;
   };
 
-  // realtime change
   const handleChange = (name: string, value: string) => {
     let formatted = value;
 
@@ -111,8 +109,6 @@ export function StudentCreateModal({
       setFullName(value);
     } else if (name === "birthDate") {
       setBirthDate(value);
-    } else if (name === "groupId") {
-      setGroupId(value);
     } else if (name === "address") {
       setAddress(value);
     }
@@ -131,7 +127,7 @@ export function StudentCreateModal({
     setPhone("+998");
     setParentPhone("+998");
     setBirthDate("");
-    setGroupId("");
+    setGroupId(null);
     setAddress("");
     setErrors({});
   };
@@ -152,6 +148,7 @@ export function StudentCreateModal({
     }
 
     setErrors(newErrors);
+
     const hasError = Object.values(newErrors).some((e) => e);
     if (hasError) return;
 
@@ -164,7 +161,7 @@ export function StudentCreateModal({
         parentPhone,
         birthDate,
         learningCenterId: localStorage.getItem("id"),
-        groupId: Number(groupId),
+        groupId: groupId,
         address,
       });
 
@@ -204,6 +201,7 @@ export function StudentCreateModal({
             <div className="flex flex-col gap-2">
               <Label>Ism Familiya</Label>
               <Input
+                placeholder=""
                 value={fullName}
                 onChange={(e) => handleChange("fullName", e.target.value)}
               />
@@ -247,8 +245,11 @@ export function StudentCreateModal({
             </div>
 
             <div className="flex flex-col gap-2">
-              <Label>Guruh </Label>
-              <StudentUpdateGroupSelect value={groupId} onChange={setGroupId} />
+              <Label>Guruh</Label>
+              <StudentUpdateGroupSelect
+                value={groupId ? groupId.toString() : ""}
+                onChange={setGroupId}
+              />
               {errors.groupId && (
                 <p className="text-red-500 text-xs">{errors.groupId}</p>
               )}
