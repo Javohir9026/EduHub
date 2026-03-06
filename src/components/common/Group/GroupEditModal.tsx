@@ -106,7 +106,7 @@ export function GroupEditModal({
     if (!validate()) return;
 
     try {
-      const numericPrice = Number(monthlyPrice.replace(/\D/g, "")).toFixed(1git);
+      const numericPrice = Number(monthlyPrice.replace(/\D/g, "")).toFixed(1);
       setLoading(true);
       console.log(
         name,
