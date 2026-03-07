@@ -48,7 +48,15 @@ export function GroupEditModal({
       setName(group.name || "");
       setLessonDays(String(group.lessonDays) || "");
       setLessonTime(group.lessonTime || "");
-      setMonthlyPrice(group.monthlyPrice || "");
+      const price = group.monthlyPrice
+        ? Number(group.monthlyPrice).toString()
+        : "";
+
+      const formattedPrice = price
+        ? new Intl.NumberFormat("uz-UZ").format(Number(price))
+        : "";
+
+      setMonthlyPrice(formattedPrice);
       setMaxStudents(String(group.maxStudents) || "");
       setRoom(group.room || "");
       setDescription(group.description || "");
@@ -69,7 +77,7 @@ export function GroupEditModal({
     const newErrors: Record<string, string> = {};
 
     if (!name.trim()) {
-      newErrors.fullName = "Guruh Nomini kiriting!";
+      newErrors.fullName = "Guruh Nomini to'liq kiriting!";
     }
     if (!startDate.trim()) {
       newErrors.fullName = "Boshlanish sanasini kiriting!";

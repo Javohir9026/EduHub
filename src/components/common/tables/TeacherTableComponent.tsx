@@ -45,6 +45,7 @@ import {
 import SearchInput from "@/components/ui/SearchInput";
 import { TeacherCreateModal } from "../teacher/TeacherCreateModal";
 import { TeacherEditModal } from "../teacher/TeacherEditModal";
+import { toast } from "sonner";
 
 export default function TeacherTableComponent() {
   const [tableData, setTableData] = useState<Teacher[]>([]);
@@ -82,6 +83,7 @@ export default function TeacherTableComponent() {
       });
       await fetchTeachers();
       setDeletingId(null);
+      toast.success("O'qituvchi Muvaffaqiyatli o'chirildi")
     } catch (error) {
       console.log("O'chirishda xatolik:", error);
       setDeletingId(null);

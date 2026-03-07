@@ -201,7 +201,7 @@ export function StudentCreateModal({
             <div className="flex flex-col gap-2">
               <Label>Ism Familiya</Label>
               <Input
-                placeholder=""
+                placeholder="O'quvchi Ism Familiyasi"
                 value={fullName}
                 onChange={(e) => handleChange("fullName", e.target.value)}
               />
@@ -258,6 +258,7 @@ export function StudentCreateModal({
             <div className="flex flex-col gap-2">
               <Label>Manzil</Label>
               <Input
+                placeholder="O'quvchi manzili"
                 value={address}
                 onChange={(e) => handleChange("address", e.target.value)}
               />

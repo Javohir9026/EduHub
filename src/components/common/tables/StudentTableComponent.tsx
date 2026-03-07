@@ -45,6 +45,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import SearchInput from "@/components/ui/SearchInput";
+import { toast } from "sonner";
 
 export default function StudentTableComponent() {
   const [tableData, setTableData] = useState<Student[]>([]);
@@ -82,6 +83,7 @@ export default function StudentTableComponent() {
       });
       await fetchStudents();
       setDeletingId(null);
+      toast.success("Oq'uvchi Muvaffaqiyatli O'chirildi!")
     } catch (error) {
       console.log("O'chirishda xatolik:", error);
       setDeletingId(null);
