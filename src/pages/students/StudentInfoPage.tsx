@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import apiClient from "@/api/ApiClient";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   Cake,
   GroupIcon,
@@ -23,11 +23,15 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 const StudentInfoPage = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+
   const [student, setStudent] = useState<Student | null>(null);
   const [loading, setLoading] = useState(false);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
   const fetchStudent = async () => {
     try {
@@ -47,16 +51,81 @@ const StudentInfoPage = () => {
       setLoading(false);
     }
   };
+
+  const handleDelete = async (studentId: number) => {
+    try {
+      setDeletingId(studentId);
+
+      const token = localStorage.getItem("access_token");
+      const api = import.meta.env.VITE_API_URL;
+
+      await apiClient.delete(`${api}/students/${studentId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      navigate("/students");
+      toast.success("O'quvchi Muvaffaqiyatli o'chirildi!");
+    } catch (error) {
+      console.error("Delete xatolik:", error);
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   useEffect(() => {
     if (id) fetchStudent();
   }, [id]);
 
   if (loading)
-    return (
-      <div className="h-screen flex items-center justify-center">
-        <p className="text-xl font-semibold animate-pulse">Yuklanmoqda...</p>
-      </div>
-    );
+    if (loading)
+      return (
+        <div className="max-w-6xl mx-auto p-6 grid md:grid-cols-3 gap-6 animate-pulse">
+          {/* PROFILE SKELETON */}
+          <div className="bg-white dark:bg-fullbg rounded-2xl shadow-lg p-6 flex flex-col items-center gap-4">
+            <div className="w-28 h-28 rounded-full bg-gray-300 dark:bg-gray-700"></div>
+
+            <div className="h-6 w-40 bg-gray-300 dark:bg-gray-700 rounded"></div>
+
+            <div className="h-5 w-24 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
+
+            <div className="h-10 w-full bg-gray-300 dark:bg-gray-700 rounded-lg"></div>
+
+            <div className="h-10 w-full bg-gray-300 dark:bg-gray-700 rounded-lg"></div>
+          </div>
+
+          {/* INFO SKELETON */}
+
+          <div className="md:col-span-2 grid sm:grid-cols-2 gap-5">
+            {[...Array(4)].map((_, i) => (
+              <div
+                key={i}
+                className="bg-white dark:bg-fullbg rounded-xl shadow p-5 flex items-center gap-4"
+              >
+                <div className="w-8 h-8 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
+
+                <div className="flex flex-col gap-2 w-full">
+                  <div className="h-4 w-24 bg-gray-300 dark:bg-gray-700 rounded"></div>
+                  <div className="h-5 w-40 bg-gray-300 dark:bg-gray-700 rounded"></div>
+                </div>
+              </div>
+            ))}
+
+            {/* GROUPS SKELETON */}
+
+            <div className="bg-white dark:bg-fullbg rounded-xl shadow p-5 sm:col-span-2">
+              <div className="h-4 w-24 bg-gray-300 dark:bg-gray-700 rounded mb-4"></div>
+
+              <div className="flex gap-2">
+                <div className="h-6 w-20 bg-gray-300 dark:bg-gray-700 rounded"></div>
+                <div className="h-6 w-16 bg-gray-300 dark:bg-gray-700 rounded"></div>
+                <div className="h-6 w-24 bg-gray-300 dark:bg-gray-700 rounded"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
 
   if (!student)
     return (
@@ -90,43 +159,49 @@ const StudentInfoPage = () => {
           content="Tahrirlash"
           student={student}
           onSuccess={fetchStudent}
-          classname=" dark:bg-blue-500 bg-blue-500 hover:bg-blue-500/80 hover:text-white cursor-pointer text-white rounded-lg  items-center justify-center gap-2"
+          classname="dark:bg-blue-500  w-full bg-blue-500 hover:bg-blue-500/80 hover:text-white cursor-pointer text-white rounded-lg flex items-center justify-center gap-2"
         />
-        <div>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button className="bg-red-600 hover:bg-red-700 hover:text-white cursor-pointer text-white rounded-lg flex items-center justify-center gap-2">
-                <Trash className="w-4 h-4" />
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>O'chirishni tasdiqlaysizmi?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Haqiqatdan ham ishonchingiz komilmi?
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel className="cursor-pointer">
-                  Bekor qilish
-                </AlertDialogCancel>
-                <AlertDialogAction
-                  disabled={deletingId === student.id}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleDelete(student.id);
-                  }}
-                  className="bg-red-600 hover:bg-red-700 hover:text-white cursor-pointer text-white"
-                >
-                  {deletingId === student.id
-                    ? "O'chirilmoqda..."
-                    : "Ha, O'chirish"}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
+
+        {/* DELETE BUTTON */}
+
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button className="bg-red-600 w-full hover:bg-red-700 hover:text-white cursor-pointer text-white rounded-lg flex items-center justify-center gap-2">
+              <Trash className="w-4 h-4" />
+              O'chirish
+            </Button>
+          </AlertDialogTrigger>
+
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>O'chirishni tasdiqlaysizmi?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Haqiqatdan ham ishonchingiz komilmi?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+
+            <AlertDialogFooter>
+              <AlertDialogCancel className="cursor-pointer">
+                Bekor qilish
+              </AlertDialogCancel>
+
+              <AlertDialogAction
+                disabled={deletingId === student.id}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleDelete(student.id);
+                }}
+                className="bg-red-600 hover:bg-red-700 hover:text-white cursor-pointer text-white"
+              >
+                {deletingId === student.id
+                  ? "O'chirilmoqda..."
+                  : "Ha, O'chirish"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
+
       {/* INFO SECTION */}
 
       <div className="md:col-span-2 grid sm:grid-cols-2 gap-5">
