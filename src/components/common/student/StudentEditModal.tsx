@@ -15,16 +15,17 @@ import { Pen } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import type { Student } from "@/lib/types";
-import StudentUpdateGroupSelect from "./StudentGroupSelect";
 
 export function StudentEditModal({
   classname,
   student,
   onSuccess,
+  content,
 }: {
   classname: string;
   student: Student;
   onSuccess?: () => void;
+  content?: string;
 }) {
   const api = import.meta.env.VITE_API_URL;
 
@@ -101,7 +102,6 @@ export function StudentEditModal({
       const originalBirthDate = student.birthDate
         ? student.birthDate.split("T")[0]
         : "";
-      const originalGroupId = student.groupStudents?.[0]?.group?.id || null;
 
       if (fullName !== student.fullName) data.fullName = fullName;
       if (phone !== student.phone) data.phone = phone;
@@ -138,6 +138,7 @@ export function StudentEditModal({
       <AlertDialogTrigger asChild>
         <Button className={classname} variant="outline">
           <Pen className="w-4 h-4" />
+          {content && <span>{content}</span>}
         </Button>
       </AlertDialogTrigger>
 
