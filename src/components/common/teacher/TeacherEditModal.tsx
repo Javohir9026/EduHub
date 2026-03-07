@@ -19,10 +19,12 @@ import type { Teacher } from "@/lib/types";
 export function TeacherEditModal({
   classname,
   teacher,
+  content,
   onSuccess,
 }: {
   classname: string;
   teacher: Teacher;
+  content?: string;
   onSuccess?: () => void;
 }) {
   const api = import.meta.env.VITE_API_URL;
@@ -166,6 +168,7 @@ export function TeacherEditModal({
       <AlertDialogTrigger asChild>
         <Button className={classname} variant="outline">
           <Pen className="w-4 h-4" />
+          {content && <span>{content}</span>}
         </Button>
       </AlertDialogTrigger>
 

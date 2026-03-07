@@ -46,9 +46,9 @@ export interface Groupforstudent {
 export type Teacher = {
   id: number;
   name: string;
-  email:string;
+  email: string;
   lastName: string;
-  login:string;
+  login: string;
   phone: string;
   subject: string;
   salary: number;
@@ -56,6 +56,7 @@ export type Teacher = {
   learningCenterId: number;
   isActive: boolean;
   createdAt: string;
+  updatedAt: string;
 };
 export interface Student {
   id: number;
@@ -146,6 +147,6 @@ export interface StudentShort {
   id: number;
   firstName: string;
   lastName: string;
-  fullName:string;
+  fullName: string;
   phone: string;
 }
