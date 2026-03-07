@@ -77,7 +77,7 @@ export function GroupEditModal({
     const newErrors: Record<string, string> = {};
 
     if (!name.trim()) {
-      newErrors.fullName = "Guruh Nomini kiriting!";
+      newErrors.fullName = "Guruh Nomini to'liq kiriting!";
     }
     if (!startDate.trim()) {
       newErrors.fullName = "Boshlanish sanasini kiriting!";

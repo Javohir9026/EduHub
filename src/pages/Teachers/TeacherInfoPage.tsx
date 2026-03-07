@@ -102,10 +102,9 @@ const TeacherInfoPage = () => {
       <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-8 rounded-2xl shadow-xl flex flex-col md:flex-row items-center gap-6">
         <div className="w-32 h-32 rounded-full bg-blue-400 flex items-center justify-center text-white text-5xl font-bold shadow-lg">
           {teacher.name[0].toUpperCase()}
-          {teacher.lastName[0].toUpperCase()}
         </div>
-        <div>
-          <h1 className="text-4xl font-extrabold">
+        <div className="flex items-center flex-col sm:block">
+          <h1 className="text-4xl font-extrabold text-center">
             {teacher.name} {teacher.lastName}
           </h1>
           <p className="mt-2 text-blue-100 font-medium text-lg">
@@ -138,7 +137,7 @@ const TeacherInfoPage = () => {
         </InfoCard>
 
         <InfoCard icon={<DollarSign />} title="Maosh">
-          {teacher.salary.toLocaleString()} so'm
+          {Number(teacher.salary).toLocaleString("de-DE")} so'm
         </InfoCard>
       </div>
     </div>
