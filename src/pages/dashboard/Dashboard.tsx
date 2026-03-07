@@ -2,33 +2,35 @@ import apiClient from "@/api/ApiClient";
 import { Button } from "@/components/ui/button";
 import { Calendar, ChevronUpSquareIcon, Coins, Plus, Users } from "lucide-react";
 import { useEffect, useState } from "react";
-import Chart from "react-apexcharts";
 
 const Dashboard = () => {
 
-  const [studentCount, setStudentCount] = useState<number>(0);
+  const [studentsCount, setStudentsCount] = useState<number>(0);
 
   useEffect(() => {
-  const getStudents = async () => {
-    try {
-      const token = localStorage.getItem("access_token");
 
-      const res = await apiClient.get("/students", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setStudentCount(res.data.length);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    const fetchStudentsCount = async () => {
+      try {
+        const token = localStorage.getItem("access_token");
+        const api = import.meta.env.VITE_API_URL;
+        const learningCenterId = localStorage.getItem('id')
+        const res = await apiClient.get(`${api}/learning-centers/${learningCenterId}/students`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
 
-  getStudents();
-}, []);
+        setStudentsCount(res.data.data.length);
+        
+      } catch (error) {
+        console.error("Students count olishda xatolik", error);
+      }
+    };
+    
+    fetchStudentsCount();
+
+  }, []);
 
   const stats = [
-    { id:1, icon:<Users />, title:"Jami o`quvchilar", count: studentCount, persend:"+ O'tgan oyga nisbatan 12%" },
+    { id:1, icon:<Users />, title:"Jami o`quvchilar", count: studentsCount, persend:"+ O'tgan oyga nisbatan 12%" },
     { id:2, icon:<Coins />, title:"Oylik daromad", count:"$25,480", persend:"+ 8,5% ga o'sish" },
     { id:3, icon:<Users />, title:"O'rtacha ishtirok", count:"92%", persend:"+ O'tgan haftada 2% ga oshgan" },
     { id:4, icon:<ChevronUpSquareIcon />, title:"Faol ustozlar", count:"42", persend:"+ Bu chorakda 5 ta yangi kurslar" },
