@@ -3,6 +3,7 @@ import { UserEditModal } from "@/components/common/User/UserEditModal";
 import { useUser } from "@/context/UserContext";
 import { useState } from "react";
 import { Eye, Download, X } from "lucide-react";
+import { BreadcrumbBasic } from "@/components/common/BreadCrumb";
 
 const userProfile = () => {
   const { userData, loading } = useUser();
@@ -33,7 +34,15 @@ const userProfile = () => {
 
   return (
     <div className="flex flex-col gap-5">
-      <h1 className="text-[20px] !font-semibold">Shaxsiy Profil</h1>
+      <div className="flex justify-between">
+        <h1 className="text-[20px] !font-semibold">Shaxsiy Profil</h1>
+        <BreadcrumbBasic
+          items={[
+            { title: "Bosh sahifa", href: "/" },
+            { title: "Shaxsiy Profil", href: "/user-profile" },
+          ]}
+        />
+      </div>
       {loading ? (
         <div className="bg-white dark:bg-fullbg rounded-lg p-5 flex flex-col gap-7 animate-pulse">
           <div
