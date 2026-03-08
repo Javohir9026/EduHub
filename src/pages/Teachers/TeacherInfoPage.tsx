@@ -19,6 +19,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { BreadcrumbBasic } from "@/components/common/BreadCrumb";
 
 const TeacherInfoPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -59,7 +60,7 @@ const TeacherInfoPage = () => {
       await apiClient.delete(`${api}/teachers/${teacherId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      toast.success("O'qituvchi Muvaffaqiyatli o'chirildi")
+      toast.success("O'qituvchi Muvaffaqiyatli o'chirildi");
       window.location.href = "/teachers";
     } catch (error) {
       console.error(error);
@@ -101,97 +102,115 @@ const TeacherInfoPage = () => {
   }
 
   return (
-    <div className="min-h-screen p-6 space-y-8">
-      {/* HEADER */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-8 rounded-2xl shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
-        <div className="flex items-center gap-6">
-          <div className="hidden md:flex w-32 h-32 rounded-full bg-blue-400 items-center justify-center text-5xl font-bold shadow-lg">
-            {teacher.name[0].toUpperCase()}
-          </div>
-
-          <div className="text-center md:text-left">
-            <h1 className="text-4xl font-extrabold">
-              {teacher.name} {teacher.lastName}
-            </h1>
-
-            <p className="mt-2 text-blue-100 text-lg">Fan: {teacher.subject}</p>
-
-            <span className="bg-white/20 px-4 py-1 rounded-full text-sm mt-3 inline-block">
-              {teacher.role}
-            </span>
-          </div>
-        </div>
-
-        {/* ACTION BUTTONS */}
-        <div className="flex gap-3">
-          <TeacherEditModal
-            teacher={teacher}
-            content="Tahrirlash"
-            onSuccess={fetchTeacher}
-            classname="hidden sm:flex bg-blue-500 hover:bg-blue-600 hover:text-white text-white cursor-pointer rounded-lg px-4 py-2 items-center justify-center gap-2"
-          />
-
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button className="bg-red-600 hover:bg-red-700 text-white cursor-pointer flex items-center gap-2">
-                <Trash className="w-4 h-4" />
-                Tahrirlash
-              </Button>
-            </AlertDialogTrigger>
-
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>O'chirishni tasdiqlaysizmi?</AlertDialogTitle>
-
-                <AlertDialogDescription>
-                  Haqiqatdan ham o'chirmoqchimisiz?
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-
-              <AlertDialogFooter>
-                <AlertDialogCancel className="cursor-pointer">
-                  Bekor qilish
-                </AlertDialogCancel>
-
-                <AlertDialogAction
-                  disabled={deletingId === teacher.id}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleDelete(teacher.id);
-                  }}
-                  className="bg-red-600 hover:bg-red-700 text-white cursor-pointer"
-                >
-                  {deletingId === teacher.id
-                    ? "O'chirilmoqda..."
-                    : "Ha, O'chirish"}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
+    <div>
+      <div className="flex justify-end">
+        <BreadcrumbBasic
+          items={[
+            { title: "Bosh sahifa", href: "/" },
+            { title: "O'qituvchilar", href: "/teachers" },
+            {
+              title: teacher.name + " " + teacher.lastName,
+              href: `/teacher-info/${teacher.id}`,
+            },
+          ]}
+        />
       </div>
+      <div className="min-h-screen py-3 space-y-8">
+        {/* HEADER */}
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-8 rounded-2xl shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-6">
+            <div className="hidden md:flex w-32 h-32 rounded-full bg-blue-400 items-center justify-center text-5xl font-bold shadow-lg">
+              {teacher.name[0].toUpperCase()}
+            </div>
 
-      {/* INFO CARDS */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <InfoCard icon={<User />} title="Login">
-          {teacher.login}
-        </InfoCard>
+            <div className="text-center md:text-left">
+              <h1 className="text-4xl font-extrabold">
+                {teacher.name} {teacher.lastName}
+              </h1>
 
-        <InfoCard icon={<Phone />} title="Telefon">
-          {teacher.phone}
-        </InfoCard>
+              <p className="mt-2 text-blue-100 text-lg">
+                Fan: {teacher.subject}
+              </p>
 
-        <InfoCard icon={<Mail />} title="Email">
-          {teacher.email}
-        </InfoCard>
+              <span className="bg-white/20 px-4 py-1 rounded-full text-sm mt-3 inline-block">
+                {teacher.role}
+              </span>
+            </div>
+          </div>
 
-        <InfoCard icon={<Book />} title="Fan">
-          {teacher.subject}
-        </InfoCard>
+          {/* ACTION BUTTONS */}
+          <div className="flex gap-3">
+            <TeacherEditModal
+              teacher={teacher}
+              content="Tahrirlash"
+              onSuccess={fetchTeacher}
+              classname="hidden sm:flex bg-blue-500 hover:bg-blue-600 hover:text-white text-white cursor-pointer rounded-lg px-4 py-2 items-center justify-center gap-2"
+            />
 
-        <InfoCard icon={<DollarSign />} title="Maosh">
-          {Number(teacher.salary).toLocaleString("de-DE")} so'm
-        </InfoCard>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button className="bg-red-600 hover:bg-red-700 text-white cursor-pointer flex items-center gap-2">
+                  <Trash className="w-4 h-4" />
+                  Tahrirlash
+                </Button>
+              </AlertDialogTrigger>
+
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    O'chirishni tasdiqlaysizmi?
+                  </AlertDialogTitle>
+
+                  <AlertDialogDescription>
+                    Haqiqatdan ham o'chirmoqchimisiz?
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="cursor-pointer">
+                    Bekor qilish
+                  </AlertDialogCancel>
+
+                  <AlertDialogAction
+                    disabled={deletingId === teacher.id}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleDelete(teacher.id);
+                    }}
+                    className="bg-red-600 hover:bg-red-700 text-white cursor-pointer"
+                  >
+                    {deletingId === teacher.id
+                      ? "O'chirilmoqda..."
+                      : "Ha, O'chirish"}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        </div>
+
+        {/* INFO CARDS */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <InfoCard icon={<User />} title="Login">
+            {teacher.login}
+          </InfoCard>
+
+          <InfoCard icon={<Phone />} title="Telefon">
+            {teacher.phone}
+          </InfoCard>
+
+          <InfoCard icon={<Mail />} title="Email">
+            {teacher.email}
+          </InfoCard>
+
+          <InfoCard icon={<Book />} title="Fan">
+            {teacher.subject}
+          </InfoCard>
+
+          <InfoCard icon={<DollarSign />} title="Maosh">
+            {Number(teacher.salary).toLocaleString("de-DE")} so'm
+          </InfoCard>
+        </div>
       </div>
     </div>
   );

@@ -24,6 +24,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
+import { BreadcrumbBasic } from "@/components/common/BreadCrumb";
 
 const StudentInfoPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -135,6 +136,19 @@ const StudentInfoPage = () => {
     );
 
   return (
+    <div>
+      <div className="flex justify-end">
+        <BreadcrumbBasic
+          items={[
+            { title: "Bosh sahifa", href: "/" },
+            { title: "O'quvchilar", href: "/students" },
+            {
+              title: student.fullName,
+              href: `/student-info/${student.id}`,
+            },
+          ]}
+        />
+      </div>
     <div className="max-w-6xl mx-auto p-6 grid md:grid-cols-3 gap-6">
       {/* PROFILE CARD */}
       <div className="bg-white dark:bg-fullbg rounded-2xl shadow-lg p-6 flex flex-col items-center text-center gap-4">
@@ -246,6 +260,7 @@ const StudentInfoPage = () => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };
