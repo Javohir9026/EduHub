@@ -2,7 +2,6 @@ import { Link, useLocation } from "react-router-dom";
 import { useSidebar } from "@/context/SidebarContext";
 import { EduLogoDark, EduLogoLight, EduHubLogo } from "@/assets/exportImg";
 import { Calendar, Home, Layers, Users, UsersRound } from "lucide-react";
-import LogOutButton from "@/components/common/LogOutButton";
 
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
@@ -105,8 +104,8 @@ const AppSidebar: React.FC = () => {
             <Link
               key={link.id}
               to={link.path}
-              className={`flex gap-3 items-center font-semibold p-2 rounded-lg transition
-              ${isActive ? "bg-chart-1 text-white" : "hover:bg-muted"}`}
+              className={`flex gap-3 items-center font-semibold dark:hover:bg-blue-500/10 p-2 rounded-lg transition
+              ${isActive ? "bg-chart-1 text-white dark:hover:bg-chart-1" : "hover:bg-muted"}`}
             >
               <link.icon
                 size={25}
