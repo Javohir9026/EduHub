@@ -40,6 +40,8 @@ apiClient.interceptors.response.use(
         return apiClient(originalRequest);
       } catch (err) {
         localStorage.removeItem("access_token");
+        localStorage.removeItem("role");
+        localStorage.removeItem("id");
         window.location.href = "/";
       }
     }

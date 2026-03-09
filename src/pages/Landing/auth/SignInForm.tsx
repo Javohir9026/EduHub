@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { toast } from "sonner";
 import apiClient from "@/api/ApiClient";
+import RoleSwitcher from "@/components/common/RoleSwitcher";
 
 interface LoginErrors {
   login?: string;
@@ -20,7 +21,7 @@ const SignInForm = () => {
   const [errors, setErrors] = useState<LoginErrors>({});
   const [loading, setLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState(false);
-
+  const [role, setRole] = useState<string>("center");
   const navigate = useNavigate();
 
   const validateField = (
@@ -49,18 +50,26 @@ const SignInForm = () => {
 
     try {
       setLoading(true);
+      const endpoind = role === "center" ? "auth/login" : "teachers/login";
+      console.log(role);
+      console.log(endpoind);
       const api = import.meta.env.VITE_API_URL;
-      const res = await apiClient.post(`${api}/auth/login`, {
+      const res = await apiClient.post(`${api}/${endpoind}`, {
         login,
         password,
       });
-
+      console.log(res.data.data)
       const access_token = res.data?.data?.access_token;
       const refresh_token = res.data?.data?.refresh_token;
-
+      if (role === "center") {
+        localStorage.setItem("role", "center");
+        localStorage.setItem("id", res.data.data.user.id);
+      } else {
+        localStorage.setItem("role", "teacher");
+        localStorage.setItem("id", res.data.data.teacher.id);
+      }
       if (access_token) localStorage.setItem("access_token", access_token);
       if (refresh_token) localStorage.setItem("refresh_token", refresh_token);
-      localStorage.setItem("id", res.data.data.user.id);
       toast.success("Kirish muvaffaqiyatli yakunlandi!");
       navigate("/dashboard");
       setLogin("");
@@ -87,87 +96,91 @@ const SignInForm = () => {
             <h1 className="text-3xl font-bold text-gray-800">Xush Kelibsiz</h1>
             <p className="text-gray-500 text-sm">EduHub hisobingizga kiring</p>
           </div>
+          <div className="flex flex-col gap-2">
+            <RoleSwitcher onChange={(role) => setRole(role)} />
+            <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="login">Login</Label>
+                <Input
+                  id="login"
+                  type="text"
+                  placeholder="Login"
+                  value={login}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setLogin(value);
+                    setErrors((prev) => ({
+                      ...prev,
+                      login: validateField("login", value),
+                    }));
+                  }}
+                  className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+                {errors.login && (
+                  <p className="text-red-500 text-xs mt-1">*{errors.login}</p>
+                )}
+              </div>
+              <div className="flex flex-col gap-2 relative">
+                <Label htmlFor="pass">Parol</Label>
 
-          <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="login">Login</Label>
-              <Input
-                id="login"
-                type="text"
-                placeholder="Login"
-                value={login}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setLogin(value);
-                  setErrors((prev) => ({
-                    ...prev,
-                    login: validateField("login", value),
-                  }));
-                }}
-                className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              />
-              {errors.login && (
-                <p className="text-red-500 text-xs mt-1">*{errors.login}</p>
-              )}
-            </div>
-            <div className="flex flex-col gap-2 relative">
-              <Label htmlFor="pass">Parol</Label>
+                <Input
+                  id="pass"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Parol"
+                  value={password}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setPassword(value);
+                    setErrors((prev) => ({
+                      ...prev,
+                      password: validateField("password", value),
+                    }));
+                  }}
+                  className="border border-gray-300 rounded-lg px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-3 top-10 cursor-pointer -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+                {errors.password && (
+                  <p className="text-red-500 text-xs mt-1">
+                    *{errors.password}
+                  </p>
+                )}
+              </div>
 
-              <Input
-                id="pass"
-                type={showPassword ? "text" : "password"}
-                placeholder="Parol"
-                value={password}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setPassword(value);
-                  setErrors((prev) => ({
-                    ...prev,
-                    password: validateField("password", value),
-                  }));
-                }}
-                className="border border-gray-300 rounded-lg px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-3 top-10 cursor-pointer -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+              <div className="flex items-center gap-2">
+                <Checkbox id="checkbox" className="border-gray-300 " />
+                <Label htmlFor="checkbox" className="text-sm text-gray-600">
+                  Tizimda qolish
+                </Label>
+              </div>
+              <Button
+                type="submit"
+                disabled={!isFormValid || loading}
+                className={`w-full font-bold flex items-center justify-center gap-2 py-3 rounded-lg transition-all cursor-pointer ${
+                  loading
+                    ? "bg-blue-400 cursor-not-allowed"
+                    : "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white"
+                }`}
               >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
-              {errors.password && (
-                <p className="text-red-500 text-xs mt-1">*{errors.password}</p>
-              )}
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Checkbox id="checkbox" className="border-gray-300" />
-              <Label htmlFor="checkbox" className="text-sm text-gray-600">
-                Tizimda qolish
-              </Label>
-            </div>
-            <Button
-              type="submit"
-              disabled={!isFormValid || loading}
-              className={`w-full font-bold flex items-center justify-center gap-2 py-3 rounded-lg transition-all cursor-pointer ${
-                loading
-                  ? "bg-blue-400 cursor-not-allowed"
-                  : "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white"
-              }`}
-            >
-              {loading ? (
-                <Loader2 className="animate-spin" size={20} />
-              ) : (
-                "Kirish"
-              )}
-            </Button>
-            <p className="text-center text-sm text-gray-500 mt-4">
-              Hisobingiz yo'qmi?{" "}
-              <Link to="/register" className="text-blue-500 hover:underline">
-                Yaratish
-              </Link>
-            </p>
-          </form>
+                {loading ? (
+                  <Loader2 className="animate-spin" size={20} />
+                ) : (
+                  "Kirish"
+                )}
+              </Button>
+              <p className="text-center text-sm text-gray-500 mt-4">
+                Hisobingiz yo'qmi?{" "}
+                <Link to="/register" className="text-blue-500 hover:underline">
+                  Yaratish
+                </Link>
+              </p>
+            </form>
+          </div>
 
           <p className="text-center text-sm text-gray-500 mt-4">
             Yordam kerakmi?{" "}

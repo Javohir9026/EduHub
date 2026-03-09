@@ -76,7 +76,7 @@ const DayDetailsDrawer: FC<DayDetailsDrawerProps> = ({
       {/* Backdrop */}
       <div
         onClick={onClose}
-        className={`fixed inset-0 z-30 bg-slate-900/20 dark:bg-slate-950/40 backdrop-blur-sm transition-opacity duration-300 ${
+        className={`fixed inset-0 z-40 bg-slate-900/20 dark:bg-slate-950/40 backdrop-blur-sm transition-opacity duration-300 ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
       />

@@ -37,7 +37,8 @@ const LogOutButton = () => {
 
       localStorage.removeItem("access_token");
       localStorage.removeItem("refresh_token");
-
+      localStorage.removeItem("role");
+      localStorage.removeItem("id");
       navigate("/");
     } catch (error) {
       console.log(error);
