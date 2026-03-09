@@ -2,7 +2,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import LandingPage from "./pages/Landing/LandingPage";
 import SignInForm from "./pages/Landing/auth/SignInForm";
 import RegisterForm from "./pages/Landing/auth/RegisterForm";
-import ProtectedRoute from "./routes/ProtectedRoute";
 import Dashboard from "./pages/dashboard/Dashboard";
 import GuestRoute from "./routes/GuestRoute";
 import PublicLayout from "./pages/Landing/layout/PublicLayout";
@@ -10,17 +9,16 @@ import InfoUsers from "./pages/Landing/pages/InfoUsers";
 import ContactUs from "./pages/Landing/pages/contactUs";
 import AboutUs from "./pages/Landing/pages/aboutUs";
 import ScrollToTop from "./components/common/ScroolToTop";
-import AppLayout from "./layout/AppLayout";
 import StudentsPage from "./pages/students/StudentsPage";
 import TeachersPage from "./pages/Teachers/TeachersPage";
 import Groups from "./pages/Groups/Groups";
 import CalendarPage from "./pages/Calendar/CalendarPage";
 import UserProfile from "./pages/UserProfile/userProfile";
-import { UserProvider } from "./context/UserContext";
 import AppLayoutWithProvider from "./layout/AppLayoutWithProvider";
 import StudentInfoPage from "./pages/students/StudentInfoPage";
 import TeacherInfoPage from "./pages/Teachers/TeacherInfoPage";
 import { GroupInfo } from "./pages/Groups/GorupInfo";
+import LearningCenterRoute from "./routes/LearningProtectedRoute";
 
 const App = () => {
   return (
@@ -85,73 +83,73 @@ const App = () => {
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute>
+              <LearningCenterRoute>
                 <Dashboard />
-              </ProtectedRoute>
+              </LearningCenterRoute>
             }
           />
           <Route
             path="/students"
             element={
-              <ProtectedRoute>
+              <LearningCenterRoute>
                 <StudentsPage />
-              </ProtectedRoute>
+              </LearningCenterRoute>
             }
           />
           <Route
             path="/teachers"
             element={
-              <ProtectedRoute>
+              <LearningCenterRoute>
                 <TeachersPage />
-              </ProtectedRoute>
+              </LearningCenterRoute>
             }
           />
           <Route
             path="/groups"
             element={
-              <ProtectedRoute>
+              <LearningCenterRoute>
                 <Groups />
-              </ProtectedRoute>
+              </LearningCenterRoute>
             }
           />
           <Route
             path="/calendar"
             element={
-              <ProtectedRoute>
+              <LearningCenterRoute>
                 <CalendarPage />
-              </ProtectedRoute>
+              </LearningCenterRoute>
             }
           />
           <Route
             path="/user-profile"
             element={
-              <ProtectedRoute>
+              <LearningCenterRoute>
                 <UserProfile />
-              </ProtectedRoute>
+              </LearningCenterRoute>
             }
           />
           <Route
             path="/student-info/:id"
             element={
-              <ProtectedRoute>
+              <LearningCenterRoute>
                 <StudentInfoPage />
-              </ProtectedRoute>
+              </LearningCenterRoute>
             }
           />
           <Route
             path="/teacher-info/:id"
             element={
-              <ProtectedRoute>
+              <LearningCenterRoute>
                 <TeacherInfoPage />
-              </ProtectedRoute>
+              </LearningCenterRoute>
             }
           />
-           <Route
+          <Route
             path="/group-info/:id"
             element={
-              <ProtectedRoute>
+              <LearningCenterRoute>
                 <GroupInfo />
-              </ProtectedRoute>
+              </LearningCenterRoute>
             }
           />
         </Route>
