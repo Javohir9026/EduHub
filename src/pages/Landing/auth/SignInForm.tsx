@@ -173,12 +173,12 @@ const SignInForm = () => {
                   "Kirish"
                 )}
               </Button>
-              <p className="text-center text-sm text-gray-500 mt-4">
+              {role === 'center' && <p className="text-center text-sm text-gray-500 mt-4">
                 Hisobingiz yo'qmi?{" "}
                 <Link to="/register" className="text-blue-500 hover:underline">
                   Yaratish
                 </Link>
-              </p>
+              </p>}
             </form>
           </div>
 
