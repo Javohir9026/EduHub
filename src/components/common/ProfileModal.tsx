@@ -10,9 +10,17 @@ import { Link } from "react-router-dom";
 import { AnimatedThemeToggler } from "../ui/animated-theme-toggler";
 import LogOutButton from "./LogOutButton";
 import { useUser } from "@/context/UserContext";
+import { useEffect } from "react";
+import { TeacherIcon } from "@/assets/exportImg";
 
 export function ProfileModal() {
   const { userData, loading } = useUser();
+  const role = localStorage.getItem("role");
+  const image =
+    userData?.role === "center" ? userData.image : TeacherIcon;
+  useEffect(() => {
+    console.log(userData + "asda");
+  }, []);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -21,7 +29,7 @@ export function ProfileModal() {
       >
         <Button variant="ghost" size="icon" className="rounded-full">
           <Avatar>
-            <AvatarImage src={userData?.image} alt="shadcn" />
+            <AvatarImage src={image} alt="shadcn" />
             <AvatarFallback>
               <UserIcon />
             </AvatarFallback>
@@ -51,7 +59,7 @@ export function ProfileModal() {
           <div className="flex flex-col min-w-[180px] gap-2 px-3 py-2">
             <div className="flex items-center gap-2">
               <Avatar>
-                <AvatarImage src={userData?.image} alt="shadcn" />
+                <AvatarImage src={image} alt="shadcn" />
                 <AvatarFallback>
                   <UserIcon />
                 </AvatarFallback>
