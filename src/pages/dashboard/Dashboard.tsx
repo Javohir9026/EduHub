@@ -1,82 +1,10 @@
-import apiClient from "@/api/ApiClient";
-import { Button } from "@/components/ui/button";
-import { Calendar, ChevronUpSquareIcon, Coins, Plus, Users } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useUser } from "@/context/UserContext";
+import TeacherDashboard from "./TeacherDashboard";
+import CenterDashboard from "./CenterDashboard";
 
 const Dashboard = () => {
-
-  const [studentsCount, setStudentsCount] = useState<number>(0);
-
-  useEffect(() => {
-
-    const fetchStudentsCount = async () => {
-      try {
-        const token = localStorage.getItem("access_token");
-        const api = import.meta.env.VITE_API_URL;
-        const learningCenterId = localStorage.getItem('id')
-        const res = await apiClient.get(`${api}/learning-centers/${learningCenterId}/students`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-
-        setStudentsCount(res.data.data.length);
-        
-      } catch (error) {
-        console.error("Students count olishda xatolik", error);
-      }
-    };
-    
-    fetchStudentsCount();
-
-  }, []);
-
-  const stats = [
-    { id:1, icon:<Users />, title:"Jami o`quvchilar", count: studentsCount, persend:"+ O'tgan oyga nisbatan 12%" },
-    { id:2, icon:<Coins />, title:"Oylik daromad", count:"$25,480", persend:"+ 8,5% ga o'sish" },
-    { id:3, icon:<Users />, title:"O'rtacha ishtirok", count:"92%", persend:"+ O'tgan haftada 2% ga oshgan" },
-    { id:4, icon:<ChevronUpSquareIcon />, title:"Faol ustozlar", count:"42", persend:"+ Bu chorakda 5 ta yangi kurslar" },
-  ];
-
-  return (
-    <div>
-
-      <div className="p-6 flex justify-between items-center md:flex-row flex-col gap-4">
-        <div>
-          <h1 className="text-4xl font-black tracking-tight">Dashboard</h1>
-          <p className="text-gray-500 mt-2 text-[13px]">
-            Qaytib kelganingizdan xursandmiz! Mana sizning ta'lim markazingiz faoliyati
-          </p>
-        </div>
-
-        <div className="flex gap-4">
-          <Button className="flex items-center gap-2 bg-white border border-black text-black hover:bg-purple-500 hover:text-white hover:border-purple-500">
-            <Calendar /> Bu oy
-          </Button>
-
-          <Button className="flex items-center gap-2 bg-gradient-to-r text-white from-[#332a9b] via-[#490bb5] to-[#cc53ed] border-black border">
-            <Plus /> yangi voqea
-          </Button>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((item) => (
-          <div key={item.id} className="bg-white rounded-xl p-6 shadow-md flex flex-col gap-3 dark:bg-gray-800">
-            <div className="bg-gray-100 w-12 h-12 flex items-center justify-center rounded-lg text-blue-600 dark:bg-gray-700 dark:text-white">
-              {item.icon}
-            </div>
-
-            <p className="text-gray-500 text-sm dark:text-gray-400">{item.title}</p>
-
-            <div className="flex items-center gap-2">
-              <h2 className="text-2xl font-bold dark:text-white">{item.count}</h2>
-              <p className="text-green-500 text-[11px] mt-2">{item.persend}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-    </div>
-  );
+  const role = localStorage.getItem("role");
+  return role === "teacher" ? <TeacherDashboard /> : <CenterDashboard />;
 };
 
 export default Dashboard;
