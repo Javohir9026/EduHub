@@ -1,4 +1,5 @@
 import { BreadcrumbBasic } from "@/components/common/BreadCrumb";
+import CalendarBody from "@/components/common/Calendar/components/CalendarBody";
 
 const CalendarPage = () => {
   return (
@@ -11,8 +12,8 @@ const CalendarPage = () => {
           ]}
         />
       </div>
-      <div className="p-6 space-y-8">
-        Calendar Content...
+      <div className="mt-5">
+        <CalendarBody />
       </div>
     </div>
   );
