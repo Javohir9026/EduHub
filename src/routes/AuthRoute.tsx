@@ -1,10 +1,6 @@
 import { Navigate } from "react-router-dom";
 
-interface Props {
-  children: React.ReactNode;
-}
-
-const ProtectedRoute = ({ children }: Props) => {
+const AuthRoute = ({ children }: { children: React.ReactNode }) => {
   const token = localStorage.getItem("access_token");
 
   if (!token) {
@@ -14,4 +10,4 @@ const ProtectedRoute = ({ children }: Props) => {
   return children;
 };
 
-export default ProtectedRoute;
+export default AuthRoute;

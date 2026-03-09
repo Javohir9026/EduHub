@@ -1,12 +1,10 @@
 import { Link } from "react-router";
 import { useSidebar } from "../context/SidebarContext";
-import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import { EduHubLogo } from "@/assets/exportImg";
 import { ProfileModal } from "@/components/common/ProfileModal";
 
 const AppHeader: React.FC = () => {
-  const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
-
+  const { toggleSidebar, toggleMobileSidebar } = useSidebar();
   const handleToggle = () => {
     if (window.innerWidth >= 1024) {
       toggleSidebar();

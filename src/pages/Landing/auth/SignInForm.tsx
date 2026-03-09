@@ -58,7 +58,7 @@ const SignInForm = () => {
         login,
         password,
       });
-      console.log(res.data.data)
+      console.log(res.data.data);
       const access_token = res.data?.data?.access_token;
       const refresh_token = res.data?.data?.refresh_token;
       if (role === "center") {
@@ -71,7 +71,7 @@ const SignInForm = () => {
       if (access_token) localStorage.setItem("access_token", access_token);
       if (refresh_token) localStorage.setItem("refresh_token", refresh_token);
       toast.success("Kirish muvaffaqiyatli yakunlandi!");
-      navigate("/dashboard");
+      navigate('/dashboard')
       setLogin("");
       setPassword("");
     } catch (error: any) {
@@ -173,12 +173,17 @@ const SignInForm = () => {
                   "Kirish"
                 )}
               </Button>
-              <p className="text-center text-sm text-gray-500 mt-4">
-                Hisobingiz yo'qmi?{" "}
-                <Link to="/register" className="text-blue-500 hover:underline">
-                  Yaratish
-                </Link>
-              </p>
+              {role === "center" && (
+                <p className="text-center text-sm text-gray-500 mt-4">
+                  Hisobingiz yo'qmi?{" "}
+                  <Link
+                    to="/register"
+                    className="text-blue-500 hover:underline"
+                  >
+                    Yaratish
+                  </Link>
+                </p>
+              )}
             </form>
           </div>
 
