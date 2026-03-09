@@ -1,13 +1,20 @@
 import { Link, useLocation } from "react-router-dom";
 import { useSidebar } from "@/context/SidebarContext";
 import { EduLogoDark, EduLogoLight, EduHubLogo } from "@/assets/exportImg";
-import { Calendar, Home, Layers, Users, UsersRound } from "lucide-react";
+import {
+  Calendar,
+  CalendarCheck,
+  Home,
+  Layers,
+  Users,
+  UsersRound,
+} from "lucide-react";
 
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
 
-  const navLinks = [
+  const navLinksCenter = [
     {
       id: 1,
       title: "Dashboard",
@@ -40,6 +47,29 @@ const AppSidebar: React.FC = () => {
     },
   ];
 
+  const navLinksTeacher = [
+    {
+      id: 1,
+      title: "Dashboard",
+      path: "/dashboard",
+      icon: Home,
+    },
+    {
+      id: 2,
+      title: "Guruhlarim",
+      path: "/my-groups",
+      icon: Layers,
+    },
+    {
+      id: 3,
+      title: "Davomat",
+      path: "/attendances",
+      icon: CalendarCheck,
+    },
+  ];
+  const role = localStorage.getItem('role')
+  const navLinks =
+    role === "teacher" ? navLinksTeacher : navLinksCenter;
   return (
     <aside
       className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0

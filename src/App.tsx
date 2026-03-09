@@ -20,6 +20,9 @@ import TeacherInfoPage from "./pages/Teachers/TeacherInfoPage";
 import { GroupInfo } from "./pages/Groups/GorupInfo";
 import LearningCenterRoute from "./routes/LearningProtectedRoute";
 import AuthRoute from "./routes/AuthRoute";
+import TeacherRoute from "./routes/TeacherProtectedRoute";
+import MyGroups from "./pages/MyGroups/MyGroups";
+import AttendancesPage from "./pages/Davomat/Attendances";
 
 const App = () => {
   return (
@@ -151,6 +154,22 @@ const App = () => {
               <LearningCenterRoute>
                 <GroupInfo />
               </LearningCenterRoute>
+            }
+          />
+          <Route
+            path="/my-groups"
+            element={
+              <TeacherRoute>
+                <MyGroups />
+              </TeacherRoute>
+            }
+          />
+          <Route
+            path="/attendances"
+            element={
+              <TeacherRoute>
+                <AttendancesPage />
+              </TeacherRoute>
             }
           />
         </Route>
