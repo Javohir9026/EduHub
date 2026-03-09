@@ -19,6 +19,7 @@ import StudentInfoPage from "./pages/students/StudentInfoPage";
 import TeacherInfoPage from "./pages/Teachers/TeacherInfoPage";
 import { GroupInfo } from "./pages/Groups/GorupInfo";
 import LearningCenterRoute from "./routes/LearningProtectedRoute";
+import AuthRoute from "./routes/AuthRoute";
 
 const App = () => {
   return (
@@ -83,9 +84,9 @@ const App = () => {
           <Route
             path="/dashboard"
             element={
-              <LearningCenterRoute>
+              <AuthRoute>
                 <Dashboard />
-              </LearningCenterRoute>
+              </AuthRoute>
             }
           />
           <Route

@@ -9,7 +9,7 @@ const LearningCenterRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (role !== "center") {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return children;
