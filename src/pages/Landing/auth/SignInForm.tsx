@@ -71,7 +71,7 @@ const SignInForm = () => {
       if (access_token) localStorage.setItem("access_token", access_token);
       if (refresh_token) localStorage.setItem("refresh_token", refresh_token);
       toast.success("Kirish muvaffaqiyatli yakunlandi!");
-      navigate('/dashbaord')
+      navigate('/dashboard')
       setLogin("");
       setPassword("");
     } catch (error: any) {
