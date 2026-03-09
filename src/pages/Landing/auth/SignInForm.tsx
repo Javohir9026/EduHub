@@ -71,11 +71,7 @@ const SignInForm = () => {
       if (access_token) localStorage.setItem("access_token", access_token);
       if (refresh_token) localStorage.setItem("refresh_token", refresh_token);
       toast.success("Kirish muvaffaqiyatli yakunlandi!");
-      if (role === "center") {
-        navigate("/dashboard");
-      }else if(role === 'teacher'){
-        navigate("/teacher-dashboard")
-      }
+      navigate('/dashbaord')
       setLogin("");
       setPassword("");
     } catch (error: any) {
