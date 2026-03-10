@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Eye, Download, X } from "lucide-react";
 import { BreadcrumbBasic } from "@/components/common/BreadCrumb";
 
-const userProfile = () => {
+const UserProfile = () => {
   const { userData, loading } = useUser();
   const [openImage, setOpenImage] = useState(false);
 
@@ -33,9 +33,13 @@ const userProfile = () => {
   };
 
   return (
-    <div className="flex flex-col gap-5">
-      <div className="flex justify-between">
-        <h1 className="text-[20px] !font-semibold">Shaxsiy Profil</h1>
+    <div className="flex flex-col gap-6">
+      {/* HEADER */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <h1 className="text-2xl font-bold tracking-tight">
+          Shaxsiy Profil
+        </h1>
+
         <BreadcrumbBasic
           items={[
             { title: "Bosh sahifa", href: "/" },
@@ -43,149 +47,104 @@ const userProfile = () => {
           ]}
         />
       </div>
-      {loading ? (
-        <div className="bg-white dark:bg-fullbg rounded-lg p-5 flex flex-col gap-7 animate-pulse">
-          <div
-            className="border border-black/10 dark:border-white/10 p-4 rounded-lg 
-      flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
-          >
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 items-center sm:text-left">
-              <div className="rounded-full w-20 h-20 bg-gray-200 dark:bg-gray-700" />
 
-              <div className="flex flex-col gap-2 items-center sm:items-start">
-                <div className="h-5 w-40 bg-gray-200 dark:bg-gray-700 rounded" />
-                <div className="h-4 w-28 bg-gray-200 dark:bg-gray-700 rounded" />
+      {loading ? (
+        <div className="bg-white dark:bg-fullbg rounded-xl p-6 shadow-sm animate-pulse flex flex-col gap-6">
+          <div className="flex items-center justify-between">
+            <div className="flex gap-4 items-center">
+              <div className="w-20 h-20 rounded-full bg-gray-200 dark:bg-gray-700" />
+              <div className="flex flex-col gap-2">
+                <div className="w-40 h-5 bg-gray-200 dark:bg-gray-700 rounded" />
+                <div className="w-28 h-4 bg-gray-200 dark:bg-gray-700 rounded" />
               </div>
             </div>
 
-            <div className="h-9 w-28 bg-gray-200 dark:bg-gray-700 rounded" />
-          </div>
-
-          <div className="border border-black/10 dark:border-white/10 p-4 rounded-lg flex flex-col gap-5">
-            <div className="flex justify-between">
-              <div className="h-5 w-40 bg-gray-200 dark:bg-gray-700 rounded" />
-              <div className="h-9 w-28 bg-gray-200 dark:bg-gray-700 rounded hidden sm:block" />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 w-full sm:w-1/2 gap-4">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="flex flex-col gap-2">
-                  <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded" />
-                  <div className="h-5 w-32 bg-gray-200 dark:bg-gray-700 rounded" />
-                </div>
-              ))}
-            </div>
+            <div className="w-28 h-9 bg-gray-200 dark:bg-gray-700 rounded" />
           </div>
         </div>
       ) : (
-        <div className="bg-white dark:bg-fullbg rounded-lg p-5 flex flex-col gap-7">
-          <div
-            className="border border-black/10 dark:border-white/10 p-4 rounded-lg 
-flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
-          >
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 items-center sm:items-center text-center sm:text-left">
-              {/* IMAGE */}
+        <div className="flex flex-col gap-6">
+          {/* PROFILE CARD */}
+          <div className="bg-white dark:bg-fullbg rounded-xl shadow-md border border-black/5 dark:border-white/10 p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 hover:shadow-lg transition">
+            <div className="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
+              {/* AVATAR */}
               {hasImage ? (
                 <div
-                  className="relative border bg-fullbg dark:bg-fullbg rounded-full w-20 h-20 overflow-hidden shrink-0 group cursor-pointer"
                   onClick={() => setOpenImage(true)}
+                  className="relative w-20 h-20 rounded-full p-[2px] bg-gradient-to-tr from-blue-500 to-indigo-500 cursor-pointer"
                 >
-                  <img
-                    src={userData?.image}
-                    alt="logo"
-                    className="object-cover w-full h-full"
-                  />
+                  <div className="rounded-full overflow-hidden w-full h-full bg-white dark:bg-black group">
+                    <img
+                      src={userData?.image}
+                      alt="avatar"
+                      className="object-cover w-full h-full"
+                    />
 
-                  {/* Hover overlay */}
-                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                    <Eye className="text-white" size={22} />
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center rounded-full">
+                      <Eye className="text-white" size={22} />
+                    </div>
                   </div>
                 </div>
               ) : (
-                <div className="border bg-fullbg dark:bg-fullbg rounded-full w-20 h-20 overflow-hidden shrink-0">
+                <div className="w-20 h-20 rounded-full overflow-hidden border">
                   <img
                     src={DefaultUserIcon}
-                    alt="logo"
-                    className="object-cover w-full h-full"
+                    alt="avatar"
+                    className="w-full h-full object-cover"
                   />
                 </div>
               )}
 
               <div>
-                <h1 className="text-[20px] !font-semibold">{userData?.name}</h1>
-                <h1 className="text-[14px] text-black/50 dark:text-white/50">
+                <h2 className="text-xl font-semibold">{userData?.name}</h2>
+                <p className="text-sm text-gray-500">
                   {userData?.phone}
-                </h1>
+                </p>
               </div>
             </div>
 
-            <div className="flex justify-center sm:justify-end">
-              <UserEditModal classname="cursor-pointer border items-center justify-center border-black/20 dark:border-white/20 flex rounded-lg py-2 gap-2 hover:bg-black/10 dark:hover:bg-white/10 px-1 w-full sm:w-auto" />
-            </div>
+            <UserEditModal classname="border border-black/20 dark:border-white/20 flex items-center justify-center rounded-lg py-2 px-4 gap-2 hover:bg-black/5 dark:hover:bg-white/10 transition cursor-pointer" />
           </div>
 
-          <div className="border border-black/10 dark:border-white/10 p-4 rounded-lg flex flex-col gap-5">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <h1 className="text-[17px] !font-semibold">
+          {/* INFO CARD */}
+          <div className="bg-white dark:bg-fullbg rounded-xl shadow-md border border-black/5 dark:border-white/10 p-6 flex flex-col gap-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold">
                 Shaxsiy Ma'lumotlar
-              </h1>
+              </h2>
 
-              <UserEditModal classname="cursor-pointer border rounded-lg gap-2 items-center border-black/20 dark:border-white/20 py-2 px-1 hover:bg-black/10 dark:hover:bg-white/10 w-full sm:w-auto hidden sm:flex" />
+              <UserEditModal classname="hidden sm:flex border border-black/20 dark:border-white/20 rounded-lg py-2 px-4 gap-2 hover:bg-black/5 dark:hover:bg-white/10 transition cursor-pointer" />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 w-full sm:w-1/2 gap-4">
-              <div className="flex flex-col">
-                <h1 className="text-[15px] text-black/50 dark:text-white/50">
-                  Nomi
-                </h1>
-                <h1>{userData?.name}</h1>
-              </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <Info label="Nomi" value={userData?.name} />
+              <Info label="Email" value={userData?.email} />
+              <Info label="Telefon" value={userData?.phone} />
+              <Info label="Login" value={userData?.login} />
 
-              <div className="flex flex-col">
-                <h1 className="text-[15px] text-black/50 dark:text-white/50">
-                  Email
-                </h1>
-                <h1>{userData?.email}</h1>
-              </div>
-
-              <div className="flex flex-col">
-                <h1 className="text-[15px] text-black/50 dark:text-white/50">
-                  Telefon Raqam
-                </h1>
-                <h1>{userData?.phone}</h1>
-              </div>
-
-              <div className="flex flex-col">
-                <h1 className="text-[15px] text-black/50 dark:text-white/50">
-                  Login
-                </h1>
-                <h1>{userData?.login}</h1>
-              </div>
-
-              <div className="flex flex-col">
-                <h1 className="text-[15px] text-black/50 dark:text-white/50">
-                  Role
-                </h1>
-                <h1>
-                  {userData?.role == "LEARNING_CENTER"
+              <Info
+                label="Role"
+                value={
+                  userData?.role == "LEARNING_CENTER"
                     ? "Ta'lim Markazi"
                     : userData?.role == "TEACHER"
-                      ? "Ustoz"
-                      : userData?.role}
-                </h1>
-              </div>
+                    ? "Ustoz"
+                    : userData?.role
+                }
+              />
 
-              <div className="flex flex-col">
-                <h1 className="text-[15px] text-black/50 dark:text-white/50">
-                  Status
-                </h1>
-                <h1
-                  className={
-                    userData?.is_blocked ? "text-red-500" : "text-green-500"
-                  }
+              <div>
+                <p className="text-sm text-gray-500 mb-1">Status</p>
+
+                <span
+                  className={`px-3 py-1 rounded-full text-xs font-medium ${
+                    userData?.is_blocked
+                      ? "bg-red-100 text-red-600"
+                      : "bg-green-100 text-green-600"
+                  }`}
                 >
                   {userData?.is_blocked ? "Bloklangan" : "Aktiv"}
-                </h1>
+                </span>
               </div>
             </div>
           </div>
@@ -194,20 +153,19 @@ flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
 
       {/* IMAGE MODAL */}
       {openImage && hasImage && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur flex items-center justify-center z-50">
           <div className="relative max-w-[90%] max-h-[90%]">
-            {/* BUTTONLAR */}
             <div className="absolute top-3 right-3 flex gap-2">
               <button
                 onClick={handleDownload}
-                className=" cursor-pointer bg-white/90 backdrop-blur p-2 rounded-full hover:bg-white dark:bg-blue-900"
+                className="bg-white/90 p-2 rounded-full hover:bg-white cursor-pointer"
               >
                 <Download size={20} />
               </button>
 
               <button
                 onClick={() => setOpenImage(false)}
-                className=" cursor-pointer bg-white/90 backdrop-blur p-2 rounded-full hover:bg-white dark:bg-blue-900"
+                className="bg-white/90 p-2 rounded-full hover:bg-white cursor-pointer"
               >
                 <X size={20} />
               </button>
@@ -216,7 +174,7 @@ flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
             <img
               src={userData?.image}
               alt="preview"
-              className="max-w-[90vw] max-h-[90vh] rounded-lg"
+              className="max-w-[90vw] max-h-[90vh] rounded-xl shadow-2xl"
             />
           </div>
         </div>
@@ -225,4 +183,11 @@ flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
   );
 };
 
-export default userProfile;
+const Info = ({ label, value }: { label: string; value: any }) => (
+  <div>
+    <p className="text-sm text-gray-500 mb-1">{label}</p>
+    <p className="font-medium">{value}</p>
+  </div>
+);
+
+export default UserProfile;
