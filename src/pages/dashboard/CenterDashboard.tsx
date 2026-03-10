@@ -1,37 +1,37 @@
 import apiClient from "@/api/ApiClient";
-import { Button } from "@/components/ui/button";
 import {
-  Calendar,
   ChevronUpSquareIcon,
   Coins,
-  Plus,
   Users,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const Dashboard = () => {
   const [studentsCount, setStudentsCount] = useState<number>(0);
+  const [techersCount,setTechersCount] = useState<number>(0);
+  const [totalPaid,setTotalPaid] = useState<number>(0);
 
   useEffect(() => {
-    const fetchStudentsCount = async () => {
+    const fetchStatistics = async () => {
       try {
         const token = localStorage.getItem("access_token");
         const api = import.meta.env.VITE_API_URL;
-        const learningCenterId = localStorage.getItem("id");
+        const learningCenterId = localStorage.getItem('id');
         const res = await apiClient.get(
-          `${api}/learning-centers/${learningCenterId}/students`,
+          `${api}/learning-centers/${learningCenterId}/statistics`,
           {
-            headers: { Authorization: `Bearer ${token}` },
-          },
+            headers:{Authorization:`Bearer ${token}`}
+          }
+          
         );
-
-        setStudentsCount(res.data.data.length);
+        setTechersCount(res.data.data.teacherCount);
+        setTotalPaid(res.data.data.totalPayments)
+        setStudentsCount(res.data.data.studentCount);
       } catch (error) {
-        console.error("Students count olishda xatolik", error);
+        
       }
-    };
-
-    fetchStudentsCount();
+    }
+    fetchStatistics();
   }, []);
 
   const stats = [
@@ -45,8 +45,8 @@ const Dashboard = () => {
     {
       id: 2,
       icon: <Coins />,
-      title: "Oylik daromad",
-      count: "$25,480",
+      title: "Umumiy daromad",
+      count: totalPaid,
       persend: "+ 8,5% ga o'sish",
     },
     {
@@ -60,7 +60,7 @@ const Dashboard = () => {
       id: 4,
       icon: <ChevronUpSquareIcon />,
       title: "Faol ustozlar",
-      count: "42",
+      count: techersCount,
       persend: "+ Bu chorakda 5 ta yangi kurslar",
     },
   ];
@@ -74,16 +74,6 @@ const Dashboard = () => {
             Qaytib kelganingizdan xursandmiz! Mana sizning ta'lim markazingiz
             faoliyati
           </p>
-        </div>
-
-        <div className="flex gap-4">
-          <Button className="flex items-center gap-2 bg-white border border-black text-black hover:bg-purple-500 hover:text-white hover:border-purple-500">
-            <Calendar /> Bu oy
-          </Button>
-
-          <Button className="flex items-center gap-2 bg-gradient-to-r text-white from-[#332a9b] via-[#490bb5] to-[#cc53ed] border-black border">
-            <Plus /> yangi voqea
-          </Button>
         </div>
       </div>
 
