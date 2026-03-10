@@ -149,7 +149,7 @@ const StudentInfoPage = () => {
           ]}
         />
       </div>
-    <div className="max-w-6xl mx-auto p-6 grid md:grid-cols-3 gap-6">
+    <div className="max-w-6xl mx-auto py-6 grid md:grid-cols-3 gap-6">
       {/* PROFILE CARD */}
       <div className="bg-white dark:bg-fullbg rounded-2xl shadow-lg p-6 flex flex-col items-center text-center gap-4">
         <div className="w-28 h-28 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center text-white text-4xl font-bold shadow">
