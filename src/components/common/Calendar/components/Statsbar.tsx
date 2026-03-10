@@ -1,24 +1,18 @@
 import type { FC } from "react";
 import { type DataMap, type StatItem } from "../types";
 
-// ─── PROPS ────────────────────────────────────────────────────────────────────
+// ─── PROPS ───────────────────────────────────────────────────
 
 interface StatsBarProps {
   data: DataMap;
   year: number;
   month: number;
+  loading: boolean;
 }
 
-// ─── COMPONENT ────────────────────────────────────────────────────────────────
+// ─── COMPONENT ───────────────────────────────────────────────
 
-/**
- * StatsBar
- *
- * Displays four summary cards at the top of the calendar page:
- * total lessons, payments, birthdays, and combined revenue
- * for the currently visible month.
- */
-const StatsBar: FC<StatsBarProps> = ({ data, year, month }) => {
+const StatsBar: FC<StatsBarProps> = ({ data, year, month, loading }) => {
   const monthStr = `${year}-${String(month + 1).padStart(2, "0")}`;
 
   let lessons = 0;
@@ -62,12 +56,32 @@ const StatsBar: FC<StatsBarProps> = ({ data, year, month }) => {
     },
   ];
 
+  // ── Skeleton Loader ────────────────────────────────────────
+
+  if (loading) {
+    return (
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div
+            key={i}
+            className="rounded-xl border border-slate-200 dark:border-slate-800 px-4 py-3 bg-white dark:bg-slate-900"
+          >
+            <div className="h-3 w-20 mb-2 rounded bg-slate-200 dark:bg-slate-700 animate-pulse" />
+            <div className="h-6 w-16 rounded bg-slate-300 dark:bg-slate-600 animate-pulse" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  // ── Normal UI ──────────────────────────────────────────────
+
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
       {stats.map((stat) => (
         <div
           key={stat.label}
-          className={`rounded-xl border-2 px-4 py-3 ${stat.bg} border border-slate-200 dark:border-slate-800`}
+          className={`rounded-xl border px-4 py-3 ${stat.bg} border-slate-200 dark:border-slate-800`}
         >
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-1">
             {stat.label}

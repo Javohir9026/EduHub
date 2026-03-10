@@ -17,6 +17,7 @@ const CalendarBody: FC = () => {
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
   const [dataMap, setDataMap] = useState<DataMap>({});
+  const [loading, setLoading] = useState(false)
   // fetchdata
 
   const fetchData = async () => {
@@ -24,6 +25,7 @@ const CalendarBody: FC = () => {
     const id = localStorage.getItem("id");
 
     try {
+      setLoading(true)
       const res = await apiClient.get(
         `${api}/learning-centers/${id}/calendar`,
         {
@@ -37,44 +39,14 @@ const CalendarBody: FC = () => {
       setDataMap(res.data.data);
     } catch (error) {
       console.log(error);
+    } finally{
+      setLoading(false)
     }
   };
 
   useEffect(() => {
     fetchData();
   }, [month, year]);
-
-  // const mockDayData: DayData[] = [
-  //   {
-  //     date: "2026-03-10",
-  //     lessons: [
-  //       { name: "Mathematics", time: "09:00 - 10:30" },
-  //       { name: "English", time: "11:00 - 12:30" },
-  //       { name: "Physics", time: "14:00 - 15:30" },
-  //     ],
-  //     payments: [
-  //       { student: "Ali Valiyev", amount: 500000 },
-  //       { student: "Sardor Karimov", amount: 350000 },
-  //     ],
-  //     birthdays: [{ name: "Dilshod Rahimov" }],
-  //   },
-  //   {
-  //     date: "2026-03-11",
-  //     lessons: [
-  //       { name: "Chemistry", time: "10:00 - 11:30" },
-  //       { name: "Biology", time: "13:00 - 14:30" },
-  //     ],
-  //     payments: [{ student: "Madina Ismoilova", amount: 400000 }],
-  //     birthdays: [{ name: "Aziza Tursunova" }, { name: "Bekzod Aliyev" }],
-  //   },
-  //   {
-  //     date: "2026-03-12",
-  //     lessons: [{ name: "History", time: "09:30 - 11:00" }],
-  //     payments: [],
-  //     birthdays: [],
-  //   },
-  // ── Data ───────────────────────────────────────────────────────────────────
-  /** Convert the flat array into a "YYYY-MM-DD" keyed map for O(1) lookups. */
 
   // ── Handlers ───────────────────────────────────────────────────────────────
   const handleDayClick = (day: number): void => {
@@ -154,12 +126,13 @@ const CalendarBody: FC = () => {
         </div>
 
         {/* Monthly stats summary */}
-        <StatsBar data={dataMap} year={year} month={month} />
+        <StatsBar data={dataMap} loading={loading} year={year} month={month} />
 
         {/* Calendar grid card */}
         <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-3 sm:p-5">
           <CalendarGrid
             year={year}
+            loading={loading}
             month={month}
             data={dataMap}
             selectedDay={selectedDay}
