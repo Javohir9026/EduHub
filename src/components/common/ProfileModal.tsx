@@ -12,12 +12,21 @@ import LogOutButton from "./LogOutButton";
 import { useUser } from "@/context/UserContext";
 import { useEffect } from "react";
 import { TeacherIcon } from "@/assets/exportImg";
-
+type UserType = {
+  id: string;
+  name: string;
+  email: string;
+  login: string;
+  phone: string;
+  image: string;
+  role: string;
+  is_blocked: boolean;
+};
 export function ProfileModal() {
   const { userData, loading } = useUser();
   const role = localStorage.getItem("role");
-  const image =
-    userData?.role === "center" ? userData.image : TeacherIcon;
+
+  const image = role === "center" ? (userData as UserType)?.image : TeacherIcon;
   useEffect(() => {
     console.log(userData + "asda");
   }, []);
