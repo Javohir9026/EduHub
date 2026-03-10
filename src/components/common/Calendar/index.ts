@@ -23,7 +23,6 @@ export { default as Legend } from "./components/Legend";
 export * from "./icons";
 
 // Data
-export { mockData } from "./data/mockData";
 
 // Utils / constants
 export {

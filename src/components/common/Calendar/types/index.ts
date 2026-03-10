@@ -1,17 +1,25 @@
 // ─── DATA TYPES ───────────────────────────────────────────────────────────────
 
+import type { Student } from "@/lib/types";
+
 export interface Lesson {
+  id: number;
   name: string;
   time: string;
+  groupName: string;
 }
 
 export interface Payment {
-  student: string;
+  id:number;
+  student: Student;
   amount: number;
+  paidAmount: number;
 }
 
 export interface Birthday {
-  name: string;
+  fullName: string;
+  id: number;
+  phone: string;
 }
 
 export interface DayData {

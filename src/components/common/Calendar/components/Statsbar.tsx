@@ -56,7 +56,7 @@ const StatsBar: FC<StatsBarProps> = ({ data, year, month }) => {
     },
     {
       label: "Daromad",
-      value: `$${revenue}`,
+      value: `${revenue} so'm`,
       color: "text-indigo-600 dark:text-indigo-400",
       bg: "bg-indigo-50 dark:bg-indigo-950/40",
     },

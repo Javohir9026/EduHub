@@ -58,12 +58,12 @@ const CalendarDay: FC<CalendarDayProps> = ({
     );
     if (pills.length < 2) {
       dayData.payments.slice(0, 1).forEach((p) =>
-        pills.push({ type: "payment", label: `$${p.amount}` })
+        pills.push({ type: "payment", label: `$${p.paidAmount}` })
       );
     }
     if (pills.length < 2) {
       dayData.birthdays.slice(0, 1).forEach((b) =>
-        pills.push({ type: "birthday", label: `🎂 ${b.name}` })
+        pills.push({ type: "birthday", label: `🎂 ${b.fullName}` })
       );
     }
   }

@@ -8,6 +8,8 @@ import {
   CreditCardIcon,
   CakeIcon,
 } from "../icons";
+import { Link } from "react-router-dom";
+import { ChevronRight } from "lucide-react";
 
 // ─── PROPS ────────────────────────────────────────────────────────────────────
 
@@ -76,7 +78,7 @@ const DayDetailsDrawer: FC<DayDetailsDrawerProps> = ({
       {/* Backdrop */}
       <div
         onClick={onClose}
-        className={`fixed inset-0 z-40 bg-slate-900/20 dark:bg-slate-950/40 backdrop-blur-sm transition-opacity duration-300 ${
+        className={`fixed inset-0 z-40 bg-slate-900/20 dark:bg-slate-950/40 backdrop-blur-xs transition-opacity duration-300 ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
       />
@@ -199,10 +201,10 @@ const DayDetailsDrawer: FC<DayDetailsDrawerProps> = ({
                     <div className="w-1 self-stretch rounded-full bg-emerald-500" />
                     <div className="flex-1">
                       <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
-                        {payment.student}
+                        {payment.student.fullName}
                       </p>
                       <p className="text-xs text-emerald-600 dark:text-emerald-400 font-bold">
-                        {payment.amount} so'm
+                        {payment.amount} / {payment.paidAmount} so'm
                       </p>
                     </div>
                   </div>
@@ -225,16 +227,22 @@ const DayDetailsDrawer: FC<DayDetailsDrawerProps> = ({
 
               <div className="space-y-2">
                 {dayData.birthdays.map((birthday, i) => (
-                  <div
+                  <Link
+                    to={`/student-info/${birthday.id}`}
                     key={i}
-                    className="flex items-center gap-3 p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-100 dark:border-amber-900/50"
+                    className="flex items-center group gap-3 p-3 rounded-xl justify-between bg-amber-50 dark:bg-amber-950/30 border border-amber-100 dark:border-amber-900/50"
                   >
-                    <div className="w-1 self-stretch rounded-full bg-amber-500" />
-                    <span>🎂</span>
-                    <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
-                      {birthday.name}
-                    </p>
-                  </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-1 self-stretch rounded-full bg-amber-500" />
+                      <span>🎂</span>
+                      <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+                        {birthday.fullName}
+                      </p>
+                    </div>
+                    <div className="hidden group-hover:flex">
+                      <ChevronRight strokeWidth={2} className="text-amber-500/50"/>
+                    </div>
+                  </Link>
                 ))}
               </div>
             </section>

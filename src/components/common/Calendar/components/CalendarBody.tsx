@@ -1,28 +1,13 @@
-import { type FC, useState, useMemo } from "react";
+import { type FC, useState, useMemo, useEffect } from "react";
 
-import type { DataMap } from "../types";
-import { mockData } from "../data/mockData";
+import type { DataMap, DayData } from "../types";
 import { MONTH_NAMES } from "../utils/dateHelpers";
 import { ChevronLeftIcon, ChevronRightIcon } from "../icons";
 import { CalendarGrid, DayDetailsDrawer, StatsBar } from "..";
+import apiClient from "@/api/ApiClient";
 
 // ─── COMPONENT ────────────────────────────────────────────────────────────────
 
-/**
- * CalendarPage
- *
- * Root page component for the EduHub Calendar feature.
- *
- * Responsibilities:
- *  • Owns month/year navigation state
- *  • Owns selected-day + drawer open/close state
- *  • Owns dark-mode toggle state (wraps output in `class="dark"`)
- *  • Builds the DataMap lookup from mockData via useMemo
- *  • Composes the header, stats bar, calendar grid, and detail drawer
- *
- * Replace `mockData` with an API call (e.g. useQuery / useEffect)
- * when connecting to a real backend.
- */
 const CalendarBody: FC = () => {
   const today = new Date();
 
@@ -31,16 +16,65 @@ const CalendarBody: FC = () => {
   const [month, setMonth] = useState<number>(2); // 0-indexed; 2 = March
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
+  const [dataMap, setDataMap] = useState<DataMap>({});
+  // fetchdata
 
+  const fetchData = async () => {
+    const api = import.meta.env.VITE_API_URL;
+    const id = localStorage.getItem("id");
+
+    try {
+      const res = await apiClient.get(
+        `${api}/learning-centers/${id}/calendar`,
+        {
+          params: {
+            year: year,
+            month: month + 1,
+          },
+        },
+      );
+
+      setDataMap(res.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [month, year]);
+
+  // const mockDayData: DayData[] = [
+  //   {
+  //     date: "2026-03-10",
+  //     lessons: [
+  //       { name: "Mathematics", time: "09:00 - 10:30" },
+  //       { name: "English", time: "11:00 - 12:30" },
+  //       { name: "Physics", time: "14:00 - 15:30" },
+  //     ],
+  //     payments: [
+  //       { student: "Ali Valiyev", amount: 500000 },
+  //       { student: "Sardor Karimov", amount: 350000 },
+  //     ],
+  //     birthdays: [{ name: "Dilshod Rahimov" }],
+  //   },
+  //   {
+  //     date: "2026-03-11",
+  //     lessons: [
+  //       { name: "Chemistry", time: "10:00 - 11:30" },
+  //       { name: "Biology", time: "13:00 - 14:30" },
+  //     ],
+  //     payments: [{ student: "Madina Ismoilova", amount: 400000 }],
+  //     birthdays: [{ name: "Aziza Tursunova" }, { name: "Bekzod Aliyev" }],
+  //   },
+  //   {
+  //     date: "2026-03-12",
+  //     lessons: [{ name: "History", time: "09:30 - 11:00" }],
+  //     payments: [],
+  //     birthdays: [],
+  //   },
   // ── Data ───────────────────────────────────────────────────────────────────
   /** Convert the flat array into a "YYYY-MM-DD" keyed map for O(1) lookups. */
-  const dataMap = useMemo<DataMap>(() => {
-    const map: DataMap = {};
-    mockData.forEach((d) => {
-      map[d.date] = d;
-    });
-    return map;
-  }, []);
 
   // ── Handlers ───────────────────────────────────────────────────────────────
   const handleDayClick = (day: number): void => {
