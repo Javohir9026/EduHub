@@ -20,13 +20,13 @@ const LogOutButton = () => {
   const api = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
+  const role = localStorage.getItem("role")
   const handleLogout = async () => {
     try {
       setLoading(true);
-
+        const endpoint = role === 'center' ? 'auth/logout' : 'teachers/logout' 
       await apiClient.post(
-        `${api}/auth/logout`,
+        `${api}/${endpoint}`,
         {},
         {
           headers: {

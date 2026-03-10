@@ -20,13 +20,13 @@ const AboutUsPage = () => {
             interaktiv muhit yaratish.
           </p>
           <Button
-            className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg cursor-pointer"
+            className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg cursor-pointer w-full h-13 !font-bold"
             onClick={() => navigate("/contact-us")}
           >
             Biz bilan bog'lanish
           </Button>
         </div>
-        <div className="flex-1 w-[200px] overflow-hidden flex items-center justify-center cursor-pointer h-[350px]">
+        <div className="flex-1 w-[200px] overflow-hidden items-center justify-center cursor-pointer h-[350px] hidden lg:flex">
           <img src={EduHubLogo} alt="About Us" className="object-contain" />
         </div>
       </section>
@@ -51,7 +51,7 @@ const AboutUsPage = () => {
               Innovatsiya
             </h3>
             <p className="text-black">
-              Raqamli yechimlar va zamonaviy texnologiyalar yordamida ta'\'limni
+              Raqamli yechimlar va zamonaviy texnologiyalar yordamida ta'limni
               yanada samarali qilamiz.
             </p>
           </div>
