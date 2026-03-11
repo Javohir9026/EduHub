@@ -151,9 +151,9 @@ const App = () => {
           <Route
             path="/group-info/:id"
             element={
-              <LearningCenterRoute>
+              <AuthRoute>
                 <GroupInfo />
-              </LearningCenterRoute>
+              </AuthRoute>
             }
           />
           <Route
