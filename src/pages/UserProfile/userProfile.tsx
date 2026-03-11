@@ -1,4 +1,4 @@
-import { DefaultUserIcon } from "@/assets/exportImg";
+import { DefaultUserIcon, TeacherIcon } from "@/assets/exportImg";
 import { UserEditModal } from "@/components/common/User/UserEditModal";
 import { useUser } from "@/context/UserContext";
 import { useState } from "react";
@@ -8,14 +8,22 @@ import { BreadcrumbBasic } from "@/components/common/BreadCrumb";
 const UserProfile = () => {
   const { userData, loading } = useUser();
   const [openImage, setOpenImage] = useState(false);
+  const role = localStorage.getItem("role");
 
-  const hasImage = !!userData?.image;
+  let imageSrc = DefaultUserIcon;
 
+  if (userData && role === "center" && "image" in userData && userData.image) {
+    imageSrc = userData.image;
+  } else {
+    imageSrc = TeacherIcon;
+  }
+  const isBlocked =
+    userData && "is_blocked" in userData ? userData.is_blocked : false;
   const handleDownload = async () => {
     try {
-      if (!hasImage) return;
+      if (!imageSrc) return;
 
-      const response = await fetch(userData.image);
+      const response = await fetch(imageSrc);
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
 
@@ -36,9 +44,7 @@ const UserProfile = () => {
     <div className="flex flex-col gap-6">
       {/* HEADER */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-        <h1 className="text-2xl font-bold tracking-tight">
-          Shaxsiy Profil
-        </h1>
+        <h1 className="text-2xl font-bold tracking-tight">Shaxsiy Profil</h1>
 
         <BreadcrumbBasic
           items={[
@@ -68,14 +74,14 @@ const UserProfile = () => {
           <div className="bg-white dark:bg-fullbg rounded-xl shadow-md border border-black/5 dark:border-white/10 p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 hover:shadow-lg transition">
             <div className="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
               {/* AVATAR */}
-              {hasImage ? (
+              {imageSrc ? (
                 <div
                   onClick={() => setOpenImage(true)}
                   className="relative w-20 h-20 rounded-full p-[2px] bg-gradient-to-tr from-blue-500 to-indigo-500 cursor-pointer"
                 >
                   <div className="rounded-full overflow-hidden w-full h-full bg-white dark:bg-black group">
                     <img
-                      src={userData?.image}
+                      src={imageSrc}
                       alt="avatar"
                       className="object-cover w-full h-full"
                     />
@@ -97,23 +103,21 @@ const UserProfile = () => {
 
               <div>
                 <h2 className="text-xl font-semibold">{userData?.name}</h2>
-                <p className="text-sm text-gray-500">
-                  {userData?.phone}
-                </p>
+                <p className="text-sm text-gray-500">{userData?.phone}</p>
               </div>
             </div>
-
-            <UserEditModal classname="border border-black/20 dark:border-white/20 flex items-center justify-center rounded-lg py-2 px-4 gap-2 hover:bg-black/5 dark:hover:bg-white/10 transition cursor-pointer" />
+            {role === "center" && (
+              <UserEditModal classname="border border-black/20 dark:border-white/20 flex items-center justify-center rounded-lg py-2 px-4 gap-2 hover:bg-black/5 dark:hover:bg-white/10 transition cursor-pointer" />
+            )}
           </div>
 
           {/* INFO CARD */}
           <div className="bg-white dark:bg-fullbg rounded-xl shadow-md border border-black/5 dark:border-white/10 p-6 flex flex-col gap-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold">
-                Shaxsiy Ma'lumotlar
-              </h2>
-
-              <UserEditModal classname="hidden sm:flex border border-black/20 dark:border-white/20 rounded-lg py-2 px-4 gap-2 hover:bg-black/5 dark:hover:bg-white/10 transition cursor-pointer" />
+              <h2 className="text-lg font-semibold">Shaxsiy Ma'lumotlar</h2>
+              {role === "center" && (
+                <UserEditModal classname="hidden sm:flex border border-black/20 dark:border-white/20 rounded-lg py-2 px-4 gap-2 hover:bg-black/5 dark:hover:bg-white/10 transition cursor-pointer" />
+              )}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -125,54 +129,56 @@ const UserProfile = () => {
               <Info
                 label="Role"
                 value={
-                  userData?.role == "LEARNING_CENTER"
+                  userData?.role == "center"
                     ? "Ta'lim Markazi"
                     : userData?.role == "TEACHER"
-                    ? "Ustoz"
-                    : userData?.role
+                      ? "Ustoz"
+                      : userData?.role
                 }
               />
 
-              <div>
-                <p className="text-sm text-gray-500 mb-1">Status</p>
+              {role === "center" && (
+                <div>
+                  <p className="text-sm text-gray-500 mb-1">Status</p>
 
-                <span
-                  className={`px-3 py-1 rounded-full text-xs font-medium ${
-                    userData?.is_blocked
-                      ? "bg-red-100 text-red-600"
-                      : "bg-green-100 text-green-600"
-                  }`}
-                >
-                  {userData?.is_blocked ? "Bloklangan" : "Aktiv"}
-                </span>
-              </div>
+                  <span
+                    className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      isBlocked
+                        ? "bg-red-100 text-red-600"
+                        : "bg-green-100 text-green-600"
+                    }`}
+                  >
+                    {isBlocked ? "Bloklangan" : "Aktiv"}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </div>
       )}
 
       {/* IMAGE MODAL */}
-      {openImage && hasImage && (
+      {openImage && imageSrc && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur flex items-center justify-center z-50">
           <div className="relative max-w-[90%] max-h-[90%]">
             <div className="absolute top-3 right-3 flex gap-2">
               <button
                 onClick={handleDownload}
-                className="bg-white/90 p-2 rounded-full hover:bg-white cursor-pointer"
+                className="bg-white/90 p-2 dark:bg-slate-800 rounded-full hover:bg-white cursor-pointer"
               >
                 <Download size={20} />
               </button>
 
               <button
                 onClick={() => setOpenImage(false)}
-                className="bg-white/90 p-2 rounded-full hover:bg-white cursor-pointer"
+                className="bg-white/90 p-2 rounded-full dark:bg-slate-800  hover:bg-white cursor-pointer"
               >
                 <X size={20} />
               </button>
             </div>
 
             <img
-              src={userData?.image}
+              src={imageSrc}
               alt="preview"
               className="max-w-[90vw] max-h-[90vh] rounded-xl shadow-2xl"
             />
