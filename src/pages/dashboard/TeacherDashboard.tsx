@@ -1,7 +1,7 @@
 
 const TeacherDashboard = () => {
   return (
-    <div>enasi jilli</div>
+    <div>Dashboard teacher</div>
   )
 }
 

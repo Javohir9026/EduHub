@@ -127,9 +127,9 @@ const App = () => {
           <Route
             path="/user-profile"
             element={
-              <LearningCenterRoute>
+              <AuthRoute>
                 <UserProfile />
-              </LearningCenterRoute>
+              </AuthRoute>
             }
           />
           <Route
