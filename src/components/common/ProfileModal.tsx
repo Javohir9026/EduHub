@@ -5,7 +5,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Info, UserIcon } from "lucide-react";
+import { Info, User2Icon, UserIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { AnimatedThemeToggler } from "../ui/animated-theme-toggler";
 import LogOutButton from "./LogOutButton";
@@ -22,6 +22,7 @@ type UserType = {
   role: string;
   is_blocked: boolean;
 };
+
 export function ProfileModal() {
   const { userData, loading } = useUser();
   const role = localStorage.getItem("role");
