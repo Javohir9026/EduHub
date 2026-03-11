@@ -17,7 +17,7 @@ export const GroupInfo = () => {
   const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState(false);
   const [group, setGroup] = useState<GroupDetail | null>(null);
-
+  const role = localStorage.getItem("role");
   useEffect(() => {
     const fetchGroup = async () => {
       try {
@@ -135,17 +135,28 @@ export const GroupInfo = () => {
 
         {/* TEACHER & CENTER */}
         <div className="grid md:grid-cols-2 gap-6">
-          <Link
-            to={`/teacher-info/${group.teacher.id}`}
-            className="bg-white shadow-lg rounded-xl p-6 dark:!bg-fullbg"
-          >
-            <h2 className="text-xl font-bold mb-4">O'qituvchi</h2>
-            <p className="font-semibold">
-              {group.teacher.name} {group.teacher.lastName}
-            </p>
-            <p className="text-gray-500">{group.teacher.phone}</p>
-            <p className="text-gray-500">{group.teacher.email}</p>
-          </Link>
+          {role === "center" ? (
+            <Link
+              to={`/teacher-info/${group.teacher.id}`}
+              className="bg-white shadow-lg rounded-xl p-6 dark:!bg-fullbg"
+            >
+              <h2 className="text-xl font-bold mb-4">O'qituvchi</h2>
+              <p className="font-semibold">
+                {group.teacher.name} {group.teacher.lastName}
+              </p>
+              <p className="text-gray-500">{group.teacher.phone}</p>
+              <p className="text-gray-500">{group.teacher.email}</p>
+            </Link>
+          ) : (
+            <div className="bg-white shadow-lg rounded-xl p-6 dark:!bg-fullbg">
+              <h2 className="text-xl font-bold mb-4">O'qituvchi</h2>
+              <p className="font-semibold">
+                {group.teacher.name} {group.teacher.lastName}
+              </p>
+              <p className="text-gray-500">{group.teacher.phone}</p>
+              <p className="text-gray-500">{group.teacher.email}</p>
+            </div>
+          )}
 
           <div className="bg-white shadow-lg rounded-xl p-6 dark:!bg-fullbg">
             <h2 className="text-xl font-bold mb-4">O'quv markaz</h2>
@@ -165,21 +176,37 @@ export const GroupInfo = () => {
             <p className="text-gray-500">Hozircha o'quvchilar yo'q</p>
           ) : (
             <div className="grid md:grid-cols-2 gap-4">
-              {group.groupStudents.map((gs) => (
-                <Link
-                  key={gs.id}
-                  to={`/student-info/${gs.student.id}`}
-                  className="p-4 border rounded-xl hover:shadow-md transition bg-gray-50 hover:bg-blue-50 flex justify-between group items-center dark:!bg-fullbg"
-                >
-                  <div className="flex flex-col">
-                    <p className="font-semibold">{gs.student.fullName}</p>
-                    <p className="text-sm text-gray-500">{gs.student.phone}</p>
+              {group.groupStudents.map((gs) =>
+                role === "center" ? (
+                  <Link
+                    key={gs.id}
+                    to={`/student-info/${gs.student.id}`}
+                    className="p-4 border rounded-2xl hover:shadow-lg transition bg-white dark:bg-gray-800 flex justify-between items-center"
+                  >
+                    <div className="flex flex-col">
+                      <p className="font-semibold">{gs.student.fullName}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        {gs.student.phone}
+                      </p>
+                    </div>
+                    <span className="text-gray-400 group-hover:text-blue-500 transition">
+                      <ChevronRight />
+                    </span>
+                  </Link>
+                ) : (
+                  <div
+                    key={gs.id}
+                    className="p-4 border rounded-2xl bg-white dark:bg-gray-800 flex justify-between items-center"
+                  >
+                    <div className="flex flex-col">
+                      <p className="font-semibold">{gs.student.fullName}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        {gs.student.phone}
+                      </p>
+                    </div>
                   </div>
-                  <span className="hidden group-hover:block">
-                    <ChevronRight />
-                  </span>
-                </Link>
-              ))}
+                ),
+              )}
             </div>
           )}
         </div>
