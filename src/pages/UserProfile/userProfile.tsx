@@ -129,9 +129,9 @@ const UserProfile = () => {
               <Info
                 label="Role"
                 value={
-                  userData?.role == "center"
+                  role == "center"
                     ? "Ta'lim Markazi"
-                    : userData?.role == "TEACHER"
+                    : role == "teacher"
                       ? "Ustoz"
                       : userData?.role
                 }
@@ -142,7 +142,7 @@ const UserProfile = () => {
                   <p className="text-sm text-gray-500 mb-1">Status</p>
 
                   <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${
+                    className={`px-3 py-1 dark:bg-slate-800 rounded-full text-xs font-medium ${
                       isBlocked
                         ? "bg-red-100 text-red-600"
                         : "bg-green-100 text-green-600"
