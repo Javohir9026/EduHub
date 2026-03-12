@@ -88,7 +88,7 @@ export function PaymentsPage() {
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 font-sans">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+      <div className="max-w-7x mx-auto py-8 space-y-6">
         {/* Header */}
 
         <div className="flex items-center justify-between gap-4">
