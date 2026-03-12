@@ -150,3 +150,10 @@ export interface StudentShort {
   fullName: string;
   phone: string;
 }
+export type AttendanceRequest = {
+  groupId: number;
+  studentId: number;
+  teacherId: number;
+  date: string;
+  status: "PRESENT" | "ABSENT" | "LATE";
+};

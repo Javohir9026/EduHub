@@ -21,11 +21,12 @@ export const GroupInfo = () => {
   useEffect(() => {
     const fetchGroup = async () => {
       try {
+        const endpoint = role === 'center' ? `/groups/${id}` : role === 'teacher' ? `/groups/teacher/${id}`: ''
         setLoading(true);
         const token = localStorage.getItem("access_token");
         const api = import.meta.env.VITE_API_URL;
 
-        const res = await apiClient.get(`${api}/groups/${id}`, {
+        const res = await apiClient.get(`${api}${endpoint}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setGroup(res.data.data);
