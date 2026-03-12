@@ -23,6 +23,7 @@ import AuthRoute from "./routes/AuthRoute";
 import TeacherRoute from "./routes/TeacherProtectedRoute";
 import MyGroups from "./pages/MyGroups/MyGroups";
 import AttendancesPage from "./pages/Davomat/Attendances";
+import { PaymentsPage } from "./pages/Payment/Paymentspage";
 
 const App = () => {
   return (
@@ -145,6 +146,14 @@ const App = () => {
             element={
               <LearningCenterRoute>
                 <TeacherInfoPage />
+              </LearningCenterRoute>
+            }
+          />
+          <Route
+            path="/payments"
+            element={
+              <LearningCenterRoute>
+                <PaymentsPage />
               </LearningCenterRoute>
             }
           />

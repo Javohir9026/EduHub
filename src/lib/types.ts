@@ -150,3 +150,34 @@ export interface StudentShort {
   fullName: string;
   phone: string;
 }
+export interface StudentForPayment {
+  id: number;
+  fullName: string;
+}
+
+export interface GroupForPayment {
+  id: number;
+  name: string;
+}
+
+export interface Payment {
+  id: number;
+  student: StudentForPayment;
+  group: GroupForPayment;
+  amount: number;
+  paidAmount: number;
+  discount: number;
+  month: string;
+  paymentDate: string;
+  description: string;
+}
+
+export interface PaymentFormData {
+  student_id: number;
+  group_id: number;
+  amount: number;
+  paidAmount: number;
+  discount: number;
+  month: string;
+  description: string;
+}
