@@ -150,6 +150,7 @@ export interface StudentShort {
   fullName: string;
   phone: string;
 }
+<<<<<<< HEAD
 export interface StudentForPayment {
   id: number;
   fullName: string;
@@ -181,3 +182,12 @@ export interface PaymentFormData {
   month: string;
   description: string;
 }
+=======
+export type AttendanceRequest = {
+  groupId: number;
+  studentId: number;
+  teacherId: number;
+  date: string;
+  status: "PRESENT" | "ABSENT" | "LATE";
+};
+>>>>>>> 1ca23c602f5b6d23baa5fdde712c334527d6aa8b

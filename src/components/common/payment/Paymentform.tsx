@@ -81,14 +81,14 @@ export function PaymentForm({
       <DialogContent className="sm:max-w-lg bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-2xl">
         <DialogHeader className="pb-2">
           <DialogTitle className="text-lg font-bold text-zinc-900 dark:text-zinc-50">
-            {editingPayment ? "Edit Payment" : "Add New Payment"}
+            {editingPayment ? "To'lovni Yangilash" : "Yangi To'lov Kiritish"}
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             {field(
-              "Student",
+              "O'quvchi",
               <Select
                 value={form.student_id ? String(form.student_id) : ""}
                 onValueChange={(v) =>
@@ -96,7 +96,7 @@ export function PaymentForm({
                 }
               >
                 <SelectTrigger className="rounded-xl border-zinc-200 dark:border-zinc-700 dark:bg-zinc-800">
-                  <SelectValue placeholder="Select student" />
+                  <SelectValue placeholder="O'quvchini Tanlang" />
                 </SelectTrigger>
                 <SelectContent>
                   {STUDENTS.map((s) => (
@@ -109,13 +109,13 @@ export function PaymentForm({
             )}
 
             {field(
-              "Group",
+              "Guruh",
               <Select
                 value={form.group_id ? String(form.group_id) : ""}
                 onValueChange={(v) => setForm({ ...form, group_id: Number(v) })}
               >
                 <SelectTrigger className="rounded-xl border-zinc-200 dark:border-zinc-700 dark:bg-zinc-800">
-                  <SelectValue placeholder="Select group" />
+                  <SelectValue placeholder="Guruhni tanlang" />
                 </SelectTrigger>
                 <SelectContent>
                   {GROUPS.map((g) => (
@@ -130,10 +130,10 @@ export function PaymentForm({
 
           <div className="grid grid-cols-3 gap-4">
             {field(
-              "Amount (UZS)",
+              "Miqdor (UZS)",
               <Input
                 type="number"
-                placeholder="500000"
+                placeholder="500000 UZS"
                 value={form.amount || ""}
                 onChange={(e) =>
                   setForm({ ...form, amount: Number(e.target.value) })
@@ -142,10 +142,10 @@ export function PaymentForm({
               />,
             )}
             {field(
-              "Paid Amount",
+              "To'lanadi (UZS)",
               <Input
                 type="number"
-                placeholder="500000"
+                placeholder="500000 UZS"
                 value={form.paidAmount || ""}
                 onChange={(e) =>
                   setForm({ ...form, paidAmount: Number(e.target.value) })
@@ -154,7 +154,7 @@ export function PaymentForm({
               />,
             )}
             {field(
-              "Discount",
+              "Chegirma (UZS)",
               <Input
                 type="number"
                 placeholder="0"
@@ -168,7 +168,7 @@ export function PaymentForm({
           </div>
 
           {field(
-            "Month",
+            "Sana",
             <Input
               type="month"
               value={form.month}
@@ -178,9 +178,9 @@ export function PaymentForm({
           )}
 
           {field(
-            "Description",
+            "Qo'shimcha",
             <Textarea
-              placeholder="Payment note..."
+              placeholder="Tolov izohi..."
               value={form.description}
               onChange={(e) =>
                 setForm({ ...form, description: e.target.value })

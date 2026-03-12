@@ -2,8 +2,10 @@ import { Link, useLocation } from "react-router-dom";
 import { useSidebar } from "@/context/SidebarContext";
 import { EduLogoDark, EduLogoLight, EduHubLogo } from "@/assets/exportImg";
 import {
+  BanknoteArrowDown,
   Calendar,
   CalendarCheck,
+  CreditCard,
   Home,
   Layers,
   Users,
@@ -44,6 +46,12 @@ const AppSidebar: React.FC = () => {
       title: "Kalendar",
       path: "/calendar",
       icon: Calendar,
+    },
+    {
+      id: 6,
+      title: "To'lovlar",
+      path: "/payments",
+      icon: BanknoteArrowDown,
     },
   ];
 

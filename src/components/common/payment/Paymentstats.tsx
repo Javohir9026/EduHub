@@ -13,31 +13,31 @@ export function PaymentStats({ payments }: PaymentStatsProps) {
 
   const stats = [
     {
-      title: "Total Amount",
+      title: "Jami summa",
       value: formatCurrency(totalAmount),
       icon: DollarSign,
       color: "text-violet-500",
       bg: "bg-violet-500/10 dark:bg-violet-500/15",
       border: "border-violet-200/60 dark:border-violet-500/20",
-      badge: `${payments.length} payments`,
+      badge: `${payments.length} ta to'lov`,
     },
     {
-      title: "Total Paid",
+      title: "Jami To'langan",
       value: formatCurrency(totalPaid),
       icon: CheckCircle,
       color: "text-emerald-500",
       bg: "bg-emerald-500/10 dark:bg-emerald-500/15",
       border: "border-emerald-200/60 dark:border-emerald-500/20",
-      badge: `${Math.round((totalPaid / totalAmount) * 100)}% collected`,
+      badge: `${Math.round((totalPaid / totalAmount) * 100)}% qabul qilingan`,
     },
     {
-      title: "Total Discount",
+      title: "Jami Chegirma",
       value: formatCurrency(totalDiscount),
       icon: Tag,
       color: "text-amber-500",
       bg: "bg-amber-500/10 dark:bg-amber-500/15",
       border: "border-amber-200/60 dark:border-amber-500/20",
-      badge: `${payments.filter((p) => p.discount > 0).length} with discount`,
+      badge: `${payments.filter((p) => p.discount > 0).length} ta Chegirma bilan.`,
     },
   ];
 

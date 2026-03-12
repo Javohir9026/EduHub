@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { Plus, CreditCard } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -13,18 +13,8 @@ import {
   GROUPS,
 } from "@/components/common/payment/mockData";
 
-import type {
-  Payment,
-  PaymentFormData,
-} from "@/lib/types";
-
-interface Toast {
-  id: number;
-  message: string;
-  type: "success" | "error";
-}
-
-let toastId = 0;
+import type { Payment, PaymentFormData } from "@/lib/types";
+import { toast } from "sonner";
 
 export function PaymentsPage() {
   const [payments, setPayments] = useState<Payment[]>(MOCK_PAYMENTS);
@@ -32,21 +22,6 @@ export function PaymentsPage() {
   const [formOpen, setFormOpen] = useState<boolean>(false);
 
   const [editingPayment, setEditingPayment] = useState<Payment | null>(null);
-
-  const [toasts, setToasts] = useState<Toast[]>([]);
-
-  const showToast = useCallback(
-    (message: string, type: "success" | "error" = "success") => {
-      const id = ++toastId;
-
-      setToasts((prev) => [...prev, { id, message, type }]);
-
-      setTimeout(() => {
-        setToasts((prev) => prev.filter((t) => t.id !== id));
-      }, 3500);
-    },
-    []
-  );
 
   const handleOpenAdd = () => {
     setEditingPayment(null);
@@ -60,7 +35,7 @@ export function PaymentsPage() {
 
   const handleDelete = (id: number) => {
     setPayments((prev) => prev.filter((p) => p.id !== id));
-    showToast("Payment deleted successfully");
+    toast.success("Tolov Muvaffaqiyatli O'chirildi!");
   };
 
   const handleSubmit = (data: PaymentFormData) => {
@@ -84,11 +59,11 @@ export function PaymentsPage() {
                 month: data.month,
                 description: data.description,
               }
-            : p
-        )
+            : p,
+        ),
       );
 
-      showToast("Payment updated successfully");
+      toast.success("To'lov Muvaffaqiyatli Yangilandi!");
     } else {
       const newPayment: Payment = {
         id: Math.max(0, ...payments.map((p) => p.id)) + 1,
@@ -104,7 +79,7 @@ export function PaymentsPage() {
 
       setPayments((prev) => [newPayment, ...prev]);
 
-      showToast("Payment added successfully");
+      toast.success("To'lov Muvaffaqiyatli Qo'shildi");
     }
 
     setFormOpen(false);
@@ -124,24 +99,24 @@ export function PaymentsPage() {
 
             <div>
               <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 leading-tight">
-                Payments
+                To'lovlar
               </h1>
 
               <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                {payments.length} total records
+                {payments.length} ta to'lov umumiy
               </p>
             </div>
           </div>
 
           <Button
             onClick={handleOpenAdd}
-            className="bg-violet-600 hover:bg-violet-700 text-white rounded-xl shadow-lg shadow-violet-500/20 gap-1.5 text-sm font-semibold transition-all hover:scale-[1.02] active:scale-[0.98]"
+            className="bg-violet-600 cursor-pointer hover:bg-violet-700 text-white rounded-xl shadow-lg shadow-violet-500/20 gap-1.5 text-sm font-semibold transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
             <Plus className="w-4 h-4" />
 
-            <span className="hidden sm:inline">Add Payment</span>
+            <span className="hidden sm:inline">To'lov kiritish</span>
 
-            <span className="sm:hidden">Add</span>
+            <span className="sm:hidden">Qo'shish</span>
           </Button>
         </div>
 
@@ -154,11 +129,11 @@ export function PaymentsPage() {
         <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden">
           <div className="px-5 py-4 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
             <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
-              All Payments
+              Umumiy To'lovlar
             </h2>
 
             <span className="text-xs text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded-lg font-medium">
-              {payments.length} records
+              {payments.length} ta to'lovlar
             </span>
           </div>
 
@@ -183,20 +158,6 @@ export function PaymentsPage() {
         onSubmit={handleSubmit}
         editingPayment={editingPayment}
       />
-
-      {/* Toast */}
-
-      <div className="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none">
-        {toasts.map((toast) => (
-          <div
-            key={toast.id}
-            className="flex items-center gap-2.5 bg-zinc-900 dark:bg-zinc-50 text-zinc-50 dark:text-zinc-900 px-4 py-3 rounded-xl shadow-2xl text-sm font-medium animate-in slide-in-from-bottom-2 fade-in duration-200"
-          >
-            <span className="w-2 h-2 rounded-full bg-emerald-400 dark:bg-emerald-500 shrink-0" />
-            {toast.message}
-          </div>
-        ))}
-      </div>
     </div>
   );
 }

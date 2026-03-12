@@ -35,56 +35,56 @@ export function PaymentTable({
                 isHeader
                 className="px-4 py-4 whitespace-nowrap text-center"
               >
-                Student
+                O'quvchi
               </TableCell>
 
               <TableCell
                 isHeader
                 className="hidden sm:table-cell px-5 py-4 text-center whitespace-nowrap"
               >
-                Group
+                Guruh
               </TableCell>
 
               <TableCell
                 isHeader
                 className="hidden md:table-cell px-5 py-4 text-center whitespace-nowrap"
               >
-                Amount
+                Miqdor
               </TableCell>
 
               <TableCell
                 isHeader
                 className="hidden md:table-cell px-5 py-4 text-center whitespace-nowrap"
               >
-                Paid
+                To'langan
               </TableCell>
 
               <TableCell
                 isHeader
                 className="hidden xl:table-cell px-5 py-4 text-center whitespace-nowrap"
               >
-                Discount
+                chegirma
               </TableCell>
 
               <TableCell
                 isHeader
                 className="hidden xl:table-cell px-5 py-4 text-center whitespace-nowrap"
               >
-                Month
+                Oy
               </TableCell>
 
               <TableCell
                 isHeader
                 className="px-5 py-4 whitespace-nowrap text-center"
               >
-                Payment Date
+                To'lov Sanasi
               </TableCell>
 
               <TableCell
                 isHeader
                 className="px-5 py-4 whitespace-nowrap text-center"
               >
-                Actions
+                Qo'shimcha
               </TableCell>
             </TableRow>
           </TableHeader>
@@ -98,7 +98,7 @@ export function PaymentTable({
                   colSpan={8}
                   className="text-center py-10 text-gray-400"
                 >
-                  No payments found
+                  To'lovlar Mavjud Emas
                 </TableCell>
               </TableRow>
             ) : (

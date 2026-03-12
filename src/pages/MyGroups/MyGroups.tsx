@@ -27,10 +27,9 @@ const TeacherGroupsTable = () => {
   const fetchGroups = async () => {
     try {
       const token = localStorage.getItem("access_token");
-      const teacherId = localStorage.getItem("id");
       const api = import.meta.env.VITE_API_URL;
 
-      const res = await apiClient.get(`${api}/groups/teacher/${teacherId}`, {
+      const res = await apiClient.get(`${api}/groups/teacher/my-groups`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
