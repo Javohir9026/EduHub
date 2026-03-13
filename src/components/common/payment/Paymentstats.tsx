@@ -111,13 +111,13 @@ export function PaymentStats({ payments, loading }: PaymentStatsProps) {
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {loading
         ? // ─── Skeleton Loader ─────────────
           Array.from({ length: 3 }).map((_, idx) => (
             <div
               key={idx}
-              className="relative rounded-2xl border bg-white dark:bg-zinc-900 p-5 shadow-sm overflow-hidden animate-pulse"
+              className="relative rounded-2xl border bg-white dark:bg-fullbg p-5 shadow-sm overflow-hidden animate-pulse"
             >
               <div className="h-4 bg-zinc-300 dark:bg-zinc-700 rounded w-3/4 mb-2" />
               <div className="h-6 bg-zinc-300 dark:bg-zinc-700 rounded w-1/2 mb-2" />

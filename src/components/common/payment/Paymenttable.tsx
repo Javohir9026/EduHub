@@ -1,4 +1,4 @@
-import { Pencil, Trash2 } from "lucide-react";
+import { Info, Pencil, Trash2 } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -7,6 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 // ─── TYPES ───────────────────────────────────────────────────────────────
 interface Student {
@@ -27,13 +28,12 @@ interface Group {
   lessonDays?: string[];
   [key: string]: any; // boshqa maydonlar uchun
 }
-
-export interface Payment {
+interface Payment {
   id: number;
-  amount: number | string;
-  paidAmount: number | string;
-  discount?: number | string;
-  month?: string;
+  amount: number;
+  paidAmount: number;
+  discount: number;
+  month: string;
   paymentDate: string;
   description?: string;
   student: Student;
@@ -52,7 +52,6 @@ const formatCurrency = (value: number | string) => {
   const num = typeof value === "string" ? parseFloat(value) : value;
   return num.toLocaleString("en-US");
 };
-
 const formatMonthName = (month?: string) => {
   if (!month) return "—";
   const date = new Date(month);
@@ -71,6 +70,7 @@ export function PaymentTable({
   onDelete,
 }: PaymentTableProps) {
   console.log(payments);
+  const navigate = useNavigate();
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-fullbg">
       <div className="max-w-full overflow-x-auto">
@@ -89,8 +89,8 @@ export function PaymentTable({
                 Chegirma
               </TableCell>
 
-              <TableCell isHeader>To'lov Sanasi</TableCell>
-              <TableCell isHeader>Actions</TableCell>
+              <TableCell isHeader className="text-center">Sana</TableCell>
+              <TableCell isHeader>Qo'shimcha</TableCell>
             </TableRow>
           </TableHeader>
 
@@ -128,7 +128,9 @@ export function PaymentTable({
                       ${idx % 2 === 0 ? "bg-gray-50 dark:bg-white/5" : "bg-white dark:bg-white/0"}
                       hover:bg-gray-100 dark:hover:bg-white/10`}
                   >
-                    <TableCell className="py-3">{payment.student.fullName}</TableCell>
+                    <TableCell className="py-3">
+                      {payment.student.fullName}
+                    </TableCell>
                     <TableCell className="hidden md:table-cell">
                       {formatCurrency(amount)}
                     </TableCell>
@@ -141,20 +143,30 @@ export function PaymentTable({
 
                     <TableCell>{formatDate(payment.paymentDate)}</TableCell>
                     <TableCell>
-                      <div className="flex justify-center gap-2">
+                      <div className="flex justify-center gap-1 sm:gap-2">
                         <Button
                           size="icon"
                           variant="ghost"
                           onClick={() => onEdit(payment)}
-                          className="hover:bg-blue-100 dark:hover:bg-blue-500/20"
+                          className="bg-blue-500 hidden sm:flex hover:bg-blue-500/80 dark:hover:bg-blue-400 hover:text-white cursor-pointer text-white rounded-lg items-center justify-center gap-2"
                         >
                           <Pencil className="w-4 h-4" />
                         </Button>
                         <Button
                           size="icon"
                           variant="ghost"
+                          onClick={() =>
+                            navigate(`/payment-info/${payment.id}`)
+                          }
+                          className="bg-blue-500  sm:flex hover:bg-blue-500/80 dark:hover:bg-blue-400 hover:text-white cursor-pointer text-white rounded-lg flex items-center justify-center gap-2"
+                        >
+                          <Info />
+                        </Button>
+                        <Button
+                          size="icon"
+                          variant="ghost"
                           onClick={() => onDelete(payment.id)}
-                          className="hover:bg-red-100 dark:hover:bg-red-500/20 text-red-500"
+                          className="bg-red-600 hover:bg-red-700 hidden sm:flex dark:hover:bg-red-400 hover:text-white cursor-pointer text-white rounded-lg items-center justify-center gap-2"
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
