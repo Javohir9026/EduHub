@@ -17,8 +17,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { STUDENTS, GROUPS } from "./mockData";
-import type { Payment, PaymentFormData } from "@/lib/types";
+import type { GroupDetail, Payment, PaymentFormData } from "@/lib/types";
+import apiClient from "@/api/ApiClient";
 
 interface PaymentFormProps {
   open: boolean;
@@ -27,12 +27,12 @@ interface PaymentFormProps {
   editingPayment: Payment | null;
 }
 
-const defaultForm: PaymentFormData = {
+const defaultForm: any = {
   student_id: 0,
   group_id: 0,
   amount: 0,
-  paidAmount: 0,
-  discount: 0,
+  paidAmount: "",
+  discount: "",
   month: "",
   description: "",
 };
@@ -43,17 +43,45 @@ export function PaymentForm({
   onSubmit,
   editingPayment,
 }: PaymentFormProps) {
-  const [form, setForm] = useState<PaymentFormData>(defaultForm);
+  const [form, setForm] = useState(defaultForm);
 
+  const formatCurrency = (value: string) => {
+    const numbers = value.replace(/\D/g, "");
+    if (!numbers) return "";
+    return numbers.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
+  const parseNumber = (value: string) => {
+    return Number(value.replace(/,/g, ""));
+  };
+  const [groups, setGroups] = useState<GroupDetail[]>([]);
+  const [loading, setloading] = useState(false);
+  const fetchGroups = async () => {
+    try {
+      setloading(true);
+      const api = import.meta.env.VITE_API_URL;
+      const id = localStorage.getItem("id");
+      const res = await apiClient.get(`${api}/groups/learning-center/${id}`);
+      setGroups(res.data.data);
+      console.log(res.data.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setloading(false);
+    }
+  };
+  useEffect(() => {
+    fetchGroups();
+  }, []);
   useEffect(() => {
     if (editingPayment) {
       setForm({
         student_id: editingPayment.student.id,
         group_id: editingPayment.group.id,
         amount: editingPayment.amount,
-        paidAmount: editingPayment.paidAmount,
-        discount: editingPayment.discount,
-        month: editingPayment.month.slice(0, 7), // yyyy-MM
+        paidAmount: formatCurrency(String(editingPayment.paidAmount)),
+        discount: formatCurrency(String(editingPayment.discount)),
+        month: editingPayment.month.slice(0, 7),
         description: editingPayment.description,
       });
     } else {
@@ -63,8 +91,15 @@ export function PaymentForm({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!form.student_id || !form.group_id || !form.month) return;
-    onSubmit({ ...form, month: form.month + "-01" });
+
+    onSubmit({
+      ...form,
+      paidAmount: parseNumber(form.paidAmount),
+      discount: parseNumber(form.discount),
+      month: form.month + "-01",
+    });
   };
 
   const field = (label: string, children: React.ReactNode) => (
@@ -75,7 +110,7 @@ export function PaymentForm({
       {children}
     </div>
   );
-
+  const selectedGroup = groups.find((g) => g.id === form.group_id);
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-lg bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-2xl">
@@ -86,39 +121,28 @@ export function PaymentForm({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            {field(
-              "O'quvchi",
-              <Select
-                value={form.student_id ? String(form.student_id) : ""}
-                onValueChange={(v) =>
-                  setForm({ ...form, student_id: Number(v) })
-                }
-              >
-                <SelectTrigger className="rounded-xl border-zinc-200 dark:border-zinc-700 dark:bg-zinc-800">
-                  <SelectValue placeholder="O'quvchini Tanlang" />
-                </SelectTrigger>
-                <SelectContent>
-                  {STUDENTS.map((s) => (
-                    <SelectItem key={s.id} value={String(s.id)}>
-                      {s.fullName}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>,
-            )}
-
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {field(
               "Guruh",
               <Select
                 value={form.group_id ? String(form.group_id) : ""}
-                onValueChange={(v) => setForm({ ...form, group_id: Number(v) })}
+                onValueChange={(v) => {
+                  const group = groups.find((g) => g.id === Number(v));
+
+                  setForm({
+                    ...form,
+                    group_id: Number(v),
+                    student_id: 0,
+                    amount: group?.monthlyPrice || 0,
+                  });
+                }}
               >
-                <SelectTrigger className="rounded-xl border-zinc-200 dark:border-zinc-700 dark:bg-zinc-800">
+                <SelectTrigger className="rounded-xl w-full border-zinc-200 dark:border-zinc-700 dark:bg-zinc-800">
                   <SelectValue placeholder="Guruhni tanlang" />
                 </SelectTrigger>
+
                 <SelectContent>
-                  {GROUPS.map((g) => (
+                  {groups.map((g) => (
                     <SelectItem key={g.id} value={String(g.id)}>
                       {g.name}
                     </SelectItem>
@@ -126,44 +150,97 @@ export function PaymentForm({
                 </SelectContent>
               </Select>,
             )}
+
+            {field(
+              "O'quvchi",
+              <Select
+                disabled={!form.group_id}
+                value={form.student_id ? String(form.student_id) : ""}
+                onValueChange={(v) =>
+                  setForm({ ...form, student_id: Number(v) })
+                }
+              >
+                <SelectTrigger
+                  disabled={!form.group_id}
+                  className="rounded-xl w-full border-zinc-200 dark:border-zinc-700 dark:bg-zinc-800"
+                >
+                  <SelectValue
+                    placeholder={
+                      form.group_id
+                        ? "O'quvchini tanlang"
+                        : "Avval guruh tanlang"
+                    }
+                  />
+                </SelectTrigger>
+
+                <SelectContent>
+                  {selectedGroup?.groupStudents?.map((gs) => (
+                    <SelectItem
+                      key={gs.student.id}
+                      value={String(gs.student.id)}
+                    >
+                      {gs.student.fullName}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>,
+            )}
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {field(
               "Miqdor (UZS)",
               <Input
-                type="number"
-                placeholder="500000 UZS"
-                value={form.amount || ""}
-                onChange={(e) =>
-                  setForm({ ...form, amount: Number(e.target.value) })
+                readOnly
+                value={
+                  form.amount
+                    ? `${Math.floor(Number(form.amount)).toLocaleString()} UZS`
+                    : ""
                 }
                 className="rounded-xl border-zinc-200 dark:border-zinc-700 dark:bg-zinc-800"
               />,
             )}
+
             {field(
               "To'lanadi (UZS)",
-              <Input
-                type="number"
-                placeholder="500000 UZS"
-                value={form.paidAmount || ""}
-                onChange={(e) =>
-                  setForm({ ...form, paidAmount: Number(e.target.value) })
-                }
-                className="rounded-xl border-zinc-200 dark:border-zinc-700 dark:bg-zinc-800"
-              />,
+              <div className="relative">
+                <Input
+                  value={form.paidAmount}
+                  onChange={(e) => {
+                    const formatted = formatCurrency(e.target.value);
+                    setForm({
+                      ...form,
+                      paidAmount: formatted,
+                    });
+                  }}
+                  className="rounded-xl border-zinc-200 dark:border-zinc-700 dark:bg-zinc-800 pr-14"
+                />
+
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-zinc-500">
+                  UZS
+                </span>
+              </div>,
             )}
+
             {field(
               "Chegirma (UZS)",
-              <Input
-                type="number"
-                placeholder="0"
-                value={form.discount || ""}
-                onChange={(e) =>
-                  setForm({ ...form, discount: Number(e.target.value) })
-                }
-                className="rounded-xl border-zinc-200 dark:border-zinc-700 dark:bg-zinc-800"
-              />,
+              <div className="relative">
+                <Input
+                  value={form.discount}
+                  onChange={(e) => {
+                    const formatted = formatCurrency(e.target.value);
+                    setForm({
+                      ...form,
+                      discount: formatted,
+                    });
+                  }}
+                  className="rounded-xl border-zinc-200 dark:border-zinc-700 dark:bg-zinc-800 pr-14"
+                />
+
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-zinc-500">
+                  UZS
+                </span>
+              </div>,
             )}
           </div>
 
@@ -195,15 +272,16 @@ export function PaymentForm({
               type="button"
               variant="outline"
               onClick={onClose}
-              className="rounded-xl border-zinc-200 dark:border-zinc-700"
+              className="rounded-xl cursor-pointer border-zinc-200 dark:border-zinc-700"
             >
               Cancel
             </Button>
+
             <Button
               type="submit"
-              className="rounded-xl bg-violet-600 hover:bg-violet-700 text-white"
+              className="rounded-xl cursor-pointer bg-violet-600 hover:bg-violet-700 text-white"
             >
-              {editingPayment ? "Save Changes" : "Add Payment"}
+              {editingPayment ? "Saqlash" : "Saqlash"}
             </Button>
           </DialogFooter>
         </form>

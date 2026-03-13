@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Plus, CreditCard } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -15,8 +15,23 @@ import {
 
 import type { Payment, PaymentFormData } from "@/lib/types";
 import { toast } from "sonner";
+import apiClient from "@/api/ApiClient";
 
 export function PaymentsPage() {
+  const fetchPayments = async () => {
+    try {
+      const api = import.meta.env.VITE_API_URL;
+      const id = localStorage.getItem("id");
+      const res = await apiClient.get(`${api}/learning-centers/${id}/payments`);
+      // setPayments(res.data.data)
+      console.log(res.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    fetchPayments();
+  }, []);
   const [payments, setPayments] = useState<Payment[]>(MOCK_PAYMENTS);
 
   const [formOpen, setFormOpen] = useState<boolean>(false);
@@ -62,7 +77,6 @@ export function PaymentsPage() {
             : p,
         ),
       );
-
       toast.success("To'lov Muvaffaqiyatli Yangilandi!");
     } else {
       const newPayment: Payment = {
@@ -78,7 +92,7 @@ export function PaymentsPage() {
       };
 
       setPayments((prev) => [newPayment, ...prev]);
-
+      
       toast.success("To'lov Muvaffaqiyatli Qo'shildi");
     }
 

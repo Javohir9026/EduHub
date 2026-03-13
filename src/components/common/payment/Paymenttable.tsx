@@ -122,7 +122,7 @@ export function PaymentTable({
                   {/* Group */}
 
                   <TableCell className="hidden sm:table-cell px-5 py-4">
-                    {payment.group.name}
+                    {payment.group?.name}
                   </TableCell>
 
                   {/* Amount */}
