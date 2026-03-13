@@ -139,7 +139,7 @@ const TeacherGroupsTable = () => {
 
               <td className="p-3 text-right">
                 <button
-                  onClick={() => navigate(`/group-info/AttendancessMainPage`)}
+                  onClick={() => navigate(`/group-info/AttendancessMainPage/${group.id}`)}
                   className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg flex items-center gap-1 ml-auto"
                 >
                   <Info size={16} /> Davomat

@@ -174,7 +174,7 @@ const App = () => {
             }
           />
           <Route
-            path="/group-info/AttendancessMainPage"
+            path="/group-info/AttendancessMainPage/:id"
             element={<AttendancessMainPage />}
           />
         </Route>
