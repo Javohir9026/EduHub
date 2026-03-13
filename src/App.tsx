@@ -23,7 +23,7 @@ import AuthRoute from "./routes/AuthRoute";
 import TeacherRoute from "./routes/TeacherProtectedRoute";
 import MyGroups from "./pages/MyGroups/MyGroups";
 import AttendancesPage from "./pages/Davomat/Attendances";
-import { PaymentsPage } from "./pages/Payment/Paymentspage";
+import AttendancessMainPage from "./pages/Davomat/AttendacessMainPage";
 
 const App = () => {
   return (
@@ -180,6 +180,10 @@ const App = () => {
                 <AttendancesPage />
               </TeacherRoute>
             }
+          />
+          <Route
+            path="/group-info/AttendancessMainPage/:id"
+            element={<AttendancessMainPage />}
           />
         </Route>
       </Routes>
