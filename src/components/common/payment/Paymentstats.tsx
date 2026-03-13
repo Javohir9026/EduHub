@@ -38,9 +38,10 @@ interface PaymentData {
 
 interface PaymentStatsProps {
   payments: PaymentData[];
+  loading: boolean; // skeleton loader uchun
 }
 
-export function PaymentStats({ payments }: PaymentStatsProps) {
+export function PaymentStats({ payments, loading }: PaymentStatsProps) {
   // ─── Currency Format Function ─────────────────────────────
   const formatCurrency = (value: number | string) => {
     if (!value) return "0";
@@ -89,7 +90,7 @@ export function PaymentStats({ payments }: PaymentStatsProps) {
       color: "text-emerald-500",
       bg: "bg-emerald-500/10 dark:bg-emerald-500/15",
       border: "border-emerald-200/60 dark:border-emerald-500/20",
-      badge: `${Math.round((totalPaid / totalAmount) * 100)}% qabul qilingan`,
+      badge: `${totalAmount > 0 ? Math.round((totalPaid / totalAmount) * 100) : 0}% qabul qilingan`,
     },
     {
       title: "Jami Chegirma",
@@ -111,35 +112,48 @@ export function PaymentStats({ payments }: PaymentStatsProps) {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      {stats.map((stat) => {
-        const Icon = stat.icon;
-        return (
-          <div
-            key={stat.title}
-            className={`relative rounded-2xl border ${stat.border} bg-white dark:bg-fullbg p-5 shadow-sm overflow-hidden transition-all hover:shadow-md`}
-          >
+      {loading
+        ? // ─── Skeleton Loader ─────────────
+          Array.from({ length: 3 }).map((_, idx) => (
             <div
-              className={`absolute -top-6 -right-6 w-24 h-24 rounded-full ${stat.bg} blur-2xl`}
-            />
-            <div className="relative flex items-start justify-between gap-3">
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">
-                  {stat.title}
-                </p>
-                <p className="text-xl font-bold text-zinc-900 dark:text-zinc-50 truncate">
-                  {stat.value}
-                </p>
-                <span className="inline-block mt-2 text-xs font-medium text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded-full">
-                  {stat.badge}
-                </span>
-              </div>
-              <div className={`shrink-0 p-2.5 rounded-xl ${stat.bg}`}>
-                <Icon className={`w-5 h-5 ${stat.color}`} />
-              </div>
+              key={idx}
+              className="relative rounded-2xl border bg-white dark:bg-zinc-900 p-5 shadow-sm overflow-hidden animate-pulse"
+            >
+              <div className="h-4 bg-zinc-300 dark:bg-zinc-700 rounded w-3/4 mb-2" />
+              <div className="h-6 bg-zinc-300 dark:bg-zinc-700 rounded w-1/2 mb-2" />
+              <div className="h-3 bg-zinc-300 dark:bg-zinc-700 rounded w-1/4 mt-2" />
             </div>
-          </div>
-        );
-      })}
+          ))
+        : // ─── Actual Stats ─────────────
+          stats.map((stat) => {
+            const Icon = stat.icon;
+            return (
+              <div
+                key={stat.title}
+                className={`relative rounded-2xl border ${stat.border} bg-white dark:bg-fullbg p-5 shadow-sm overflow-hidden transition-all hover:shadow-md`}
+              >
+                <div
+                  className={`absolute -top-6 -right-6 w-24 h-24 rounded-full ${stat.bg} blur-2xl`}
+                />
+                <div className="relative flex items-start justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">
+                      {stat.title}
+                    </p>
+                    <p className="text-xl font-bold text-zinc-900 dark:text-zinc-50 truncate">
+                      {stat.value}
+                    </p>
+                    <span className="inline-block mt-2 text-xs font-medium text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded-full">
+                      {stat.badge}
+                    </span>
+                  </div>
+                  <div className={`shrink-0 p-2.5 rounded-xl ${stat.bg}`}>
+                    <Icon className={`w-5 h-5 ${stat.color}`} />
+                  </div>
+                </div>
+              </div>
+            );
+          })}
     </div>
   );
 }
