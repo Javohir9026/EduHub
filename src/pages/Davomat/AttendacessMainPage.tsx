@@ -213,7 +213,7 @@ const AttendancesMainPage = () => {
                 )}
               </div>
             </div>
-          ))}
+          ))};
 
         </div>
 
@@ -231,5 +231,6 @@ const AttendancesMainPage = () => {
     </div>
   );
 };
+    
 
 export default AttendancesMainPage;
