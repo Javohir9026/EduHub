@@ -23,7 +23,9 @@ import AuthRoute from "./routes/AuthRoute";
 import TeacherRoute from "./routes/TeacherProtectedRoute";
 import MyGroups from "./pages/MyGroups/MyGroups";
 import AttendancesPage from "./pages/Davomat/Attendances";
+import AttendancessMainPage from "./pages/Davomat/AttendacessMainPage";
 import { PaymentsPage } from "./pages/Payment/Paymentspage";
+import PaymentInfoPage from "./pages/Payment/PaymentInfoPage";
 
 const App = () => {
   return (
@@ -179,6 +181,22 @@ const App = () => {
               <TeacherRoute>
                 <AttendancesPage />
               </TeacherRoute>
+            }
+          />
+          <Route
+            path="/group-info/AttendancessMainPage/:id"
+            element={
+              <LearningCenterRoute>
+                <AttendancessMainPage />
+              </LearningCenterRoute>
+            }
+          />
+          <Route
+            path="/payment-info/:id"
+            element={
+              <LearningCenterRoute>
+                <PaymentInfoPage />
+              </LearningCenterRoute>
             }
           />
         </Route>

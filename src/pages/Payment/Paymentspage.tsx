@@ -45,20 +45,20 @@ export function PaymentsPage() {
   const [payments, setPayments] = useState<Payment[]>([]);
   const [formOpen, setFormOpen] = useState<boolean>(false);
   const [editingPayment, setEditingPayment] = useState<Payment | null>(null);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   // Fetch Payments
   const fetchPayments = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const api = import.meta.env.VITE_API_URL;
       const id = localStorage.getItem("id");
       const res = await apiClient.get(`${api}/learning-centers/${id}/payments`);
       setPayments(res.data.data);
-      console.log(res.data.data)
+      console.log(res.data.data);
     } catch (error) {
       console.log(error);
-    }finally{
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -87,7 +87,7 @@ export function PaymentsPage() {
   // Create Payment API Call
   const CreatePayment = async (data: PaymentFormData) => {
     try {
-      setLoading(true)
+      setLoading(true);
       const api = import.meta.env.VITE_API_URL;
       const token = localStorage.getItem("access_token");
       const res = await apiClient.post(`${api}/student-payments`, data, {
@@ -96,8 +96,8 @@ export function PaymentsPage() {
       console.log(res);
     } catch (error) {
       console.log(error);
-    }finally{
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -174,7 +174,7 @@ export function PaymentsPage() {
           </Button>
         </div>
 
-        <PaymentStats payments={payments} loading={loading}/>
+        <PaymentStats payments={payments} loading={loading} />
 
         <div className="bg-white dark:bg-fullbg rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden">
           <div className="px-5 py-4 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
@@ -187,6 +187,7 @@ export function PaymentsPage() {
           </div>
           <div className="p-4 md:p-0">
             <PaymentTable
+              loading={loading}
               payments={payments}
               onEdit={handleEdit}
               onDelete={handleDelete}
