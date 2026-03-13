@@ -6,11 +6,39 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
 import { Button } from "@/components/ui/button";
-import type { Payment } from "@/lib/types";
 
-import { formatCurrency, formatDate, formatMonthName } from "./mockData";
+// ─── TYPES ───────────────────────────────────────────────────────────────
+interface Student {
+  id: number;
+  fullName: string;
+  phone?: string;
+  parentPhone?: string;
+  birthDate?: string;
+  address?: string;
+}
+
+interface Group {
+  id: number;
+  name: string;
+  description?: string;
+  startDate?: string;
+  endDate?: string;
+  lessonDays?: string[];
+  [key: string]: any; // boshqa maydonlar uchun
+}
+
+export interface Payment {
+  id: number;
+  amount: number;
+  paidAmount: number;
+  discount: number;
+  month: string;
+  paymentDate: string;
+  description?: string;
+  student: Student;
+  group?: Group;
+}
 
 interface PaymentTableProps {
   payments: Payment[];
@@ -18,6 +46,24 @@ interface PaymentTableProps {
   onDelete: (id: number) => void;
 }
 
+// ─── FORMAT FUNCTIONS ───────────────────────────────────────────────────
+const formatCurrency = (value: number | string) => {
+  if (!value) return "0";
+  const num = typeof value === "string" ? parseFloat(value) : value;
+  return num.toLocaleString("en-US");
+};
+
+const formatMonthName = (month: string) => {
+  const date = new Date(month);
+  return date.toLocaleString("default", { month: "long", year: "numeric" });
+};
+
+const formatDate = (dateStr: string) => {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString();
+};
+
+// ─── COMPONENT ──────────────────────────────────────────────────────────
 export function PaymentTable({
   payments,
   onEdit,
@@ -28,74 +74,44 @@ export function PaymentTable({
       <div className="max-w-full overflow-x-auto">
         <Table className="w-full">
           {/* HEADER */}
-
           <TableHeader>
             <TableRow className="text-center">
-              <TableCell
-                isHeader
-                className="px-4 py-4 whitespace-nowrap text-center"
-              >
+              <TableCell isHeader className="px-4 py-4">
                 O'quvchi
               </TableCell>
-
-              <TableCell
-                isHeader
-                className="hidden sm:table-cell px-5 py-4 text-center whitespace-nowrap"
-              >
+              <TableCell isHeader className="hidden sm:table-cell px-5 py-4">
                 Guruh
               </TableCell>
-
-              <TableCell
-                isHeader
-                className="hidden md:table-cell px-5 py-4 text-center whitespace-nowrap"
-              >
+              <TableCell isHeader className="hidden md:table-cell px-5 py-4">
                 Miqdor
               </TableCell>
-
-              <TableCell
-                isHeader
-                className="hidden md:table-cell px-5 py-4 text-center whitespace-nowrap"
-              >
+              <TableCell isHeader className="hidden md:table-cell px-5 py-4">
                 To'langan
               </TableCell>
-
-              <TableCell
-                isHeader
-                className="hidden xl:table-cell px-5 py-4 text-center whitespace-nowrap"
-              >
-                chegirma
+              <TableCell isHeader className="hidden xl:table-cell px-5 py-4">
+                Chegirma
               </TableCell>
-
-              <TableCell
-                isHeader
-                className="hidden xl:table-cell px-5 py-4 text-center whitespace-nowrap"
-              >
+              <TableCell isHeader className="hidden xl:table-cell px-5 py-4">
                 Oy
               </TableCell>
-
-              <TableCell
-                isHeader
-                className="px-5 py-4 whitespace-nowrap text-center"
-              >
+              <TableCell isHeader className="px-5 py-4">
                 To'lov Sanasi
               </TableCell>
-
-              <TableCell
-                isHeader
-                className="px-5 py-4 whitespace-nowrap text-center"
-              >
+              <TableCell isHeader className="px-5 py-4">
                 Qo'shimcha
+              </TableCell>
+              <TableCell isHeader className="px-5 py-4">
+                Actions
               </TableCell>
             </TableRow>
           </TableHeader>
 
           {/* BODY */}
-
           <TableBody>
             {payments.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={8}
+                  colSpan={9}
                   className="text-center py-10 text-gray-400"
                 >
                   To'lovlar Mavjud Emas
@@ -106,59 +122,33 @@ export function PaymentTable({
                 <TableRow
                   key={payment.id}
                   className={`text-center border-b border-gray-200 dark:border-white/[0.05] last:border-b-0
-                    ${
-                      idx % 2 === 0
-                        ? "bg-gray-50 dark:bg-white/5"
-                        : "bg-white dark:bg-white/0"
-                    }
+                    ${idx % 2 === 0 ? "bg-gray-50 dark:bg-white/5" : "bg-white dark:bg-white/0"}
                     hover:bg-gray-100 dark:hover:bg-white/10`}
                 >
-                  {/* Student */}
-
-                  <TableCell className="px-5 py-4 whitespace-nowrap">
+                  <TableCell className="px-5 py-4">
                     {payment.student.fullName}
                   </TableCell>
-
-                  {/* Group */}
-
                   <TableCell className="hidden sm:table-cell px-5 py-4">
                     {payment.group?.name}
                   </TableCell>
-
-                  {/* Amount */}
-
                   <TableCell className="hidden md:table-cell px-5 py-4">
                     {formatCurrency(payment.amount)}
                   </TableCell>
-
-                  {/* Paid */}
-
                   <TableCell className="hidden md:table-cell px-5 py-4">
                     {formatCurrency(payment.paidAmount)}
                   </TableCell>
-
-                  {/* Discount */}
-
                   <TableCell className="hidden xl:table-cell px-5 py-4">
-                    {payment.discount > 0
-                      ? formatCurrency(payment.discount)
-                      : "—"}
+                    {payment.discount ? formatCurrency(payment.discount) : "—"}
                   </TableCell>
-
-                  {/* Month */}
-
                   <TableCell className="hidden xl:table-cell px-5 py-4">
                     {formatMonthName(payment.month)}
                   </TableCell>
-
-                  {/* Date */}
-
                   <TableCell className="px-5 py-4">
                     {formatDate(payment.paymentDate)}
                   </TableCell>
-
-                  {/* Actions */}
-
+                  <TableCell className="px-5 py-4">
+                    {payment.description || "—"}
+                  </TableCell>
                   <TableCell className="px-5 py-4">
                     <div className="flex justify-center gap-2">
                       <Button
@@ -169,7 +159,6 @@ export function PaymentTable({
                       >
                         <Pencil className="w-4 h-4" />
                       </Button>
-
                       <Button
                         size="icon"
                         variant="ghost"

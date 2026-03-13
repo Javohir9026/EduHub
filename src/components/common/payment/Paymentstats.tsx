@@ -1,20 +1,81 @@
 import { DollarSign, CheckCircle, Tag } from "lucide-react";
-import { formatCurrency, } from "./mockData";
-import type { Payment } from "@/lib/types";
+
+interface Student {
+  id: number;
+  fullName: string;
+  phone?: string;
+  parentPhone?: string;
+  birthDate?: string;
+  address?: string;
+}
+
+interface Group {
+  id: number;
+  name: string;
+  description?: string;
+  startDate?: string;
+  endDate?: string;
+  lessonDays?: string;
+  lessonTime?: string;
+  room?: string;
+  maxStudents?: number;
+  currentStudents?: number;
+  monthlyPrice?: number | string;
+  teacher?: { id: number; name: string; lastName: string };
+}
+
+interface PaymentData {
+  id: number;
+  amount: number | string;
+  paidAmount: number | string;
+  discount: number | string;
+  month: string;
+  paymentDate: string;
+  description?: string;
+  student: Student;
+  group?: Group;
+}
 
 interface PaymentStatsProps {
-  payments: Payment[];
+  payments: PaymentData[];
 }
 
 export function PaymentStats({ payments }: PaymentStatsProps) {
-  const totalAmount = payments.reduce((sum, p) => sum + p.amount, 0);
-  const totalPaid = payments.reduce((sum, p) => sum + p.paidAmount, 0);
-  const totalDiscount = payments.reduce((sum, p) => sum + p.discount, 0);
+  // ─── Currency Format Function ─────────────────────────────
+  const formatCurrency = (value: number | string) => {
+    if (!value) return "0";
+    const num = typeof value === "string" ? parseFloat(value) : value;
+    return new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(num);
+  };
+
+  // ─── Convert all string amounts to numbers before calculation ─────────
+  const totalAmount = payments.reduce(
+    (sum, p) =>
+      sum + (typeof p.amount === "string" ? parseFloat(p.amount) : p.amount),
+    0,
+  );
+  const totalPaid = payments.reduce(
+    (sum, p) =>
+      sum +
+      (typeof p.paidAmount === "string"
+        ? parseFloat(p.paidAmount)
+        : p.paidAmount),
+    0,
+  );
+  const totalDiscount = payments.reduce(
+    (sum, p) =>
+      sum +
+      (typeof p.discount === "string" ? parseFloat(p.discount) : p.discount),
+    0,
+  );
 
   const stats = [
     {
       title: "Jami summa",
-      value: formatCurrency(totalAmount),
+      value: `${formatCurrency(totalAmount)} UZS`,
       icon: DollarSign,
       color: "text-violet-500",
       bg: "bg-violet-500/10 dark:bg-violet-500/15",
@@ -23,7 +84,7 @@ export function PaymentStats({ payments }: PaymentStatsProps) {
     },
     {
       title: "Jami To'langan",
-      value: formatCurrency(totalPaid),
+      value: `${formatCurrency(totalPaid)} UZS`,
       icon: CheckCircle,
       color: "text-emerald-500",
       bg: "bg-emerald-500/10 dark:bg-emerald-500/15",
@@ -32,12 +93,19 @@ export function PaymentStats({ payments }: PaymentStatsProps) {
     },
     {
       title: "Jami Chegirma",
-      value: formatCurrency(totalDiscount),
+      value: `${formatCurrency(totalDiscount)} UZS`,
       icon: Tag,
       color: "text-amber-500",
       bg: "bg-amber-500/10 dark:bg-amber-500/15",
       border: "border-amber-200/60 dark:border-amber-500/20",
-      badge: `${payments.filter((p) => p.discount > 0).length} ta Chegirma bilan.`,
+      badge: `${
+        payments.filter(
+          (p) =>
+            (typeof p.discount === "string"
+              ? parseFloat(p.discount)
+              : p.discount) > 0,
+        ).length
+      } ta Chegirma bilan.`,
     },
   ];
 
@@ -50,11 +118,9 @@ export function PaymentStats({ payments }: PaymentStatsProps) {
             key={stat.title}
             className={`relative rounded-2xl border ${stat.border} bg-white dark:bg-zinc-900 p-5 shadow-sm overflow-hidden transition-all hover:shadow-md`}
           >
-            {/* Subtle background glow */}
             <div
               className={`absolute -top-6 -right-6 w-24 h-24 rounded-full ${stat.bg} blur-2xl`}
             />
-
             <div className="relative flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">

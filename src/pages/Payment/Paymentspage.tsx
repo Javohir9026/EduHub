@@ -1,63 +1,107 @@
 import { useEffect, useState } from "react";
-import { Plus, CreditCard } from "lucide-react";
-
+import { Plus, CreditCard, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-import { PaymentStats } from "@/components/common/payment/Paymentstats";
-import { PaymentTable } from "@/components/common/payment/Paymenttable";
 import { PaymentForm } from "@/components/common/payment/Paymentform";
-
-import {
-  MOCK_PAYMENTS,
-  STUDENTS,
-  GROUPS,
-} from "@/components/common/payment/mockData";
-
-import type { Payment, PaymentFormData } from "@/lib/types";
-import { toast } from "sonner";
+import { PaymentStats } from "@/components/common/payment/Paymentstats";
 import apiClient from "@/api/ApiClient";
+import { toast } from "sonner";
+import { PaymentTable } from "@/components/common/payment/Paymenttable";
 
+// ─── TYPES ─────────────────────────────────────────────────────────────────
+interface Student {
+  id: number;
+  fullName: string;
+}
+
+interface Group {
+  id: number;
+  name: string;
+}
+
+interface Payment {
+  id: number;
+  amount: number;
+  paidAmount: number;
+  discount: number;
+  month: string;
+  paymentDate: string;
+  description?: string;
+  student: Student;
+  group?: Group;
+}
+
+interface PaymentFormData {
+  student_id: number;
+  group_id: number;
+  amount: number;
+  paidAmount: number;
+  discount: number;
+  month: string;
+  description?: string;
+}
+
+// ─── MAIN PAGE ─────────────────────────────────────────────────────────────
 export function PaymentsPage() {
+  const [payments, setPayments] = useState<Payment[]>([]);
+  const [formOpen, setFormOpen] = useState<boolean>(false);
+  const [editingPayment, setEditingPayment] = useState<Payment | null>(null);
+
+  // Fetch Payments
   const fetchPayments = async () => {
     try {
       const api = import.meta.env.VITE_API_URL;
       const id = localStorage.getItem("id");
       const res = await apiClient.get(`${api}/learning-centers/${id}/payments`);
-      // setPayments(res.data.data)
-      console.log(res.data.data);
+      setPayments(res.data.data);
+      console.log(res.data.data)
     } catch (error) {
       console.log(error);
     }
   };
+
   useEffect(() => {
     fetchPayments();
   }, []);
-  const [payments, setPayments] = useState<Payment[]>(MOCK_PAYMENTS);
 
-  const [formOpen, setFormOpen] = useState<boolean>(false);
-
-  const [editingPayment, setEditingPayment] = useState<Payment | null>(null);
-
+  // Open Add Modal
   const handleOpenAdd = () => {
     setEditingPayment(null);
     setFormOpen(true);
   };
 
+  // Edit Payment
   const handleEdit = (payment: Payment) => {
     setEditingPayment(payment);
     setFormOpen(true);
   };
 
+  // Delete Payment
   const handleDelete = (id: number) => {
     setPayments((prev) => prev.filter((p) => p.id !== id));
-    toast.success("Tolov Muvaffaqiyatli O'chirildi!");
+    toast.success("To'lov muvaffaqiyatli o'chirildi!");
   };
 
+  // Create Payment API Call
+  const CreatePayment = async (data: PaymentFormData) => {
+    try {
+      const api = import.meta.env.VITE_API_URL;
+      const token = localStorage.getItem("access_token");
+      const res = await apiClient.post(`${api}/student-payments`, data, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Handle Submit from Form
   const handleSubmit = (data: PaymentFormData) => {
-    const student = STUDENTS.find((s) => s.id === data.student_id)!;
-
-    const group = GROUPS.find((g) => g.id === data.group_id)!;
-
+    const student = {
+      id: data.student_id,
+      fullName: `Student ${data.student_id}`,
+    };
+    const group = { id: data.group_id, name: `Group ${data.group_id}` };
     const today = new Date().toISOString().slice(0, 10);
 
     if (editingPayment) {
@@ -77,7 +121,7 @@ export function PaymentsPage() {
             : p,
         ),
       );
-      toast.success("To'lov Muvaffaqiyatli Yangilandi!");
+      toast.success("To'lov muvaffaqiyatli yangilandi!");
     } else {
       const newPayment: Payment = {
         id: Math.max(0, ...payments.map((p) => p.id)) + 1,
@@ -90,10 +134,9 @@ export function PaymentsPage() {
         paymentDate: today,
         description: data.description,
       };
-
       setPayments((prev) => [newPayment, ...prev]);
-      
-      toast.success("To'lov Muvaffaqiyatli Qo'shildi");
+      CreatePayment(data);
+      toast.success("To'lov muvaffaqiyatli qo'shildi");
     }
 
     setFormOpen(false);
@@ -102,55 +145,40 @@ export function PaymentsPage() {
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 font-sans">
-      <div className="max-w-7x mx-auto py-8 space-y-6">
-        {/* Header */}
-
+      <div className="max-w-7xl mx-auto py-8 space-y-6">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-500/25">
               <CreditCard className="w-[18px] h-[18px] text-white" />
             </div>
-
             <div>
               <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 leading-tight">
                 To'lovlar
               </h1>
-
               <p className="text-xs text-zinc-500 dark:text-zinc-400">
                 {payments.length} ta to'lov umumiy
               </p>
             </div>
           </div>
-
           <Button
             onClick={handleOpenAdd}
-            className="bg-violet-600 cursor-pointer hover:bg-violet-700 text-white rounded-xl shadow-lg shadow-violet-500/20 gap-1.5 text-sm font-semibold transition-all hover:scale-[1.02] active:scale-[0.98]"
+            className="bg-violet-600 hover:bg-violet-700 text-white rounded-xl shadow-lg gap-1.5"
           >
-            <Plus className="w-4 h-4" />
-
-            <span className="hidden sm:inline">To'lov kiritish</span>
-
-            <span className="sm:hidden">Qo'shish</span>
+            <Plus className="w-4 h-4" /> To'lov kiritish
           </Button>
         </div>
 
-        {/* Stats */}
-
         <PaymentStats payments={payments} />
-
-        {/* Table */}
 
         <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden">
           <div className="px-5 py-4 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
             <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
               Umumiy To'lovlar
             </h2>
-
             <span className="text-xs text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded-lg font-medium">
               {payments.length} ta to'lovlar
             </span>
           </div>
-
           <div className="p-4 md:p-0">
             <PaymentTable
               payments={payments}
@@ -160,8 +188,6 @@ export function PaymentsPage() {
           </div>
         </div>
       </div>
-
-      {/* Modal */}
 
       <PaymentForm
         open={formOpen}

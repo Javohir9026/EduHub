@@ -17,8 +17,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { GroupDetail, Payment, PaymentFormData } from "@/lib/types";
+import type { Payment, PaymentFormData } from "@/lib/TypeForPayment";
 import apiClient from "@/api/ApiClient";
+import type { GroupDetail } from "@/lib/types";
 
 interface PaymentFormProps {
   open: boolean;
@@ -77,7 +78,7 @@ export function PaymentForm({
     if (editingPayment) {
       setForm({
         student_id: editingPayment.student.id,
-        group_id: editingPayment.group.id,
+        group_id: editingPayment.group?.id,
         amount: editingPayment.amount,
         paidAmount: formatCurrency(String(editingPayment.paidAmount)),
         discount: formatCurrency(String(editingPayment.discount)),
@@ -174,7 +175,7 @@ export function PaymentForm({
                 </SelectTrigger>
 
                 <SelectContent>
-                  {selectedGroup?.groupStudents?.map((gs) => (
+                  {selectedGroup?.groupStudents?.map((gs: any) => (
                     <SelectItem
                       key={gs.student.id}
                       value={String(gs.student.id)}
