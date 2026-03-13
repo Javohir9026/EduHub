@@ -150,6 +150,14 @@ const App = () => {
             }
           />
           <Route
+            path="/payments"
+            element={
+              <LearningCenterRoute>
+                <PaymentsPage />
+              </LearningCenterRoute>
+            }
+          />
+          <Route
             path="/group-info/:id"
             element={
               <AuthRoute>

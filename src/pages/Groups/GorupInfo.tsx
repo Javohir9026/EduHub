@@ -21,7 +21,12 @@ export const GroupInfo = () => {
   useEffect(() => {
     const fetchGroup = async () => {
       try {
-        const endpoint = role === 'center' ? `/groups/${id}` : role === 'teacher' ? `/groups/teacher/${id}`: ''
+        const endpoint =
+          role === "center"
+            ? `/groups/${id}`
+            : role === "teacher"
+              ? `/groups/teacher/${id}`
+              : "";
         setLoading(true);
         const token = localStorage.getItem("access_token");
         const api = import.meta.env.VITE_API_URL;
@@ -29,6 +34,7 @@ export const GroupInfo = () => {
         const res = await apiClient.get(`${api}${endpoint}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+        console.log(res);
         setGroup(res.data.data);
       } catch (error) {
         console.log(error);
@@ -130,33 +136,41 @@ export const GroupInfo = () => {
           </InfoCard>
 
           <InfoCard icon={<User />} title="O'qituvchi">
-            {group.teacher.name} {group.teacher.lastName}
+            {group.teacher
+              ? `${group.teacher.name} ${group.teacher.lastName}`
+              : <span className="text-sm text-gray-500">O'qituvchi Biriktirilmagan</span>}
           </InfoCard>
         </div>
 
         {/* TEACHER & CENTER */}
         <div className="grid md:grid-cols-2 gap-6">
-          {role === "center" ? (
-            <Link
-              to={`/teacher-info/${group.teacher.id}`}
-              className="bg-white shadow-lg rounded-xl p-6 dark:!bg-fullbg"
-            >
-              <h2 className="text-xl font-bold mb-4">O'qituvchi</h2>
-              <p className="font-semibold">
-                {group.teacher.name} {group.teacher.lastName}
-              </p>
-              <p className="text-gray-500">{group.teacher.phone}</p>
-              <p className="text-gray-500">{group.teacher.email}</p>
-            </Link>
-          ) : (
-            <div className="bg-white shadow-lg rounded-xl p-6 dark:!bg-fullbg">
-              <h2 className="text-xl font-bold mb-4">O'qituvchi</h2>
-              <p className="font-semibold">
-                {group.teacher.name} {group.teacher.lastName}
-              </p>
-              <p className="text-gray-500">{group.teacher.phone}</p>
-              <p className="text-gray-500">{group.teacher.email}</p>
+          {group.teacher ? (
+            <div>
+              {role === "center" ? (
+                <Link
+                  to={`/teacher-info/${group.teacher.id}`}
+                  className="bg-white shadow-lg rounded-xl p-6 dark:!bg-fullbg"
+                >
+                  <h2 className="text-xl font-bold mb-4">O'qituvchi</h2>
+                  <p className="font-semibold">
+                    {group.teacher.name} {group.teacher.lastName}
+                  </p>
+                  <p className="text-gray-500">{group.teacher.phone}</p>
+                  <p className="text-gray-500">{group.teacher.email}</p>
+                </Link>
+              ) : (
+                <div className="bg-white shadow-lg rounded-xl p-6 dark:!bg-fullbg">
+                  <h2 className="text-xl font-bold mb-4">O'qituvchi</h2>
+                  <p className="font-semibold">
+                    {group.teacher.name} {group.teacher.lastName}
+                  </p>
+                  <p className="text-gray-500">{group.teacher.phone}</p>
+                  <p className="text-gray-500">{group.teacher.email}</p>
+                </div>
+              )}
             </div>
+          ) : (
+            ""
           )}
 
           <div className="bg-white shadow-lg rounded-xl p-6 dark:!bg-fullbg">
