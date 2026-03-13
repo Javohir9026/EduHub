@@ -144,7 +144,7 @@ export function PaymentsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 font-sans">
+    <div className="min-h-screen bg-zinc-50 dark:bg-background font-sans">
       <div className="max-w-7xl mx-auto py-8 space-y-6">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -170,7 +170,7 @@ export function PaymentsPage() {
 
         <PaymentStats payments={payments} />
 
-        <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden">
+        <div className="bg-white dark:bg-fullbg rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden">
           <div className="px-5 py-4 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
             <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
               Umumiy To'lovlar

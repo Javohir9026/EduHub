@@ -116,7 +116,7 @@ export function PaymentStats({ payments }: PaymentStatsProps) {
         return (
           <div
             key={stat.title}
-            className={`relative rounded-2xl border ${stat.border} bg-white dark:bg-zinc-900 p-5 shadow-sm overflow-hidden transition-all hover:shadow-md`}
+            className={`relative rounded-2xl border ${stat.border} bg-white dark:bg-fullbg p-5 shadow-sm overflow-hidden transition-all hover:shadow-md`}
           >
             <div
               className={`absolute -top-6 -right-6 w-24 h-24 rounded-full ${stat.bg} blur-2xl`}
