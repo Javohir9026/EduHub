@@ -217,7 +217,7 @@ const AttendancesMainPage = () => {
 
         </div>
 
-        {/* Save button */}
+
         <div className="flex justify-end mt-6">
           <button
             onClick={saveAttendance}
