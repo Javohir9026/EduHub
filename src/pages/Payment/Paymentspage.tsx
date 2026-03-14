@@ -168,7 +168,7 @@ export function PaymentsPage() {
           </div>
           <Button
             onClick={handleOpenAdd}
-            className="bg-violet-600 hover:bg-violet-700 text-white rounded-xl shadow-lg gap-1.5"
+            className="bg-violet-600 cursor-pointer hover:bg-violet-700 text-white rounded-xl shadow-lg gap-1.5"
           >
             <Plus className="w-4 h-4" /> To'lov kiritish
           </Button>
