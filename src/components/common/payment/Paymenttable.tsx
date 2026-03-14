@@ -159,16 +159,16 @@ export function PaymentTable({
                   </TableCell>
 
                   <TableCell className="hidden md:table-cell">
-                    {formatCurrency(payment.amount)}
+                    {formatCurrency(payment.amount)} UZS
                   </TableCell>
 
                   <TableCell className="hidden md:table-cell">
-                    {formatCurrency(payment.paidAmount)}
+                    {formatCurrency(payment.paidAmount)} UZS
                   </TableCell>
 
                   <TableCell className="hidden xl:table-cell">
                     {payment.discount > 0
-                      ? formatCurrency(payment.discount)
+                      ? formatCurrency(payment.discount) + " UZS"
                       : "—"}
                   </TableCell>
 

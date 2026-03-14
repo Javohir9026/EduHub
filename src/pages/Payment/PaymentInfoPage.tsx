@@ -119,8 +119,12 @@ export default function PaymentInfoPage() {
     try {
       setLoading(true);
       const api = import.meta.env.VITE_API_URL;
-      const res = await apiClient.get(`${api}/student-payments/${id}`);
-      setPayment(res.data);
+      const res = await apiClient.get(`${api}/student-payments/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+      setPayment(res.data.data);
     } catch (error) {
       console.log(error);
     } finally {
@@ -203,21 +207,21 @@ export default function PaymentInfoPage() {
           <AmountCard
             icon={<BadgeDollarSign className="w-5 h-5" />}
             label="Umumiy summa"
-            value={Number(payment?.amount.toLocaleString()) ?? 0}
+            value={Number(payment?.amount ?? 0)}
             variant="total"
           />
 
           <AmountCard
             icon={<CheckCircle2 className="w-5 h-5" />}
             label="To'langan summa"
-            value={Number(payment?.paidAmount.toLocaleString()) ?? 0}
+            value={payment?.paidAmount ?? 0}
             variant="paid"
           />
 
           <AmountCard
             icon={<Tag className="w-5 h-5" />}
             label="Chegirma"
-            value={Number(payment?.discount.toLocaleString()) ?? 0}
+            value={payment?.discount ?? 0}
             variant="discount"
           />
         </div>
@@ -226,7 +230,7 @@ export default function PaymentInfoPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
           <Section title="O'quvchi" icon={<User className="w-4 h-4" />}>
             <InfoRow
-              link={`/student-info/${payment?.student.id}`}
+              link={`/student-info/${payment?.student?.id}`}
               icon={<User className="w-4 h-4" />}
               label="Ism Familiya"
               value={payment?.student?.fullName ?? ""}
@@ -255,7 +259,8 @@ export default function PaymentInfoPage() {
               icon={<CreditCard className="w-4 h-4" />}
               label="To'lov holati"
               value={
-                (payment?.paidAmount ?? 0) >= (payment?.amount ?? 0)
+                (payment?.paidAmount ?? 0) + (payment?.discount ?? 0) >=
+                (payment?.amount ?? 0)
                   ? "To'liq to'langan ✓"
                   : "Qisman to'langan"
               }

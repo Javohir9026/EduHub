@@ -52,9 +52,10 @@ export function PaymentsPage() {
       setLoading(true);
       const api = import.meta.env.VITE_API_URL;
       const id = localStorage.getItem("id");
-      const res = await apiClient.get(`${api}/learning-centers/${id}/payments`);
+      const res = await apiClient.get(
+        `${api}/student-payments/learning-center/${id}`,
+      );
       setPayments(res.data.data);
-      console.log(res.data.data);
     } catch (error) {
       console.log(error);
     } finally {
@@ -92,7 +93,7 @@ export function PaymentsPage() {
       const token = localStorage.getItem("access_token");
       const res = await apiClient.post(
         `${api}/student-payments`,
-        { ...data, learninglearningCenterId: localStorage.getItem("id") },
+        { ...data, learningCenterId: localStorage.getItem("id") },
         {
           headers: { Authorization: `Bearer ${token}` },
         },
