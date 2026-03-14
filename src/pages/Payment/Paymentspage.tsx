@@ -6,6 +6,7 @@ import { PaymentStats } from "@/components/common/payment/Paymentstats";
 import apiClient from "@/api/ApiClient";
 import { toast } from "sonner";
 import { PaymentTable } from "@/components/common/payment/Paymenttable";
+import { BreadcrumbBasic } from "@/components/common/BreadCrumb";
 
 // ─── TYPES ─────────────────────────────────────────────────────────────────
 interface Student {
@@ -153,63 +154,73 @@ export function PaymentsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-background font-sans">
-      <div className="max-w-7xl mx-auto py-8 space-y-6">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-500/25">
-              <CreditCard className="w-[18px] h-[18px] text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 leading-tight">
-                To'lovlar
-              </h1>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                {payments.length} ta to'lov umumiy
-              </p>
-            </div>
-          </div>
-          <Button
-            onClick={handleOpenAdd}
-            className="bg-violet-600 cursor-pointer hover:bg-violet-700 text-white rounded-xl shadow-lg gap-1.5"
-          >
-            <Plus className="w-4 h-4" /> To'lov kiritish
-          </Button>
-        </div>
-
-        <PaymentStats payments={payments} loading={loading} />
-
-        <div className="bg-white dark:bg-fullbg rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden">
-          <div className="px-5 py-4 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
-              Umumiy To'lovlar
-            </h2>
-            <span className="text-xs text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded-lg font-medium">
-              {payments.length} ta to'lovlar
-            </span>
-          </div>
-          <div className="p-4 md:p-0">
-            <PaymentTable
-              loading={loading}
-              payments={payments}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              deleteLoading={deleteLoading}
-            />
-          </div>
-        </div>
+    <div>
+      <div className="flex justify-end">
+        <BreadcrumbBasic
+          items={[
+            { title: "Bosh sahifa", href: "/" },
+            { title: "To'lovlar", href: "/payments" },
+          ]}
+        />
       </div>
+      <div className="min-h-screen bg-zinc-50 dark:bg-background font-sans">
+        <div className="max-w-7xl mx-auto py-8 space-y-6">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-500/25">
+                <CreditCard className="w-[18px] h-[18px] text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 leading-tight">
+                  To'lovlar
+                </h1>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                  {payments.length} ta to'lov umumiy
+                </p>
+              </div>
+            </div>
+            <Button
+              onClick={handleOpenAdd}
+              className="bg-violet-600 cursor-pointer hover:bg-violet-700 text-white rounded-xl shadow-lg gap-1.5"
+            >
+              <Plus className="w-4 h-4" /> To'lov kiritish
+            </Button>
+          </div>
 
-      <PaymentForm
-        loadingMain={loading}
-        open={formOpen}
-        onClose={() => {
-          setFormOpen(false);
-          setEditingPayment(null);
-        }}
-        onSubmit={handleSubmit}
-        editingPayment={editingPayment}
-      />
+          <PaymentStats payments={payments} loading={loading} />
+
+          <div className="bg-white dark:bg-fullbg rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden">
+            <div className="px-5 py-4 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+                Umumiy To'lovlar
+              </h2>
+              <span className="text-xs text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded-lg font-medium">
+                {payments.length} ta to'lovlar
+              </span>
+            </div>
+            <div className="p-4 md:p-0">
+              <PaymentTable
+                loading={loading}
+                payments={payments}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                deleteLoading={deleteLoading}
+              />
+            </div>
+          </div>
+        </div>
+
+        <PaymentForm
+          loadingMain={loading}
+          open={formOpen}
+          onClose={() => {
+            setFormOpen(false);
+            setEditingPayment(null);
+          }}
+          onSubmit={handleSubmit}
+          editingPayment={editingPayment}
+        />
+      </div>
     </div>
   );
 }

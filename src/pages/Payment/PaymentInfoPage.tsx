@@ -1,4 +1,5 @@
 import apiClient from "@/api/ApiClient";
+import { BreadcrumbBasic } from "@/components/common/BreadCrumb";
 import {
   User,
   Users,
@@ -180,88 +181,102 @@ export default function PaymentInfoPage() {
       </div>
     </div>
   ) : (
-    <div className="min-h-screen w-full bg-zinc-50 dark:bg-background">
-      <div className="w-full mx-auto px-4 sm:px-6 py-8">
-        {/* Sahifa nomi */}
-        <div className="flex items-center gap-3 mb-8">
-          <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center">
-            <CreditCard className="w-5 h-5 text-white" />
+    <div>
+      <div className="flex justify-end">
+        <BreadcrumbBasic
+          items={[
+            { title: "Bosh sahifa", href: "/" },
+            { title: "To'lovlar", href: "/payments" },
+            { title: `Tolov N${payment?.id}`, href: "/payments" },
+          ]}
+        />
+      </div>
+      <div className="min-h-screen w-full bg-zinc-50 dark:bg-background">
+        <div className="w-full mx-auto px-4 sm:px-6 py-8">
+          {/* Sahifa nomi */}
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center">
+              <CreditCard className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+                To'lov Tafsilotlari
+              </h1>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                To'lov #{payment?.id}
+              </p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-              To'lov Tafsilotlari
-            </h1>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              To'lov #{payment?.id}
-            </p>
-          </div>
-        </div>
 
-        {/* Amount Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-          <AmountCard
-            icon={<BadgeDollarSign className="w-5 h-5" />}
-            label="Umumiy summa"
-            value={Number(payment?.amount ?? 0)}
-            variant="total"
-          />
-
-          <AmountCard
-            icon={<CheckCircle2 className="w-5 h-5" />}
-            label="To'langan summa"
-            value={payment?.paidAmount ?? 0}
-            variant="paid"
-          />
-
-          <AmountCard
-            icon={<Tag className="w-5 h-5" />}
-            label="Chegirma"
-            value={payment?.discount ?? 0}
-            variant="discount"
-          />
-        </div>
-
-        {/* Student + Group */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-          <Section title="O'quvchi" icon={<User className="w-4 h-4" />}>
-            <InfoRow
-              link={`/student-info/${payment?.student?.id}`}
-              icon={<User className="w-4 h-4" />}
-              label="Ism Familiya"
-              value={payment?.student?.fullName ?? ""}
+          {/* Amount Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+            <AmountCard
+              icon={<BadgeDollarSign className="w-5 h-5" />}
+              label="Umumiy summa"
+              value={Number(payment?.amount ?? 0)}
+              variant="total"
             />
+
+            <AmountCard
+              icon={<CheckCircle2 className="w-5 h-5" />}
+              label="To'langan summa"
+              value={payment?.paidAmount ?? 0}
+              variant="paid"
+            />
+
+            <AmountCard
+              icon={<Tag className="w-5 h-5" />}
+              label="Chegirma"
+              value={payment?.discount ?? 0}
+              variant="discount"
+            />
+          </div>
+
+          {/* Student + Group */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <Section title="O'quvchi" icon={<User className="w-4 h-4" />}>
+              <InfoRow
+                link={`/student-info/${payment?.student?.id}`}
+                icon={<User className="w-4 h-4" />}
+                label="Ism Familiya"
+                value={payment?.student?.fullName ?? ""}
+              />
+            </Section>
+
+            <Section title="Guruh" icon={<Users className="w-4 h-4" />}>
+              <InfoRow
+                icon={<Users className="w-4 h-4" />}
+                label="Guruh nomi"
+                value={payment?.group?.name ?? ""}
+              />
+            </Section>
+          </div>
+
+          {/* Payment Period */}
+          <Section
+            title="To'lov Sanasi"
+            icon={<Calendar className="w-4 h-4" />}
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2">
+              <InfoRow
+                icon={<Calendar className="w-4 h-4" />}
+                label="Oy"
+                value={formatMonth(payment?.month ?? "")}
+              />
+
+              <InfoRow
+                icon={<CreditCard className="w-4 h-4" />}
+                label="To'lov holati"
+                value={
+                  (payment?.paidAmount ?? 0) + (payment?.discount ?? 0) >=
+                  (payment?.amount ?? 0)
+                    ? "To'liq to'langan ✓"
+                    : "Qisman to'langan"
+                }
+              />
+            </div>
           </Section>
-
-          <Section title="Guruh" icon={<Users className="w-4 h-4" />}>
-            <InfoRow
-              icon={<Users className="w-4 h-4" />}
-              label="Guruh nomi"
-              value={payment?.group?.name ?? ""}
-            />
-          </Section>
         </div>
-
-        {/* Payment Period */}
-        <Section title="To'lov Sanasi" icon={<Calendar className="w-4 h-4" />}>
-          <div className="grid grid-cols-1 sm:grid-cols-2">
-            <InfoRow
-              icon={<Calendar className="w-4 h-4" />}
-              label="Oy"
-              value={formatMonth(payment?.month ?? "")}
-            />
-
-            <InfoRow
-              icon={<CreditCard className="w-4 h-4" />}
-              label="To'lov holati"
-              value={
-                (payment?.paidAmount ?? 0) + (payment?.discount ?? 0) >=
-                (payment?.amount ?? 0)
-                  ? "To'liq to'langan ✓"
-                  : "Qisman to'langan"
-              }
-            />
-          </div>
-        </Section>
       </div>
     </div>
   );
