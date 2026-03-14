@@ -9,7 +9,7 @@ import {
   BadgeDollarSign,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 interface Payment {
   id: number;
@@ -20,16 +20,6 @@ interface Payment {
   student: { id: number; fullName: string };
   group: { id: number; name: string };
 }
-
-const mockPayment: Payment = {
-  id: 1,
-  amount: 500000,
-  paidAmount: 500000,
-  discount: 0,
-  month: "2025-03-01",
-  student: { id: 1, fullName: "Ali Valiyev" },
-  group: { id: 2, name: "Backend N1" },
-};
 
 function formatCurrency(value: number): string {
   return value.toLocaleString("uz-UZ") + " UZS";
@@ -44,11 +34,15 @@ interface InfoRowProps {
   icon: React.ReactNode;
   label: string;
   value: string;
+  link?: string;
 }
 
-function InfoRow({ icon, label, value }: InfoRowProps) {
+function InfoRow({ icon, label, value, link }: InfoRowProps) {
   return (
-    <div className="group flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/60 transition">
+    <Link
+      to={link || "#"}
+      className="group flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/60 transition"
+    >
       <div className="w-9 h-9 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-500 dark:text-indigo-400">
         {icon}
       </div>
@@ -60,7 +54,7 @@ function InfoRow({ icon, label, value }: InfoRowProps) {
           {value}
         </p>
       </div>
-    </div>
+    </Link>
   );
 }
 
@@ -129,13 +123,34 @@ export default function PaymentInfoPage() {
       setPayment(res.data);
     } catch (error) {
       console.log(error);
-    }finally{
-        setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
     fetchData();
   }, []);
+  const monthNames = [
+    "yanvar",
+    "fevral",
+    "mart",
+    "aprel",
+    "may",
+    "iyun",
+    "iyul",
+    "avgust",
+    "sentabr",
+    "oktabr",
+    "noyabr",
+    "dekabr",
+  ];
+
+  function formatMonth(value: string) {
+    const [year, month] = value.replace("M", "").split("-");
+    const monthIndex = Number(month) - 1;
+
+    return `${year} ${monthNames[monthIndex]}`;
+  }
   return loading ? (
     <div className="min-h-screen w-full bg-zinc-50 dark:bg-background">
       <div className="w-full mx-auto px-4 sm:px-6 py-8 animate-pulse">
@@ -188,21 +203,21 @@ export default function PaymentInfoPage() {
           <AmountCard
             icon={<BadgeDollarSign className="w-5 h-5" />}
             label="Umumiy summa"
-            value={payment?.amount ?? 0}
+            value={Number(payment?.amount.toLocaleString()) ?? 0}
             variant="total"
           />
 
           <AmountCard
             icon={<CheckCircle2 className="w-5 h-5" />}
             label="To'langan summa"
-            value={payment?.paidAmount ?? 0}
+            value={Number(payment?.paidAmount.toLocaleString()) ?? 0}
             variant="paid"
           />
 
           <AmountCard
             icon={<Tag className="w-5 h-5" />}
             label="Chegirma"
-            value={payment?.discount ?? 0}
+            value={Number(payment?.discount.toLocaleString()) ?? 0}
             variant="discount"
           />
         </div>
@@ -211,6 +226,7 @@ export default function PaymentInfoPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
           <Section title="O'quvchi" icon={<User className="w-4 h-4" />}>
             <InfoRow
+              link={`/student-info/${payment?.student.id}`}
               icon={<User className="w-4 h-4" />}
               label="Ism Familiya"
               value={payment?.student?.fullName ?? ""}
@@ -227,7 +243,7 @@ export default function PaymentInfoPage() {
         </div>
 
         {/* Payment Period */}
-        <Section title="To'lov davri" icon={<Calendar className="w-4 h-4" />}>
+        <Section title="To'lov Sanasi" icon={<Calendar className="w-4 h-4" />}>
           <div className="grid grid-cols-1 sm:grid-cols-2">
             <InfoRow
               icon={<Calendar className="w-4 h-4" />}
