@@ -90,7 +90,27 @@ export function PaymentsPage() {
       setLoading(true);
       const api = import.meta.env.VITE_API_URL;
       const token = localStorage.getItem("access_token");
-      const res = await apiClient.post(`${api}/student-payments`, data, {
+      const res = await apiClient.post(
+        `${api}/student-payments`,
+        { ...data, learninglearningCenterId: localStorage.getItem("id") },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const UpdatePayment = async (data: PaymentFormData, id: number) => {
+    try {
+      setLoading(true);
+      const api = import.meta.env.VITE_API_URL;
+      const token = localStorage.getItem("access_token");
+      const res = await apiClient.patch(`${api}/student-payments/${id}`, data, {
         headers: { Authorization: `Bearer ${token}` },
       });
       console.log(res);
@@ -127,6 +147,7 @@ export function PaymentsPage() {
             : p,
         ),
       );
+      UpdatePayment(data, editingPayment.id);
       toast.success("To'lov muvaffaqiyatli yangilandi!");
     } else {
       const newPayment: Payment = {

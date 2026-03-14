@@ -48,12 +48,11 @@ export function PaymentForm({
   const [form, setForm] = useState(defaultForm);
 
   const formatCurrency = (value: string) => {
-    const number = Number(value);
-    if (!number) return "";
-    return Math.floor(number)
-      .toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    const numbers = value.replace(/\D/g, "");
+    if (!numbers) return "";
+    return numbers.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
+
   const parseNumber = (value: string) => {
     return Number(value.replace(/,/g, ""));
   };
@@ -89,13 +88,11 @@ export function PaymentForm({
         student_id: res.data.student.id,
         group_id: res.data.group?.id,
         amount: res.data.amount,
-        paidAmount: formatCurrency(String(res.data.paidAmount)),
-        discount: formatCurrency(String(res.data.discount)),
+        paidAmount: formatCurrency(String(Number(res.data.paidAmount))),
+        discount: formatCurrency(String(Number(res.data.discount))),
         month: res.data?.month?.slice(0, 7),
         description: res.data?.description,
       });
-      console.log(res.data.paidAmount);
-      console.log(formatCurrency(String(res.data.paidAmount)));
     } catch (error) {
       console.log(error);
     } finally {
@@ -114,7 +111,7 @@ export function PaymentForm({
     e.preventDefault();
 
     if (!form.student_id || !form.group_id || !form.month) return;
-
+    
     onSubmit({
       ...form,
       paidAmount: parseNumber(form.paidAmount),
@@ -179,6 +176,7 @@ export function PaymentForm({
               {field(
                 "Guruh",
                 <Select
+                  disabled={!!editingPayment}
                   value={form.group_id ? String(form.group_id) : ""}
                   onValueChange={(v) => {
                     const group = groups.find((g) => g.id === Number(v));
@@ -208,14 +206,14 @@ export function PaymentForm({
               {field(
                 "O'quvchi",
                 <Select
-                  disabled={!form.group_id}
+                  disabled={!form.group_id || !!editingPayment}
                   value={form.student_id ? String(form.student_id) : undefined}
                   onValueChange={(v) =>
                     setForm({ ...form, student_id: Number(v) })
                   }
                 >
                   <SelectTrigger
-                    disabled={!form.group_id}
+                    disabled={!form.group_id || !!editingPayment}
                     className="rounded-xl w-full border-zinc-200 dark:border-zinc-700 "
                   >
                     <SelectValue
@@ -301,6 +299,7 @@ export function PaymentForm({
             {field(
               "Sana",
               <Input
+                disabled={!!editingPayment}
                 type="month"
                 value={form.month}
                 onChange={(e) => setForm({ ...form, month: e.target.value })}
