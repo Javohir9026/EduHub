@@ -25,11 +25,6 @@ function formatCurrency(value: number): string {
   return value.toLocaleString("uz-UZ") + " UZS";
 }
 
-function formatMonth(dateStr: string): string {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString("uz-UZ", { year: "numeric", month: "long" });
-}
-
 interface InfoRowProps {
   icon: React.ReactNode;
   label: string;

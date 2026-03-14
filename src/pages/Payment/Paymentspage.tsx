@@ -46,6 +46,7 @@ export function PaymentsPage() {
   const [formOpen, setFormOpen] = useState<boolean>(false);
   const [editingPayment, setEditingPayment] = useState<Payment | null>(null);
   const [loading, setLoading] = useState(false);
+  const [deleteLoading, setDelteLoading] = useState(false);
   // Fetch Payments
   const fetchPayments = async () => {
     try {
@@ -80,9 +81,22 @@ export function PaymentsPage() {
   };
 
   // Delete Payment
-  const handleDelete = (id: number) => {
-    setPayments((prev) => prev.filter((p) => p.id !== id));
+  const handleDelete = async (id: number) => {
+    setDelteLoading(true);
+    await DeletePayment(id);
+    setDelteLoading(false);
     toast.success("To'lov muvaffaqiyatli o'chirildi!");
+    fetchPayments();
+  };
+
+  const DeletePayment = async (id: number) => {
+    try {
+      const api = import.meta.env.VITE_API_URL;
+      const res = await apiClient.delete(`${api}/student-payments/${id}`);
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // Create Payment API Call
@@ -91,14 +105,13 @@ export function PaymentsPage() {
       setLoading(true);
       const api = import.meta.env.VITE_API_URL;
       const token = localStorage.getItem("access_token");
-      const res = await apiClient.post(
+      return await apiClient.post(
         `${api}/student-payments`,
         { ...data, learningCenterId: localStorage.getItem("id") },
         {
           headers: { Authorization: `Bearer ${token}` },
         },
       );
-      console.log(res);
     } catch (error) {
       console.log(error);
     } finally {
@@ -111,10 +124,9 @@ export function PaymentsPage() {
       setLoading(true);
       const api = import.meta.env.VITE_API_URL;
       const token = localStorage.getItem("access_token");
-      const res = await apiClient.patch(`${api}/student-payments/${id}`, data, {
+      return await apiClient.patch(`${api}/student-payments/${id}`, data, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      console.log(res);
     } catch (error) {
       console.log(error);
     } finally {
@@ -123,50 +135,19 @@ export function PaymentsPage() {
   };
 
   // Handle Submit from Form
-  const handleSubmit = (data: PaymentFormData) => {
-    const student = {
-      id: data.student_id,
-      fullName: `Student ${data.student_id}`,
-    };
-    const group = { id: data.group_id, name: `Group ${data.group_id}` };
-    const today = new Date().toISOString().slice(0, 10);
-
+  const handleSubmit = async (data: PaymentFormData) => {
     if (editingPayment) {
-      setPayments((prev) =>
-        prev.map((p) =>
-          p.id === editingPayment.id
-            ? {
-                ...p,
-                student,
-                group,
-                amount: data.amount,
-                paidAmount: data.paidAmount,
-                discount: data.discount,
-                month: data.month,
-                description: data.description,
-              }
-            : p,
-        ),
-      );
-      UpdatePayment(data, editingPayment.id);
-      toast.success("To'lov muvaffaqiyatli yangilandi!");
+      await UpdatePayment(data, editingPayment.id);
     } else {
-      const newPayment: Payment = {
-        id: Math.max(0, ...payments.map((p) => p.id)) + 1,
-        student,
-        group,
-        amount: data.amount,
-        paidAmount: data.paidAmount,
-        discount: data.discount,
-        month: data.month,
-        paymentDate: today,
-        description: data.description,
-      };
-      setPayments((prev) => [newPayment, ...prev]);
-      CreatePayment(data);
-      toast.success("To'lov muvaffaqiyatli qo'shildi");
+      await CreatePayment(data);
     }
 
+    await fetchPayments();
+    if (editingPayment) {
+      toast.success("To'lov Muvaffaqiyatli Yangilandi!");
+    } else {
+      toast.success("To'lov Muvaffaqiyatli Qo'shildi!");
+    }
     setFormOpen(false);
     setEditingPayment(null);
   };
@@ -213,12 +194,14 @@ export function PaymentsPage() {
               payments={payments}
               onEdit={handleEdit}
               onDelete={handleDelete}
+              deleteLoading={deleteLoading}
             />
           </div>
         </div>
       </div>
 
       <PaymentForm
+        loadingMain={loading}
         open={formOpen}
         onClose={() => {
           setFormOpen(false);

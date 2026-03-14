@@ -1,4 +1,4 @@
-import { Info, Pencil, Trash2 } from "lucide-react";
+import { Info, Pencil, Trash, Trash2 } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -8,6 +8,18 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { useState } from "react";
 
 // ─── TYPES ───────────────────────────────────────────────────────────────
 interface Student {
@@ -35,6 +47,7 @@ interface Payment {
 interface PaymentTableProps {
   payments: Payment[];
   loading: boolean;
+  deleteLoading: boolean;
   onEdit: (payment: Payment) => void;
   onDelete: (id: number) => void;
 }
@@ -96,12 +109,13 @@ function TableSkeleton() {
 // ─── COMPONENT ──────────────────────────────────────────────────────────
 export function PaymentTable({
   payments,
+  deleteLoading,
   loading,
   onEdit,
   onDelete,
 }: PaymentTableProps) {
   const navigate = useNavigate();
-
+  const [deletingId, setDeletingId] = useState<number | null>(null);
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-fullbg">
       <div className="max-w-full overflow-x-auto">
@@ -196,14 +210,40 @@ export function PaymentTable({
                         <Info className="w-4 h-4" />
                       </Button>
 
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        onClick={() => onDelete(payment.id)}
-                        className="bg-red-600 dark:hover:bg-red-400 cursor-pointer hidden sm:flex hover:bg-red-700 hover:text-white text-white rounded-lg"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button className="bg-red-600 hover:bg-red-700 hover:text-white cursor-pointer text-white rounded-lg flex items-center justify-center gap-2">
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              O'chirishni tasdiqlaysizmi?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Haqiqatdan ham ishonchingiz komilmi?
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel className="cursor-pointer">
+                              Bekor qilish
+                            </AlertDialogCancel>
+                            <AlertDialogAction
+                              disabled={deleteLoading}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                onDelete(payment.id);
+                              }}
+                              className="bg-red-600 hover:bg-red-700 text-white cursor-pointer"
+                            >
+                              {deleteLoading
+                                ? "O'chirilmoqda..."
+                                : "Ha, O'chirish"}
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </TableCell>
                 </TableRow>

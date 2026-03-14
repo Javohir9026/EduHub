@@ -21,11 +21,13 @@ import type { Payment, PaymentFormData } from "@/lib/TypeForPayment";
 import apiClient from "@/api/ApiClient";
 import type { GroupDetail } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Loader2 } from "lucide-react";
 
 interface PaymentFormProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (data: PaymentFormData) => void;
+  loadingMain: boolean;
   editingPayment: Payment | null;
 }
 
@@ -43,6 +45,7 @@ export function PaymentForm({
   open,
   onClose,
   onSubmit,
+  loadingMain,
   editingPayment,
 }: PaymentFormProps) {
   const [form, setForm] = useState(defaultForm);
@@ -111,7 +114,7 @@ export function PaymentForm({
     e.preventDefault();
 
     if (!form.student_id || !form.group_id || !form.month) return;
-    
+
     onSubmit({
       ...form,
       paidAmount: parseNumber(form.paidAmount),
@@ -332,9 +335,16 @@ export function PaymentForm({
 
               <Button
                 type="submit"
-                className="rounded-xl cursor-pointer bg-violet-600 hover:bg-violet-700 text-white"
+                disabled={loadingMain}
+                className="rounded-xl cursor-pointer bg-violet-600 hover:bg-violet-700 text-white flex items-center gap-2"
               >
-                {editingPayment ? "Saqlash" : "Saqlash"}
+                {loadingMain && <Loader2 className="w-4 h-4 animate-spin" />}
+
+                {loadingMain
+                  ? "Saqlanmoqda..."
+                  : editingPayment
+                    ? "Saqlash"
+                    : "Saqlash"}
               </Button>
             </DialogFooter>
           </form>
