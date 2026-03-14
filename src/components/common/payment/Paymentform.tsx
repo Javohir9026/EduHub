@@ -85,13 +85,13 @@ export function PaymentForm({
         },
       });
       setForm({
-        student_id: res.data.student.id,
-        group_id: res.data.group?.id,
-        amount: res.data.amount,
-        paidAmount: formatCurrency(String(Number(res.data.paidAmount))),
-        discount: formatCurrency(String(Number(res.data.discount))),
-        month: res.data?.month?.slice(0, 7),
-        description: res.data?.description,
+        student_id: res.data.data.student.id,
+        group_id: res.data.data.group?.id,
+        amount: res.data.data.amount,
+        paidAmount: formatCurrency(String(Number(res.data.data.paidAmount))),
+        discount: formatCurrency(String(Number(res.data.data.discount))),
+        month: res.data.data?.month?.slice(0, 7),
+        description: res.data.data?.description,
       });
     } catch (error) {
       console.log(error);
