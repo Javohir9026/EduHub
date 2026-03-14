@@ -184,7 +184,19 @@ const App = () => {
           />
           <Route
             path="/group-info/AttendancessMainPage/:id"
-            element={<AttendancessMainPage />}
+            element={
+              <LearningCenterRoute>
+                <AttendancessMainPage />
+              </LearningCenterRoute>
+            }
+          />
+          <Route
+            path="/payment-info/:id"
+            element={
+              <LearningCenterRoute>
+                <PaymentInfoPage />
+              </LearningCenterRoute>
+            }
           />
         </Route>
       </Routes>
