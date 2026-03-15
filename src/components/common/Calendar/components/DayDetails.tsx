@@ -204,7 +204,7 @@ const DayDetailsDrawer: FC<DayDetailsDrawerProps> = ({
                         {payment.student.fullName}
                       </p>
                       <p className="text-xs text-emerald-600 dark:text-emerald-400 font-bold">
-                        {payment.amount} / {payment.paidAmount} so'm
+                        {Number(payment.amount).toLocaleString()} / {Number(payment.paidAmount).toLocaleString()} UZS
                       </p>
                     </div>
                   </div>

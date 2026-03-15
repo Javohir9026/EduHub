@@ -20,12 +20,18 @@ const StatsBar: FC<StatsBarProps> = ({ data, year, month, loading }) => {
   let birthdays = 0;
   let revenue = 0;
 
+  // ── Statistika hisoblash ────────────────────────────────────
   Object.entries(data).forEach(([date, d]) => {
     if (date.startsWith(monthStr)) {
       lessons += d.lessons.length;
       payments += d.payments.length;
       birthdays += d.birthdays.length;
-      revenue += d.payments.reduce((sum, p) => sum + p.amount, 0);
+
+      // Backenddan string keladigan amountni numberga o'tkazamiz
+      revenue += d.payments.reduce(
+        (sum, p) => sum + Math.floor(Number(p.paidAmount)), // Math.floor bilan nuqtadan keyingi raqamlar kesiladi
+        0,
+      );
     }
   });
 
@@ -50,14 +56,13 @@ const StatsBar: FC<StatsBarProps> = ({ data, year, month, loading }) => {
     },
     {
       label: "Daromad",
-      value: `${revenue} so'm`,
+      value: `${revenue.toLocaleString()} so'm`, // chiroyli format
       color: "text-indigo-600 dark:text-indigo-400",
       bg: "bg-indigo-50 dark:bg-indigo-950/40",
     },
   ];
 
   // ── Skeleton Loader ────────────────────────────────────────
-
   if (loading) {
     return (
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
@@ -75,7 +80,6 @@ const StatsBar: FC<StatsBarProps> = ({ data, year, month, loading }) => {
   }
 
   // ── Normal UI ──────────────────────────────────────────────
-
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
       {stats.map((stat) => (

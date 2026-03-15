@@ -25,6 +25,7 @@ import MyGroups from "./pages/MyGroups/MyGroups";
 import AttendancesPage from "./pages/Davomat/Attendances";
 import AttendancessMainPage from "./pages/Davomat/AttendacessMainPage";
 import { PaymentsPage } from "./pages/Payment/Paymentspage";
+import PaymentInfoPage from "./pages/Payment/PaymentInfoPage";
 
 const App = () => {
   return (
@@ -184,7 +185,19 @@ const App = () => {
           />
           <Route
             path="/group-info/AttendancessMainPage/:id"
-            element={<AttendancessMainPage />}
+            element={
+              <TeacherRoute>
+                <AttendancessMainPage />
+              </TeacherRoute>
+            }
+          />
+          <Route
+            path="/payment-info/:id"
+            element={
+              <LearningCenterRoute>
+                <PaymentInfoPage />
+              </LearningCenterRoute>
+            }
           />
         </Route>
       </Routes>
