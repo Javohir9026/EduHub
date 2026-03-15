@@ -3,7 +3,7 @@ import { Mail, Phone, MapPin } from "lucide-react";
 
 const ContactPage = () => {
   return (
-    <div className="min-h-scree py-20">
+    <div className="min-h-scree py-20 bg-white">
       <div className="container mx-auto px-6 lg:px-20">
         <h1 className="text-4xl lg:text-5xl font-bold text-center text-blue-800 mb-10">
           Biz bilan bog'lanish
@@ -16,7 +16,7 @@ const ContactPage = () => {
 
         <div className="flex flex-col lg:flex-row gap-12">
           {/* Contact Form */}
-          <form className="flex-1 bg-white shadow-xl rounded-2xl p-8 space-y-6">
+          <form className="flex-1 border-2 border-gray-200 bg-white shadow-xl rounded-2xl p-8 space-y-6">
             <div>
               <label className="block text-black/70 font-medium mb-2">
                 Ismingiz
@@ -29,7 +29,7 @@ const ContactPage = () => {
             </div>
 
             <div>
-              <label className="block text-black/70 font-medium mb-2">
+              <label className="block  text-black/70 font-medium mb-2">
                 Email
               </label>
               <input
