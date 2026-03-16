@@ -31,16 +31,20 @@ interface PaymentFormProps {
   editingPayment: Payment | null;
 }
 
+const getCurrentMonth = () => {
+  const today = new Date();
+  return today.toISOString().slice(0, 7); // YYYY-MM
+};
+
 const defaultForm: any = {
   student_id: 0,
   group_id: 0,
   amount: 0,
   paidAmount: "",
   discount: "",
-  month: "",
+  month: getCurrentMonth(),
   description: "",
 };
-
 export function PaymentForm({
   open,
   onClose,
@@ -55,7 +59,6 @@ export function PaymentForm({
     if (!numbers) return "";
     return numbers.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
-
   const parseNumber = (value: string) => {
     return Number(value.replace(/,/g, ""));
   };
@@ -106,7 +109,10 @@ export function PaymentForm({
     if (editingPayment) {
       GetOnePayment(String(editingPayment.id));
     } else {
-      setForm(defaultForm);
+      setForm({
+        ...defaultForm,
+        month: new Date().toISOString().slice(0, 7),
+      });
     }
   }, [editingPayment, open]);
 
