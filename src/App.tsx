@@ -195,9 +195,9 @@ const App = () => {
           <Route
             path="/group-info/AttendancessMainPage/:id"
             element={
-              <LearningCenterRoute>
+              <TeacherRoute>
                 <AttendancessMainPage />
-              </LearningCenterRoute>
+              </TeacherRoute>
             }
           />
           <Route

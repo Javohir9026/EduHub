@@ -1,9 +1,8 @@
-// AttendancesMainPage.tsx
 import { useEffect, useState } from "react";
 import apiClient from "@/api/ApiClient";
 import { useParams } from "react-router-dom";
 
-type AttendanceStatus = "present" | "absent" | "late" | "excused";
+type AttendanceStatus = "present" | "absent";
 
 interface Student {
   id: number;
@@ -51,18 +50,6 @@ const statusConfig = {
     bg: "bg-red-100",
     active: "bg-red-500 text-white",
   },
-  late: {
-    label: "Kech",
-    color: "text-yellow-700",
-    bg: "bg-yellow-100",
-    active: "bg-yellow-500 text-white",
-  },
-  excused: {
-    label: "Uzrli",
-    color: "text-indigo-600",
-    bg: "bg-indigo-100",
-    active: "bg-indigo-500 text-white",
-  },
 };
 
 const AttendancesMainPage = () => {
@@ -70,6 +57,9 @@ const AttendancesMainPage = () => {
 
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const teacherId = Number(localStorage.getItem("teacher_id")); // kerak bo‘lsa o‘zgartirasan
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -87,8 +77,6 @@ const AttendancesMainPage = () => {
 
         const group: Group = res.data.data;
 
-        console.log("GROUP:", group);
-
         const students: Student[] = group.groupStudents.map((gs) => ({
           id: gs.student.id,
           name: gs.student.fullName,
@@ -99,8 +87,6 @@ const AttendancesMainPage = () => {
             .toUpperCase(),
           status: "present",
         }));
-
-        console.log("STUDENTS:", students);
 
         setStudents(students);
       } catch (error) {
@@ -115,35 +101,52 @@ const AttendancesMainPage = () => {
 
   const setStatus = (studentId: number, status: AttendanceStatus) => {
     setStudents((prev) =>
-      prev.map((s) => (s.id === studentId ? { ...s, status } : s))
+      prev.map((s) => (s.id === studentId ? { ...s, status } : s)),
     );
   };
 
   const saveAttendance = async () => {
     try {
-      const payload = {
-        students: students.map((s) => ({
+      setSaving(true);
+
+      const today = new Date().toISOString().split("T")[0];
+
+      const requests = students.map((s) => {
+        const teacherId = Number(localStorage.getItem("teacher_id"));
+        const payload = {
+          groupId: Number(id),
           studentId: s.id,
-          status: s.status,
-        })),
-      };
+          teacherId: teacherId,
+          date: today,
+          status: s.status === "present" ? "PRESENT" : "ABSENT",
+        };
 
-      console.log("SEND:", payload);
+        const token = localStorage.getItem("access_token");
+        const api = import.meta.env.VITE_API_URL;
 
-      await apiClient.post(`/groups/${id}/attendance`, payload);
+        return apiClient.post(`${api}/attendances`, payload, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      });
 
-      alert("✅ Davomat saqlandi");
-    } catch (error) {
-      console.error("Davomat saqlashda xatolik", error);
+      await Promise.all(requests);
+
+      alert("✅ Davomat muvaffaqiyatli saqlandi");
+    } catch (error: any) {
+      console.log("ERROR RESPONSE:", error.response?.data);
+      console.log("ERROR STATUS:", error.response?.status);
+    } finally {
+      setSaving(false);
     }
   };
 
   const presentCount = students.filter((s) => s.status === "present").length;
-  const lateCount = students.filter((s) => s.status === "late").length;
 
   const attendanceRate =
     students.length > 0
-      ? Math.round(((presentCount + lateCount) / students.length) * 100)
+      ? Math.round((presentCount / students.length) * 100)
       : 0;
 
   if (loading) {
@@ -157,7 +160,6 @@ const AttendancesMainPage = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-4xl mx-auto">
-
         {/* Header */}
         <div className="flex justify-between mb-8">
           <div>
@@ -175,14 +177,12 @@ const AttendancesMainPage = () => {
 
         {/* Student list */}
         <div className="bg-white rounded-xl shadow border">
-
           {students.map((student) => (
             <div
               key={student.id}
               className="flex items-center justify-between px-6 py-4 border-b last:border-none"
             >
               <div className="flex items-center gap-3">
-
                 <div className="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center text-sm font-bold">
                   {student.avatar}
                 </div>
@@ -190,7 +190,6 @@ const AttendancesMainPage = () => {
                 <div>
                   <p className="font-medium">{student.name}</p>
                 </div>
-
               </div>
 
               <div className="flex gap-2">
@@ -209,28 +208,25 @@ const AttendancesMainPage = () => {
                         {cfg.label}
                       </button>
                     );
-                  }
+                  },
                 )}
               </div>
             </div>
-          ))};
-
+          ))}
         </div>
-
 
         <div className="flex justify-end mt-6">
           <button
             onClick={saveAttendance}
-            className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold"
+            disabled={saving}
+            className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold disabled:opacity-50"
           >
-            💾 Saqlash
+            {saving ? "Saqlanmoqda..." : "💾 Saqlash"}
           </button>
         </div>
-
       </div>
     </div>
   );
 };
-    
 
 export default AttendancesMainPage;
