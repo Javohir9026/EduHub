@@ -1,64 +1,42 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import Footer from "../sections/Footer";
 import { useEffect } from "react";
 import { useTheme } from "@/components/common/ThemeProvider";
-import { EduLogoLight } from "@/assets/exportImg";
+import { EduLogoLight, EduHubLogo } from "@/assets/exportImg";
 
 const PublicLayout = () => {
   const navigate = useNavigate();
   const { setTheme } = useTheme();
+
   useEffect(() => {
     setTheme("light");
   }, []);
+
   return (
     <>
-      <div className="py-3 top-0 sticky z-99 bg-white shadow-lg">
-        <div className="container flex justify-between items-center">
+      <div className="py-3 top-0 sticky z-50 bg-white shadow-lg">
+        <div className="container w-full flex justify-between items-center">
           <div
-            className="w-[200px] overflow-hidden flex items-center justify-center cursor-pointer h-[50px]"
+            className="cursor-pointer w-full sm:w-auto flex items-center justify-center h-[50px]"
             onClick={() => navigate("/")}
           >
+            {/* Desktop logo */}
             <img
               src={EduLogoLight}
               alt="LogoLightText"
-              className="object-contain"
+              className="hidden sm:block w-[200px] object-contain"
             />
-          </div>
-          <div className="flex items-center gap-5 hidden">
-            <div className=" hidden md:flex items-center gap-3">
-              <section
-                id="features"
-                className="cursor-pointer hover:border-b-2 hover:border-black text-black/70 hover:text-black"
-              >
-                Imkoniyatlar
-              </section>
-              <section
-                id="benfits"
-                className="cursor-pointer hover:border-b-2 hover:border-black text-black/70 hover:text-black"
-              >
-                Afzalliklar
-              </section>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                onClick={() => navigate("/sign-in")}
-                variant="outline"
-                className="cursor-pointer !font-semibold hover:text-white hover:bg-purple-500"
-              >
-                Kirish
-              </Button>
-              <Button
-                onClick={() => navigate("/register")}
-                variant="outline"
-                className="bg-blue-500 text-white !font-semibold hover:bg-blue-500/85 hover:text-white cursor-pointer hidden sm:block"
-              >
-                Ro'yxatdan o'tish
-              </Button>
-            </div>
+
+            {/* Mobile logo */}
+            <img
+              src={EduHubLogo}
+              alt="LogoMobile"
+              className="block sm:hidden w-[100px] object-contain"
+            />
           </div>
         </div>
       </div>
+
       <Outlet />
       <Footer />
     </>

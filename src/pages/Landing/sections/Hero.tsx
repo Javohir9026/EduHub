@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 const Hero = () => {
   const navigate = useNavigate();
   return (
-    <div className="w-ful">
+    <div className="w-full dark:bg-white dark:text-black">
       <div className="container flex flex-col lg:flex-row justify-between items-center mb-15">
         <div className="mt-25 max-w-[500px]">
           <h1 className="!font-bold text-4xl md:text-6xl">
@@ -36,7 +36,7 @@ const Hero = () => {
               variant="outline"
               className="
     p-6 w-full md:w-auto
-    bg-blue-500 text-white !font-semibold
+    bg-blue-500 dark:bg-blue-500 dark:hover:bg-blue-500/85 text-white !font-semibold
     hover:bg-blue-500/85 hover:text-white
     cursor-pointer
     relative overflow-hidden
@@ -246,7 +246,7 @@ const Hero = () => {
             <Button
               onClick={() => navigate("/register")}
               variant="outline"
-              className="
+              className="dark:bg-blue-500 dark:hover:bg-blue-500/85
     p-6 w-full md:w-auto
     bg-blue-500 text-white !font-semibold
     hover:bg-blue-500/85 hover:text-white

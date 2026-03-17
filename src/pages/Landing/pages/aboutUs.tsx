@@ -8,7 +8,7 @@ const AboutUsPage = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="container mx-auto px-6 lg:px-20 py-20 flex flex-col lg:flex-row items-center gap-12">
+      <section className="container bg-white mx-auto px-6 lg:px-20 py-20 flex flex-col lg:flex-row items-center gap-12">
         <div className="flex-1">
           <h1 className="text-5xl lg:text-6xl !font-bold text-blue-800 mb-6">
             Biz haqimizda
@@ -32,7 +32,7 @@ const AboutUsPage = () => {
       </section>
 
       {/* Core Values Section */}
-      <section className="container mx-auto px-6 lg:px-20 py-20">
+      <section className="container bg-white mx-auto px-6 lg:px-20 py-20">
         <h2 className="text-4xl !font-semibold text-center text-blue-800 mb-12">
           Bizning asosiy qadriyatlarimiz
         </h2>

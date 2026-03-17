@@ -49,7 +49,7 @@ export default function UsersPage() {
               "Moliyaviy modul barcha to'lovlarni avtomatik hisoblab boradi. Qarzdorlik nazorati, hisobotlar, statistikalar va tranzaksiya tarixlari bir joyda saqlanadi va real vaqt rejimida yangilanadi.",
             ],
           ].map(([icon, title, desc]) => (
-            <div className="group bg-white p-8 rounded-3xl border shadow-sm hover:shadow-2xl transition">
+            <div className="group bg-white p-8 rounded-3xl border shadow-sm hover:shadow-2xl transition dark:border-gray-300">
               <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center mb-6 group-hover:bg-blue-100 transition">
                 {icon}
               </div>
