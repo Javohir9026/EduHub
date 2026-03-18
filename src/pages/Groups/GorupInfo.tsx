@@ -34,7 +34,6 @@ export const GroupInfo = () => {
         const res = await apiClient.get(`${api}${endpoint}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        console.log(res);
         setGroup(res.data.data);
       } catch (error) {
         console.log(error);

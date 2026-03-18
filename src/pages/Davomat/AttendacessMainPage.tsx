@@ -86,7 +86,6 @@ const AttendancesMainPage = () => {
 
         const group: Group = res.data.data;
 
-        console.log("GROUP:", group);
 
         const students: Student[] = group.groupStudents.map((gs) => ({
           id: gs.student.id,
@@ -99,7 +98,6 @@ const AttendancesMainPage = () => {
           status: "present",
         }));
 
-        console.log("STUDENTS:", students);
 
         setStudents(students);
       } catch (error) {
@@ -127,7 +125,6 @@ const AttendancesMainPage = () => {
         })),
       };
 
-      console.log("SEND:", payload);
 
       await apiClient.post(`/groups/${id}/attendance`, payload);
 

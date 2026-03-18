@@ -94,7 +94,6 @@ export function PaymentsPage() {
     try {
       const api = import.meta.env.VITE_API_URL;
       const res = await apiClient.delete(`${api}/student-payments/${id}`);
-      console.log(res);
     } catch (error) {
       console.log(error);
     }

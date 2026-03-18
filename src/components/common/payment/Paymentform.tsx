@@ -71,7 +71,6 @@ export function PaymentForm({
       const id = localStorage.getItem("id");
       const res = await apiClient.get(`${api}/groups/learning-center/${id}`);
       setGroups(res.data.data);
-      console.log(res.data.data);
     } catch (error) {
       console.log(error);
     } finally {
