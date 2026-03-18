@@ -26,7 +26,6 @@ import AttendancesPage from "./pages/Davomat/Attendances";
 import AttendancessMainPage from "./pages/Davomat/AttendacessMainPage";
 import { PaymentsPage } from "./pages/Payment/Paymentspage";
 import PaymentInfoPage from "./pages/Payment/PaymentInfoPage";
-import AttendancesCenter from "./pages/DavomatForCenter/AttendancesCenter";
 import AttendanceCenterPage from "./pages/DavomatForCenter/AttendancesCenter";
 
 const App = () => {

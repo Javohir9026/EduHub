@@ -1,4 +1,3 @@
-// AttendancesMainPage.tsx
 import { useEffect, useState } from "react";
 import apiClient from "@/api/ApiClient";
 import { useParams } from "react-router-dom";
