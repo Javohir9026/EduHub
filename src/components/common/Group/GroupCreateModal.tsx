@@ -16,7 +16,6 @@ import { useState } from "react";
 import { toast } from "sonner";
 import GroupTeacherSelect from "./GroupTeacherSelect";
 import { DatePickerCalendar } from "../DatePickerCalendar";
-import { DatePickerTime } from "../TimePicker";
 
 export function GroupCreateModal({
   classname,
