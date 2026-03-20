@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import apiClient from "@/api/ApiClient";
-import { useParams } from "react-router-dom";
+import {useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
 
 type AttendanceStatus = "present" | "absent";
 
@@ -58,8 +59,8 @@ const AttendancesMainPage = () => {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const navigate = useNavigate()
 
-  const teacherId = Number(localStorage.getItem("teacher_id")); // kerak bo‘lsa o‘zgartirasan
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -144,7 +145,8 @@ const AttendancesMainPage = () => {
 
       await Promise.all(requests);
 
-      alert("✅ Davomat muvaffaqiyatli saqlandi");
+      toast.success('guruhdan davomat olindi');
+      navigate(`/AttendancessUpdatePage/${id}`);
     } catch (error: any) {
       console.log("ERROR RESPONSE:", error.response?.data);
       console.log("ERROR STATUS:", error.response?.status);
