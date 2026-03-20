@@ -153,6 +153,14 @@ const App = () => {
             }
           />
           <Route
+            path="/attendances-center"
+            element={
+              <LearningCenterRoute>
+                <AttendanceCenterPage />
+              </LearningCenterRoute>
+            }
+          />
+          <Route
             path="/payments"
             element={
               <LearningCenterRoute>

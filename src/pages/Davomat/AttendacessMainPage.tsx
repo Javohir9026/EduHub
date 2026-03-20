@@ -78,6 +78,10 @@ const AttendancesMainPage = () => {
 
         const group: Group = res.data.data;
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> bcab0a1e5670853f7946f316cf611d293d5e8284
         const students: Student[] = group.groupStudents.map((gs) => ({
           id: gs.student.id,
           name: gs.student.fullName,
@@ -89,6 +93,10 @@ const AttendancesMainPage = () => {
           status: "present",
         }));
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> bcab0a1e5670853f7946f316cf611d293d5e8284
         setStudents(students);
       } catch (error) {
         console.error("Studentlarni olishda xatolik", error);
@@ -122,8 +130,11 @@ const AttendancesMainPage = () => {
           status: s.status === "present" ? "PRESENT" : "ABSENT",
         };
 
+<<<<<<< HEAD
+=======
         const token = localStorage.getItem("access_token");
         const api = import.meta.env.VITE_API_URL;
+>>>>>>> bcab0a1e5670853f7946f316cf611d293d5e8284
 
         return apiClient.post(`${api}/attendances`, payload, {
           headers: {
