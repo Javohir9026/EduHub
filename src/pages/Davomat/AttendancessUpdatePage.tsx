@@ -10,7 +10,7 @@ interface Student {
 }
 
 interface Attendance {
-  id?: number;
+  id: number;
   studentId: number;
   status: AttendanceStatus;
 }
@@ -31,48 +31,38 @@ const AttendancessUpdatePage = () => {
 
         const token = localStorage.getItem("access_token");
         const api = import.meta.env.VITE_API_URL;
+        const groupId = localStorage.getItem('id');
 
-        // 🔥 1. STUDENTLAR
-        const studentRes = await apiClient.get(`${api}/groups/students/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        // ✅ TO‘G‘RI ENDPOINT (attendance olish)
+        const res = await apiClient.get(
+          `${api}/attendances/${groupId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
-        const studentList = Array.isArray(studentRes.data)
-          ? studentRes.data
-          : [];
+        console.log("FULL RESPONSE:", res.data);
+
+        const attendanceList = res.data?.data || [];
+
+        console.log("ATTENDANCE:", attendanceList);
+
+        // ✅ student list
+        const studentList: Student[] = attendanceList.map((a: any) => ({
+          id: a.student.id,
+          fullName: a.student.fullName,
+        }));
 
         setStudents(studentList);
-        console.log("URL:", `${api}/attendances`);
-        console.log("PARAMS:", { groupId: id, date });
 
-        // 🔥 2. ATTENDANCE (agar mavjud bo‘lsa)
-        let attendanceList: any[] = [];
+        // ✅ attendance list
+        const attendanceData: Attendance[] = attendanceList.map((a: any) => ({
+          id: a.id,
+          studentId: a.student.id,
+          status: a.status,
+        }));
 
-        try {
-          const attRes = await apiClient.get(`${api}/attendances`, {
-            params: { groupId: id, date },
-            headers: { Authorization: `Bearer ${token}` },
-          });
-
-          attendanceList = Array.isArray(attRes.data) ? attRes.data : [];
-        } catch {
-          attendanceList = [];
-        }
-
-        // 🔥 3. MERGE
-        const merged = studentList.map((student: Student) => {
-          const found = attendanceList.find(
-            (a) => a.student?.id === student.id,
-          );
-
-          return {
-            studentId: student.id,
-            id: found?.id,
-            status: found?.status || "ABSENT",
-          };
-        });
-
-        setAttendance(merged);
+        setAttendance(attendanceData);
       } catch (err: any) {
         console.log("ERROR:", err.response || err);
       } finally {
@@ -80,47 +70,34 @@ const AttendancessUpdatePage = () => {
       }
     };
 
-    fetchAll();
+    if (id && date) {
+      fetchAll();
+    }
   }, [id, date]);
 
-  // 🔥 STATUS CHANGE
   const handleChange = (studentId: number, status: AttendanceStatus) => {
     setAttendance((prev) =>
       prev.map((item) =>
-        item.studentId === studentId ? { ...item, status } : item,
-      ),
+        item.studentId === studentId ? { ...item, status } : item
+      )
     );
   };
 
-  // 🔥 SAVE (PATCH yoki POST)
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("access_token");
       const api = import.meta.env.VITE_API_URL;
 
       await Promise.all(
-        attendance.map((item) => {
-          // update
-          if (item.id) {
-            return apiClient.patch(
-              `${api}/attendances/${item.id}`,
-              { status: item.status },
-              { headers: { Authorization: `Bearer ${token}` } },
-            );
-          }
-
-          // create
-          return apiClient.post(
-            `${api}/attendances`,
+        attendance.map((item) =>
+          apiClient.patch(
+            `${api}/attendances/${item.id}`,
+            { status: item.status },
             {
-              studentId: item.studentId,
-              groupId: id,
-              date,
-              status: item.status,
-            },
-            { headers: { Authorization: `Bearer ${token}` } },
-          );
-        }),
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          )
+        )
       );
 
       alert("✅ Saqlandi!");
@@ -131,6 +108,9 @@ const AttendancessUpdatePage = () => {
   };
 
   if (loading) return <div>⏳ Yuklanmoqda...</div>;
+
+  if (!students.length)
+    return <div>❗ Bu sanada hali davomat olinmagan</div>;
 
   return (
     <div className="p-6">
