@@ -134,7 +134,6 @@ export function TeacherEditModal({
         return;
       }
 
-      console.log(data);
       await apiClient.patch(`${api}/teachers/${teacher.id}`, data);
       toast.success("O'qituvchi muvaffaqiyatli yangilandi!");
       setOpen(false);

@@ -51,14 +51,11 @@ const SignInForm = () => {
     try {
       setLoading(true);
       const endpoind = role === "center" ? "auth/login" : "teachers/login";
-      console.log(role);
-      console.log(endpoind);
       const api = import.meta.env.VITE_API_URL;
       const res = await apiClient.post(`${api}/${endpoind}`, {
         login,
         password,
       });
-      console.log(res.data.data);
       const access_token = res.data?.data?.access_token;
       const refresh_token = res.data?.data?.refresh_token;
       if (role === "center") {

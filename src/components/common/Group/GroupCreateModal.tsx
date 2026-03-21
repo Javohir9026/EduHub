@@ -161,7 +161,7 @@ export function GroupCreateModal({
     try {
       setLoading(true);
       const numericPrice = Number(monthlyPrice.replace(/\,/g, ""));
-      await apiClient.post(`${api}/groups`, {
+      const res = await apiClient.post(`${api}/groups`, {
         name,
         startDate,
         endDate,
@@ -174,7 +174,7 @@ export function GroupCreateModal({
         learning_center_id: localStorage.getItem("id"),
         teacher_id: Number(teacher_id),
       });
-
+      console.log(res)
       toast.success("Guruh qo'shildi!");
       onSuccess();
       handleCancel();

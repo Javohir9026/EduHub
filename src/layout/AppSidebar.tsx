@@ -53,6 +53,12 @@ const AppSidebar: React.FC = () => {
       path: "/payments",
       icon: BanknoteArrowDown,
     },
+    {
+      id: 7,
+      title: "Davomat",
+      path: "/attendances-center",
+      icon: CalendarCheck,
+    },
   ];
 
   const navLinksTeacher = [
@@ -75,9 +81,8 @@ const AppSidebar: React.FC = () => {
       icon: CalendarCheck,
     },
   ];
-  const role = localStorage.getItem('role')
-  const navLinks =
-    role === "teacher" ? navLinksTeacher : navLinksCenter;
+  const role = localStorage.getItem("role");
+  const navLinks = role === "teacher" ? navLinksTeacher : navLinksCenter;
   return (
     <aside
       className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0
