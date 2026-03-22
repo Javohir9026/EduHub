@@ -70,6 +70,7 @@ export default function GroupTableComponent() {
         },
       );
       setTableData(res.data.data || []);
+      console.log(res.data.data)
     } catch (error) {
       console.log("FETCH ERROR:", error);
     } finally {
