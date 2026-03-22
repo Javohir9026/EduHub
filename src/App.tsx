@@ -26,7 +26,8 @@ import AttendancesPage from "./pages/Davomat/Attendances";
 import AttendancessMainPage from "./pages/Davomat/AttendacessMainPage";
 import { PaymentsPage } from "./pages/Payment/Paymentspage";
 import PaymentInfoPage from "./pages/Payment/PaymentInfoPage";
-import AttendanceCenterPage from "./pages/DavomatForCenter/AttendancesCenter";
+import AttendancessUpdatePage from "./pages/Davomat/AttendancessUpdatePage";
+import AttendancesCenter from "./pages/DavomatForCenter/AttendancesCenter";
 
 const App = () => {
   return (
@@ -156,7 +157,7 @@ const App = () => {
             path="/attendances-center"
             element={
               <LearningCenterRoute>
-                <AttendanceCenterPage />
+                <AttendancesCenter />
               </LearningCenterRoute>
             }
           />
@@ -207,6 +208,10 @@ const App = () => {
                 <PaymentInfoPage />
               </LearningCenterRoute>
             }
+          />
+          <Route
+            path="/AttendancessUpdatePage/:id"
+            element={<AttendancessUpdatePage />}
           />
         </Route>
       </Routes>
