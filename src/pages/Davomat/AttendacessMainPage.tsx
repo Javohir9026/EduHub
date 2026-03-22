@@ -107,42 +107,47 @@ const AttendancesMainPage = () => {
   };
 
   const saveAttendance = async () => {
-    try {
-      setSaving(true);
+  try {
+    setSaving(true);
 
-      const today = new Date().toISOString().split("T")[0];
+    const today = new Date().toISOString().split("T")[0];
+    const teacherId = Number(localStorage.getItem("teacher_id"));
 
-      const requests = students.map((s) => {
-        const teacherId = Number(localStorage.getItem("teacher_id"));
-        const payload = {
-          groupId: Number(id),
-          studentId: s.id,
-          teacherId: teacherId,
-          date: today,
-          status: s.status === "present" ? "PRESENT" : "ABSENT",
-        };
+    const token = localStorage.getItem("access_token");
+    const api = import.meta.env.VITE_API_URL;
 
-        const token = localStorage.getItem("access_token");
-        const api = import.meta.env.VITE_API_URL;
+    // ✅ students array
+    const studentsPayload = students.map((s) => ({
+      studentId: s.id,
+      status: s.status === "present" ? "PRESENT" : "ABSENT",
+    }));
 
-        return apiClient.post(`${api}/attendances`, payload, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-      });
+    // ✅ bitta payload
+    const payload = {
+      groupId: Number(id),
+      teacherId: teacherId,
+      date: today,
+      students: studentsPayload,
+    };
 
-      await Promise.all(requests);
+    console.log("YUBORILAYOTGAN:", payload);
 
-      toast.success('guruhdan davomat olindi');
-      navigate(`/AttendancessUpdatePage/${id}`);
-    } catch (error: any) {
-      console.log("ERROR RESPONSE:", error.response?.data);
-      console.log("ERROR STATUS:", error.response?.status);
-    } finally {
-      setSaving(false);
-    }
-  };
+    // ✅ BITTA POST
+    await apiClient.post(`${api}/attendances`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    toast.success("guruhdan davomat olindi");
+    navigate(`/AttendancessUpdatePage/${id}?date=${today}`);
+  } catch (error: any) {
+    console.log("ERROR RESPONSE:", error.response?.data);
+    console.log("ERROR STATUS:", error.response?.status);
+  } finally {
+    setSaving(false);
+  }
+};
 
   const presentCount = students.filter((s) => s.status === "present").length;
 

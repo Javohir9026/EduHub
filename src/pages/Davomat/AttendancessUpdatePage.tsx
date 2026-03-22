@@ -2,18 +2,17 @@ import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import apiClient from "@/api/ApiClient";
 
-type AttendanceStatus = "present" | "absent" | "late" | "excused";
+type AttendanceStatus = "PRESENT" | "ABSENT";
+
+interface Student {
+  id: number;
+  fullName: string;
+}
 
 interface Attendance {
   id: number;
+  studentId: number;
   status: AttendanceStatus;
-  date: string;
-  group?: {
-    id: number;
-  };
-  student: {
-    fullName: string;
-  };
 }
 
 const AttendancessUpdatePage = () => {
@@ -21,140 +20,131 @@ const AttendancessUpdatePage = () => {
   const [searchParams] = useSearchParams();
   const date = searchParams.get("date");
 
-  const [data, setData] = useState<Attendance[]>([]);
+  const [students, setStudents] = useState<Student[]>([]);
+  const [attendance, setAttendance] = useState<Attendance[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // 🔥 GET ATTENDANCES
   useEffect(() => {
-    const fetchAttendance = async () => {
+    const fetchAll = async () => {
       try {
         setLoading(true);
 
         const token = localStorage.getItem("access_token");
         const api = import.meta.env.VITE_API_URL;
+        const groupId = localStorage.getItem('id');
 
-        console.log("ID:", id);
-        console.log("DATE:", date);
+        // ✅ TO‘G‘RI ENDPOINT (attendance olish)
+        const res = await apiClient.get(
+          `${api}/attendances/${groupId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
-        const res = await apiClient.get(`${api}/attendances`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        console.log("FULL RESPONSE:", res.data);
 
-        console.log("FULL DATA:", res.data.data);
+        const attendanceList = res.data?.data || [];
 
-        const list = res.data.data || [];
+        console.log("ATTENDANCE:", attendanceList);
 
-        // 🔥 FILTER
-        const filtered = list.filter((item: Attendance) => {
-          return (
-            String(item.group?.id) === String(id) &&
-            item.date?.slice(0, 10) === date
-          );
-        });
+        // ✅ student list
+        const studentList: Student[] = attendanceList.map((a: any) => ({
+          id: a.student.id,
+          fullName: a.student.fullName,
+        }));
 
-        console.log("FILTERED:", filtered);
+        setStudents(studentList);
 
-        setData(filtered);
+        // ✅ attendance list
+        const attendanceData: Attendance[] = attendanceList.map((a: any) => ({
+          id: a.id,
+          studentId: a.student.id,
+          status: a.status,
+        }));
+
+        setAttendance(attendanceData);
       } catch (err: any) {
-        console.log("GET ERROR:", err.response || err);
+        console.log("ERROR:", err.response || err);
       } finally {
         setLoading(false);
       }
     };
 
     if (id && date) {
-      fetchAttendance();
+      fetchAll();
     }
   }, [id, date]);
 
-  // 🔥 STATUS CHANGE
-  const handleStatusChange = (id: number, newStatus: AttendanceStatus) => {
-    setData((prev) =>
+  const handleChange = (studentId: number, status: AttendanceStatus) => {
+    setAttendance((prev) =>
       prev.map((item) =>
-        item.id === id ? { ...item, status: newStatus } : item,
-      ),
+        item.studentId === studentId ? { ...item, status } : item
+      )
     );
   };
 
-  // 🔥 UPDATE (PATCH)
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("access_token");
       const api = import.meta.env.VITE_API_URL;
 
       await Promise.all(
-        data.map((item) =>
+        attendance.map((item) =>
           apiClient.patch(
-            `${api}/api/v1/attendances/${item.id}`,
+            `${api}/attendances/${item.id}`,
+            { status: item.status },
             {
-              status: item.status,
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            },
-          ),
-        ),
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          )
+        )
       );
 
       alert("✅ Saqlandi!");
     } catch (err: any) {
-      console.log("PATCH ERROR:", err.response || err);
-      alert("❌ Xatolik yuz berdi");
+      console.log("SAVE ERROR:", err.response || err);
+      alert("❌ Xatolik");
     }
   };
 
-  // 🔥 LOADING
-  if (loading) {
-    return <div className="text-center mt-20">⏳ Yuklanmoqda...</div>;
-  }
+  if (loading) return <div>⏳ Yuklanmoqda...</div>;
+
+  if (!students.length)
+    return <div>❗ Bu sanada hali davomat olinmagan</div>;
 
   return (
     <div className="p-6">
-      <h1 className="text-xl font-bold mb-4">📋 Davomatni yangilash</h1>
+      <h1 className="text-xl font-bold mb-4">📋 Davomat</h1>
 
-      {data.length === 0 ? (
-        <p>❌ Hech qanday davomat topilmadi</p>
-      ) : (
-        <>
-          <div className="space-y-3">
-            {data.map((item) => (
-              <div
-                key={item.id}
-                className="flex justify-between items-center border p-3 rounded-lg"
-              >
-                <span className="font-medium">{item.student?.fullName}</span>
+      {students.map((student) => {
+        const att = attendance.find((a) => a.studentId === student.id);
 
-                <select
-                  value={item.status}
-                  onChange={(e) =>
-                    handleStatusChange(
-                      item.id,
-                      e.target.value as AttendanceStatus,
-                    )
-                  }
-                  className="border px-2 py-1 rounded"
-                >
-                  <option value="present">Present</option>
-                  <option value="absent">Absent</option>
-                  <option value="late">Late</option>
-                  <option value="excused">Excused</option>
-                </select>
-              </div>
-            ))}
-          </div>
-
-          <button
-            onClick={handleSave}
-            className="mt-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        return (
+          <div
+            key={student.id}
+            className="flex justify-between border p-3 mb-2 rounded"
           >
-            💾 Saqlash
-          </button>
-        </>
-      )}
+            <span>{student.fullName}</span>
+
+            <select
+              value={att?.status || "ABSENT"}
+              onChange={(e) =>
+                handleChange(student.id, e.target.value as AttendanceStatus)
+              }
+            >
+              <option value="PRESENT">Present</option>
+              <option value="ABSENT">Absent</option>
+            </select>
+          </div>
+        );
+      })}
+
+      <button
+        onClick={handleSave}
+        className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
+      >
+        💾 Saqlash
+      </button>
     </div>
   );
 };
