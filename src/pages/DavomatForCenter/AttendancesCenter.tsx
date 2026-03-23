@@ -681,19 +681,19 @@ function AttendanceTable({ data, loading, onUpdate }: AttendanceTableProps) {
       <table className="w-full min-w-[640px] text-sm">
         <thead>
           <tr className="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
-            <th className="text-left px-5 py-3.5 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+            <th className=" text-center px-5 py-3.5 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
               Guruh Nomi
             </th>
-            <th className="text-left px-5 py-3.5 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+            <th className="text-center  px-5 py-3.5 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
               Sana
             </th>
-            <th className="text-left px-5 py-3.5 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+            <th className="text-center  px-5 py-3.5 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
               O'quvchilar soni
             </th>
-            <th className="text-left px-5 py-3.5 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+            <th className="text-center  px-5 py-3.5 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
               Oxirgi yangilanish
             </th>
-            <th className="text-right px-5 py-3.5 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+            <th className=" px-5 py-3.5 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
               Amallar
             </th>
           </tr>
@@ -702,12 +702,12 @@ function AttendanceTable({ data, loading, onUpdate }: AttendanceTableProps) {
           {data.map((row, i) => (
             <tr
               key={`${row.groupId}-${row.date}`}
-              className={`border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors ${
+              className={`border-b  border-slate-100 text-center dark:border-slate-800 hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors ${
                 i === data.length - 1 ? "border-b-0" : ""
               }`}
             >
               <td className="px-5 py-4">
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-start justify-center gap-2.5">
                   <div className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center flex-shrink-0">
                     <Users className="w-4 h-4 text-indigo-500" />
                   </div>
@@ -717,7 +717,7 @@ function AttendanceTable({ data, loading, onUpdate }: AttendanceTableProps) {
                 </div>
               </td>
               <td className="px-5 py-4">
-                <div className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
+                <div className="flex items-center text-center justify-center gap-1.5 text-slate-600 dark:text-slate-400">
                   <Calendar className="w-3.5 h-3.5" />
                   {formatDate(row.date)}
                 </div>
@@ -731,10 +731,10 @@ function AttendanceTable({ data, loading, onUpdate }: AttendanceTableProps) {
               <td className="px-5 py-4 text-slate-500 dark:text-slate-400 text-xs">
                 {formatDateTime(row.updatedAt)}
               </td>
-              <td className="px-5 py-4 text-right">
+              <td className="px-5 py-4 flex items-center justify-center">
                 <button
                   onClick={() => onUpdate(row)}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 text-xs font-semibold border border-amber-200 dark:border-amber-800 hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors"
+                  className="flex items-center cursor-pointer  gap-1.5 px-3.5 py-2 rounded-lg bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 text-xs font-semibold border border-amber-200 dark:border-amber-800 hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors"
                 >
                   <Edit className="w-3.5 h-3.5" />
                   Yangilash
