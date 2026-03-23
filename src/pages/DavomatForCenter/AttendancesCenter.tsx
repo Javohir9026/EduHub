@@ -1090,6 +1090,7 @@ export default function AttendancesCenter() {
                     icon: X,
                     color: "rose",
                   },
+                  
                 ].map((card) => (
                   <div
                     key={card.label}
