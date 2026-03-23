@@ -444,7 +444,7 @@ function AttendanceModal({
               onClick={onClose}
               className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
             >
-              <X className="w-4 h-4" />
+              <X className="cursor-pointer w-4 h-4" />
             </button>
           </div>
 
@@ -585,7 +585,7 @@ function AttendanceModal({
                                 [student.id]: "PRESENT",
                               }))
                             }
-                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                            className={`cursor-pointer flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                               isPresent
                                 ? "bg-emerald-500 text-white shadow-sm shadow-emerald-200 dark:shadow-emerald-900"
                                 : "bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:border-emerald-300"
@@ -601,7 +601,7 @@ function AttendanceModal({
                                 [student.id]: "ABSENT",
                               }))
                             }
-                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                            className={`cursor-pointer flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                               !isPresent
                                 ? "bg-rose-500 text-white shadow-sm shadow-rose-200 dark:shadow-rose-900"
                                 : "bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:border-rose-300"
@@ -623,14 +623,14 @@ function AttendanceModal({
           <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 flex-shrink-0">
             <button
               onClick={onClose}
-              className="px-5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="px-5 cursor-pointer py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
             >
               Bekor qilish
             </button>
             <button
               onClick={handleSaveClick}
               disabled={loadingStudents}
-              className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition-colors flex items-center gap-2 disabled:opacity-60 shadow-sm shadow-indigo-200 dark:shadow-indigo-900"
+              className="px-5 cursor-pointer py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition-colors flex items-center gap-2 disabled:opacity-60 shadow-sm shadow-indigo-200 dark:shadow-indigo-900"
             >
               <Check className="w-4 h-4" />
               Saqlash
