@@ -902,7 +902,7 @@ function CustomSelect({ value, onChange, options }: CustomSelectProps) {
     <div className="relative">
       <button
         onClick={() => setOpen((p) => !p)}
-        className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-white text-sm font-medium min-w-[220px] hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors shadow-sm"
+        className="flex cursor-pointer items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-white text-sm font-medium min-w-[220px] hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors shadow-sm"
       >
         <span className="flex-1 text-left">{selected?.label}</span>
         <ChevronDown
@@ -914,7 +914,7 @@ function CustomSelect({ value, onChange, options }: CustomSelectProps) {
       {open && (
         <>
           <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
-          <div className="absolute top-full left-0 mt-1.5 w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl z-20 overflow-hidden">
+          <div className="absolute top-9 max-w-[220px] left-0 mt-1.5 w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl z-20 overflow-hidden">
             {options.map((opt) => (
               <button
                 key={opt.value}
@@ -1025,9 +1025,9 @@ export default function AttendancesCenter() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans">
+    <div className="min-h-screen w-full bg-slate-50 dark:bg-background font-sans">
       {/* Page wrapper */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-1">
