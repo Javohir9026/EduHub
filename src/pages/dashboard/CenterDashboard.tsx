@@ -45,7 +45,7 @@ const Dashboard = () => {
     {
       id: 2,
       icon: <Coins />,
-      title: "Umumiy daromad",
+      title: "Umumiy Daromad",
       count: totalPaid,
       persend: "+ 8,5% ga o'sish",
     },
