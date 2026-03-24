@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import apiClient from "@/api/ApiClient";
+import { toast } from "sonner";
 
 type AttendanceStatus = "PRESENT" | "ABSENT";
 
@@ -25,55 +26,48 @@ const AttendancessUpdatePage = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchAll = async () => {
-      try {
-        setLoading(true);
+  const fetchAll = async () => {
+    try {
+      setLoading(true);
 
-        const token = localStorage.getItem("access_token");
-        const api = import.meta.env.VITE_API_URL;
-        const groupId = localStorage.getItem('id');
+      const token = localStorage.getItem("access_token");
+      const api = import.meta.env.VITE_API_URL;
 
-        // ✅ TO‘G‘RI ENDPOINT (attendance olish)
-        const res = await apiClient.get(
-          `${api}/attendances/${groupId}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+      const res = await apiClient.get(
+        `${api}/groups/teacher/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
-        console.log("FULL RESPONSE:", res.data);
+      const group = res.data?.data;
 
-        const attendanceList = res.data?.data || [];
+      const studentsData: Student[] = group?.groupStudents?.map((gs: any) => ({
+        id: gs.student.id,
+        fullName: gs.student.fullName,
+      })) || [];
 
-        console.log("ATTENDANCE:", attendanceList);
+      setStudents(studentsData);
 
-        // ✅ student list
-        const studentList: Student[] = attendanceList.map((a: any) => ({
-          id: a.student.id,
-          fullName: a.student.fullName,
-        }));
+      const defaultAttendance: Attendance[] = studentsData.map((s) => ({
+        id: 0,
+        studentId: s.id,
+        status: "ABSENT",
+      }));
 
-        setStudents(studentList);
+      setAttendance(defaultAttendance);
 
-        // ✅ attendance list
-        const attendanceData: Attendance[] = attendanceList.map((a: any) => ({
-          id: a.id,
-          studentId: a.student.id,
-          status: a.status,
-        }));
-
-        setAttendance(attendanceData);
-      } catch (err: any) {
-        console.log("ERROR:", err.response || err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (id && date) {
-      fetchAll();
+    } catch (err: any) {
+      console.log("ERROR:", err.response || err);
+    } finally {
+      setLoading(false);
     }
-  }, [id, date]);
+  };
+
+  if (id) {
+    fetchAll();
+  }
+}, [id]);
 
   const handleChange = (studentId: number, status: AttendanceStatus) => {
     setAttendance((prev) =>
@@ -100,10 +94,10 @@ const AttendancessUpdatePage = () => {
         )
       );
 
-      alert("✅ Saqlandi!");
+      toast.success("✅ Saqlandi!");
     } catch (err: any) {
       console.log("SAVE ERROR:", err.response || err);
-      alert("❌ Xatolik");
+      toast.error("❌ Xatolik");
     }
   };
 
