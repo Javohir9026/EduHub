@@ -8,12 +8,14 @@ const Footer = () => {
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-5">
           <div className="flex flex-col gap-2">
             <div className="sm:justify-start h-[50px] w-[200px] flex items-center justify-center overflow-hidden">
-              <img
-                src={EduLogoLight}
-                alt="EduHubLogoLight"
-                width={150}
-                className="object-contain"
-              />
+              <Link to={'/'}>
+                <img
+                  src={EduLogoLight}
+                  alt="EduHubLogoLight"
+                  width={150}
+                  className="object-contain"
+                />
+              </Link>
             </div>
             <p className="text-black/70 text-center sm:text-start">
               Ta'lim markazlari uchun to'liq <br />
