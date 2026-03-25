@@ -111,7 +111,7 @@ const SignInForm = () => {
                       login: validateField("login", value),
                     }));
                   }}
-                  className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  className="border border-gray-300 dark:text-black rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
                 {errors.login && (
                   <p className="text-red-500 text-xs mt-1">*{errors.login}</p>
@@ -133,12 +133,12 @@ const SignInForm = () => {
                       password: validateField("password", value),
                     }));
                   }}
-                  className="border border-gray-300 rounded-lg px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  className="border dark:text-black border-gray-300 rounded-lg px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-3 top-10 cursor-pointer -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  className="absolute  right-3 top-10 cursor-pointer -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>

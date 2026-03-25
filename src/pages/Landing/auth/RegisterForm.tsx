@@ -186,7 +186,7 @@ const RegisterForm = () => {
   );
 
   return (
-    <div className="flex justify-center items-center mt-10 mb-10">
+    <div className="flex justify-center dark:bg-white items-center pt-10 pb-10">
       <div className="flex flex-col gap-7">
         <Link to="/">
           <p className="flex gap-1 text-[14px] items-center text-black/70 hover:text-black">
@@ -196,7 +196,7 @@ const RegisterForm = () => {
         </Link>
         <div className="border rounded-[27px] border-black/20 sm:p-7 p-2 flex flex-col gap-5">
           <div className="flex flex-col">
-            <h1 className="!font-bold text-[25px] text-center sm:text-start">
+            <h1 className="!font-bold dark:text-black text-[25px] text-center sm:text-start">
               Xush Kelibsiz
             </h1>
             <p className="text-black/70 text-[14px] text-center sm:text-start">
@@ -209,10 +209,12 @@ const RegisterForm = () => {
               <FileUploader value={preview} onChange={handleChange} />
             </div>
             <div className="flex flex-col gap-2">
-              <Label htmlFor="name">O'quv Markaz Nomi</Label>
+              <Label htmlFor="name" className="dark:text-black">
+                O'quv Markaz Nomi
+              </Label>
               <div
                 className="
-    border border-black/20 rounded-lg sm:w-[400px] w-[350px]
+    border border-black/20 dark:text-black rounded-lg sm:w-[400px] w-[350px]
     flex items-center px-2
     focus-within:outline
     focus-within:outline-2
@@ -225,7 +227,7 @@ const RegisterForm = () => {
                   id="name"
                   type="text"
                   placeholder="O'quv Markaz"
-                  className="border-none focus:outline-none focus:ring-0 focus-visible:ring-0"
+                  className="border-none dark:text-black focus:outline-none focus:ring-0 focus-visible:ring-0"
                   autoComplete="off"
                   value={formData.name}
                   onChange={(e) => {
@@ -246,10 +248,12 @@ const RegisterForm = () => {
               )}
             </div>
             <div className="flex flex-col gap-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="dark:text-black">
+                Email
+              </Label>
               <div
                 className="
-    border border-black/20 rounded-lg sm:w-[400px] w-[350px]
+    border border-black/20 dark:text-black rounded-lg sm:w-[400px] w-[350px]
     flex items-center px-2
     focus-within:outline
     focus-within:outline-2
@@ -282,12 +286,14 @@ const RegisterForm = () => {
               )}
             </div>
             <div className="flex flex-col gap-2">
-              <Label htmlFor="phone">Telefon Raqam</Label>
+              <Label htmlFor="phone" className="dark:text-black">
+                Telefon Raqam
+              </Label>
               <div
                 className="
     border border-black/20 rounded-lg sm:w-[400px] w-[350px]
     flex items-center px-2
-    focus-within:outline
+    focus-within:outline dark:text-black
     focus-within:outline-2
     focus-within:outline-blue-400
   "
@@ -326,7 +332,9 @@ const RegisterForm = () => {
               )}
             </div>
             <div className="flex flex-col gap-2">
-              <Label htmlFor="login">Login</Label>
+              <Label htmlFor="login" className="dark:text-black">
+                Login
+              </Label>
               <div
                 className="
     border border-black/20 rounded-lg sm:w-[400px] w-[350px]
@@ -342,7 +350,7 @@ const RegisterForm = () => {
                   type="text"
                   autoComplete="off"
                   placeholder="Login"
-                  className="border-none focus:outline-none focus:ring-0 focus-visible:ring-0"
+                  className="border-none  dark:text-black focus:outline-none focus:ring-0 focus-visible:ring-0"
                   value={formData.login}
                   onChange={(e) => {
                     setFormData((prev) => ({
@@ -362,7 +370,9 @@ const RegisterForm = () => {
               )}
             </div>
             <div className="flex flex-col gap-2">
-              <Label htmlFor="password">Parol</Label>
+              <Label htmlFor="password" className="dark:text-black">
+                Parol
+              </Label>
               <div
                 className="
     border border-black/20 rounded-lg sm:w-[400px] w-[350px]
@@ -373,7 +383,7 @@ const RegisterForm = () => {
   "
               >
                 <Lock className="stroke-black/60" />
-                <div className="relative w-full">
+                <div className="relative w-full dark:text-black">
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
@@ -409,7 +419,7 @@ const RegisterForm = () => {
             </div>
             <Button
               disabled={isFormInvalid || isloading}
-              className={`w-full cursor-pointer !font-bold flex items-center justify-center gap-2 ${
+              className={`w-full cursor-pointer !font-bold dark:text-white flex items-center justify-center gap-2 ${
                 isloading
                   ? "bg-blue-400 cursor-not-allowed"
                   : "bg-blue-500 hover:bg-blue-500/85"
@@ -428,7 +438,7 @@ const RegisterForm = () => {
             <p className="text-[14px] text-black/50">yoki</p>
             <p className="border-b-2 border-black/10 w-full"></p>
           </div>
-          <p className="text-[14px] text-center">
+          <p className="text-[14px] text-center dark:text-black">
             Hisobingiz mavjudmi ?{" "}
             <Link to="/sign-in">
               <span className="text-blue-500 hover:text-blue-500/85 cursor-pointer !font-semibold">
@@ -438,7 +448,7 @@ const RegisterForm = () => {
           </p>
         </div>
         <div className="flex justify-center">
-          <p className="text-[14px] !font-light">
+          <p className="text-[14px] !font-light dark:text-black">
             Yordam kerakmi ?{" "}
             <Link to="#">
               <span className="text-blue-500 hover:text-blue-500/85 cursor-pointer">
