@@ -35,6 +35,7 @@ export const GroupInfo = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         setGroup(res.data.data);
+        console.log(res.data.data)
       } catch (error) {
         console.log(error);
       } finally {
