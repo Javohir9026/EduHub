@@ -13,6 +13,7 @@ import {
   ChevronDown,
   Loader2,
 } from "lucide-react";
+import apiClient from "@/api/ApiClient";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -952,18 +953,37 @@ export default function AttendancesCenter() {
   const [selectedLesson, setSelectedLesson] = useState<Lesson | undefined>();
   const [existingRecords, setExistingRecords] = useState<Attendance[]>([]);
 
-  // Simulate fetch on view mode change
   useEffect(() => {
-    setLoading(true);
-    const timer = setTimeout(() => {
-      if (viewMode === "all") {
-        setAttendances(MOCK_ATTENDANCES);
-      } else {
-        setLessons(MOCK_LESSONS);
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+
+        if (viewMode === "all") {
+          const api = import.meta.env.VITE_API_URL;
+          const token = localStorage.getItem("access_token");
+          const res = await apiClient.get(
+            `${api}/attendances/learning-center/findAll`,
+            { headers: { Authorization: `Bearer ${token}` } },
+          );
+          setAttendances(res.data);
+        } else {
+          const today = new Date().toISOString().split("T")[0];
+          const res = await apiClient.get("/lessons/range", {
+            params: {
+              startDate: today,
+              endDate: today,
+            },
+          });
+          setLessons(res.data);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
-    }, 1200);
-    return () => clearTimeout(timer);
+    };
+
+    fetchData();
   }, [viewMode]);
 
   const grouped = groupAttendances(attendances);
@@ -1090,7 +1110,6 @@ export default function AttendancesCenter() {
                     icon: X,
                     color: "rose",
                   },
-                  
                 ].map((card) => (
                   <div
                     key={card.label}
