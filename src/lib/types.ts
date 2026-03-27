@@ -92,7 +92,7 @@ export interface Group {
   description: string;
   startDate: string;
   endDate: string;
-  lessonDays: number;
+  lessonDays: string;
   lessonTime: string;
   room: string;
   maxStudents: number;
