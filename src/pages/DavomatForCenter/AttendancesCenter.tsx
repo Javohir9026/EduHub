@@ -958,23 +958,17 @@ export default function AttendancesCenter() {
       try {
         setLoading(true);
 
+        const api = import.meta.env.VITE_API_URL;
+        const token = localStorage.getItem("access_token");
         if (viewMode === "all") {
-          const api = import.meta.env.VITE_API_URL;
-          const token = localStorage.getItem("access_token");
           const res = await apiClient.get(
             `${api}/attendances/learning-center/findAll`,
             { headers: { Authorization: `Bearer ${token}` } },
           );
           setAttendances(res.data);
         } else {
-          const today = new Date().toISOString().split("T")[0];
-          const res = await apiClient.get("/lessons/range", {
-            params: {
-              startDate: today,
-              endDate: today,
-            },
-          });
-          setLessons(res.data);
+          // const res = await apiClient.get();
+          // setLessons(res.data);
         }
       } catch (err) {
         console.error(err);
