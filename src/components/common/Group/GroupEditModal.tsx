@@ -43,7 +43,7 @@ export function GroupEditModal({
   const [maxStudents, setMaxStudents] = useState("");
   const [room, setRoom] = useState("");
   const [description, setDescription] = useState("");
-  const [teacher_id, setTeacherId] = useState("");
+  const [teacher_id, setTeacherId] = useState<string | null>(null);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -88,7 +88,7 @@ export function GroupEditModal({
       setMaxStudents(String(group.maxStudents) || "");
       setRoom(group.room || "");
       setDescription(group.description || "");
-      setTeacherId(String(group.teacher.id || ""));
+      setTeacherId(group.teacher?.id?.toString() || null);
 
       setStartDate(group.startDate?.split("T")[0] || "");
       setEndDate(group.endDate?.split("T")[0] || "");
@@ -261,7 +261,7 @@ export function GroupEditModal({
               <div className="sm:col-span-2 flex flex-col gap-1">
                 <Label>Qo'shimcha</Label>
                 <Input
-                  value={description} 
+                  value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </div>
@@ -269,7 +269,7 @@ export function GroupEditModal({
               <div className="sm:col-span-2 flex flex-col gap-1">
                 <Label>O'qituvchi</Label>
                 <GroupTeacherSelect
-                  value={teacher_id}
+                  value={teacher_id ? String(teacher_id) : "o'qituvchi tanlang"}
                   onChange={(v) => setTeacherId(v)}
                 />
               </div>
