@@ -227,7 +227,8 @@ export function GroupEditModal({
 
               {/* PRICE */}
               <div className="flex flex-col gap-1">
-                <Label>Oylik summa (uzs)</Label>
+                <Label>Oylik summa (uzsjaxa
+                )</Label>
                 <Input
                   value={monthlyPrice}
                   onChange={(e) => {
