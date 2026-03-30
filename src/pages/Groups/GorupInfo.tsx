@@ -1,7 +1,7 @@
 import apiClient from "@/api/ApiClient";
 import type { GroupDetail } from "@/lib/types";
-import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { use, useEffect, useState } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import {
   Users,
   Calendar,
@@ -18,6 +18,7 @@ export const GroupInfo = () => {
   const [loading, setLoading] = useState(false);
   const [group, setGroup] = useState<GroupDetail | null>(null);
   const role = localStorage.getItem("role");
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchGroup = async () => {
       try {
@@ -35,7 +36,7 @@ export const GroupInfo = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         setGroup(res.data.data);
-        console.log(res.data.data)
+        console.log(res.data.data);
       } catch (error) {
         console.log(error);
       } finally {
@@ -136,9 +137,13 @@ export const GroupInfo = () => {
           </InfoCard>
 
           <InfoCard icon={<User />} title="O'qituvchi">
-            {group.teacher
-              ? `${group.teacher.name} ${group.teacher.lastName}`
-              : <span className="text-sm text-gray-500">O'qituvchi Biriktirilmagan</span>}
+            {group.teacher ? (
+              `${group.teacher.name} ${group.teacher.lastName}`
+            ) : (
+              <span className="text-sm text-gray-500">
+                O'qituvchi Biriktirilmagan
+              </span>
+            )}
           </InfoCard>
         </div>
 
@@ -147,9 +152,9 @@ export const GroupInfo = () => {
           {group.teacher ? (
             <div>
               {role === "center" ? (
-                <Link
-                  to={`/teacher-info/${group.teacher.id}`}
-                  className="bg-white shadow-lg rounded-xl p-6 dark:!bg-fullbg"
+                <div
+                  className="bg-white shadow-lg rounded-xl p-6 dark:!bg-fullbg cursor-pointer hover:shadow-xl transition"
+                  onClick={() => navigate(`/teacher-info/${group.teacher.id}`)}
                 >
                   <h2 className="text-xl font-bold mb-4">O'qituvchi</h2>
                   <p className="font-semibold">
@@ -157,7 +162,7 @@ export const GroupInfo = () => {
                   </p>
                   <p className="text-gray-500">{group.teacher.phone}</p>
                   <p className="text-gray-500">{group.teacher.email}</p>
-                </Link>
+                </div>
               ) : (
                 <div className="bg-white shadow-lg rounded-xl p-6 dark:!bg-fullbg">
                   <h2 className="text-xl font-bold mb-4">O'qituvchi</h2>
