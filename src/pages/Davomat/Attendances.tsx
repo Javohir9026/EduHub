@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import apiClient from "@/api/ApiClient";
-import { Info, Users, Clock, Calendar, GraduationCap, BookOpen } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import {
+  Info,
+  Users,
+  Clock,
+  Calendar,
+  GraduationCap,
+  BookOpen,
+} from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 type Teacher = {
@@ -23,6 +30,9 @@ const TeacherGroupsTable = () => {
   const [groups, setGroups] = useState<Group[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+  const location = useLocation();
+  const updatedGroupId = location.state?.updatedGroupId;
 
   const fetchGroups = async () => {
     try {
@@ -55,17 +65,38 @@ const TeacherGroupsTable = () => {
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-gray-50 dark:bg-gray-800/60 text-gray-500 dark:text-gray-400 uppercase text-[11px] tracking-widest font-semibold">
-                {["#", "Guruh nomi", "Talabalar", "Haftada", "Dars vaqti", "Ustoz", "Action"].map((h) => (
-                  <th key={h} className="px-5 py-4 text-left last:text-right">{h}</th>
+                {[
+                  "#",
+                  "Guruh nomi",
+                  "Talabalar",
+                  "Haftada",
+                  "Dars vaqti",
+                  "Ustoz",
+                  "Action",
+                ].map((h) => (
+                  <th key={h} className="px-5 py-4 text-left last:text-right">
+                    {h}
+                  </th>
                 ))}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-gray-800 bg-white dark:bg-gray-900">
               {[...Array(5)].map((_, i) => (
                 <tr key={i}>
-                  {["24px", "120px", "60px", "56px", "72px", "110px", "88px"].map((w, j) => (
+                  {[
+                    "24px",
+                    "120px",
+                    "60px",
+                    "56px",
+                    "72px",
+                    "110px",
+                    "88px",
+                  ].map((w, j) => (
                     <td key={j} className="px-5 py-4">
-                      <div className="h-4 bg-gray-100 dark:bg-gray-800 rounded-lg animate-pulse" style={{ width: w }} />
+                      <div
+                        className="h-4 bg-gray-100 dark:bg-gray-800 rounded-lg animate-pulse"
+                        style={{ width: w }}
+                      />
                     </td>
                   ))}
                 </tr>
@@ -77,14 +108,20 @@ const TeacherGroupsTable = () => {
         {/* Mobile skeleton */}
         <div className="md:hidden flex flex-col gap-3">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-4 animate-pulse">
+            <div
+              key={i}
+              className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-4 animate-pulse"
+            >
               <div className="flex justify-between items-start mb-3">
                 <div className="h-5 w-32 bg-gray-100 dark:bg-gray-800 rounded-lg" />
                 <div className="h-7 w-20 bg-gray-100 dark:bg-gray-800 rounded-xl" />
               </div>
               <div className="grid grid-cols-3 gap-2">
                 {[...Array(3)].map((__, j) => (
-                  <div key={j} className="h-10 bg-gray-100 dark:bg-gray-800 rounded-xl" />
+                  <div
+                    key={j}
+                    className="h-10 bg-gray-100 dark:bg-gray-800 rounded-xl"
+                  />
                 ))}
               </div>
             </div>
@@ -111,11 +148,11 @@ const TeacherGroupsTable = () => {
     );
   }
 
-  const avatarLetter =
-    (g: Group) => g.teacher?.firstName?.[0] ?? g.teacher?.lastName?.[0] ?? "?";
+  const avatarLetter = (g: Group) =>
+    g.teacher?.firstName?.[0] ?? g.teacher?.lastName?.[0] ?? "?";
 
-  const teacherName =
-    (g: Group) => `${g.teacher?.firstName ?? ""} ${g.teacher?.lastName ?? ""}`.trim() || "—";
+  const teacherName = (g: Group) =>
+    `${g.teacher?.firstName ?? ""} ${g.teacher?.lastName ?? ""}`.trim() || "—";
 
   return (
     <>
@@ -126,19 +163,29 @@ const TeacherGroupsTable = () => {
             <tr className="bg-gray-50 dark:bg-gray-800/60 text-gray-500 dark:text-gray-400 uppercase text-[11px] tracking-widest font-semibold">
               <th className="px-5 py-4 text-left w-10">#</th>
               <th className="px-5 py-4 text-left">
-                <span className="flex items-center gap-1.5"><BookOpen size={12} /> Guruh nomi</span>
+                <span className="flex items-center gap-1.5">
+                  <BookOpen size={12} /> Guruh nomi
+                </span>
               </th>
               <th className="px-5 py-4 text-left">
-                <span className="flex items-center gap-1.5"><Users size={12} /> Talabalar</span>
+                <span className="flex items-center gap-1.5">
+                  <Users size={12} /> Talabalar
+                </span>
               </th>
               <th className="px-5 py-4 text-left">
-                <span className="flex items-center gap-1.5"><Calendar size={12} /> Haftada</span>
+                <span className="flex items-center gap-1.5">
+                  <Calendar size={12} /> Haftada
+                </span>
               </th>
               <th className="px-5 py-4 text-left">
-                <span className="flex items-center gap-1.5"><Clock size={12} /> Dars vaqti</span>
+                <span className="flex items-center gap-1.5">
+                  <Clock size={12} /> Dars vaqti
+                </span>
               </th>
               <th className="px-5 py-4 text-left">
-                <span className="flex items-center gap-1.5"><GraduationCap size={12} /> Ustoz</span>
+                <span className="flex items-center gap-1.5">
+                  <GraduationCap size={12} /> Ustoz
+                </span>
               </th>
               <th className="px-5 py-4 text-right">Action</th>
             </tr>
@@ -174,7 +221,8 @@ const TeacherGroupsTable = () => {
 
                 <td className="px-5 py-4">
                   <span className="inline-flex items-center gap-1.5 text-gray-600 dark:text-gray-300 font-medium">
-                    <Clock size={13} className="text-gray-400" /> {group.lessonTime}
+                    <Clock size={13} className="text-gray-400" />{" "}
+                    {group.lessonTime}
                   </span>
                 </td>
 
@@ -191,7 +239,9 @@ const TeacherGroupsTable = () => {
 
                 <td className="px-5 py-4 text-right">
                   <button
-                    onClick={() => navigate(`/group-info/AttendancessMainPage/${group.id}`)}
+                    onClick={() =>
+                      navigate(`/group-info/AttendancessMainPage/${group.id}`)
+                    }
                     className="inline-flex items-center gap-1.5 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition-colors duration-150 shadow-sm shadow-blue-200 dark:shadow-none"
                   >
                     <Info size={13} /> Davomat
@@ -221,10 +271,19 @@ const TeacherGroupsTable = () => {
                 </span>
               </div>
               <button
-                onClick={() => navigate(`/group-info/AttendancessMainPage/${group.id}`)}
-                className="inline-flex items-center gap-1.5 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white text-xs font-semibold px-3 py-1.5 rounded-xl transition-colors duration-150 shrink-0"
+                onClick={() =>
+                  navigate(`/group-info/AttendancessMainPage/${group.id}`)
+                }
+                className={`inline-flex items-center gap-1.5 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition-colors duration-150 shadow-sm
+    ${
+      updatedGroupId === group.id
+        ? "bg-green-500 hover:bg-green-600"
+        : "bg-blue-500 hover:bg-blue-600"
+    }
+  `}
               >
-                <Info size={12} /> Davomat
+                <Info size={13} />
+                {updatedGroupId === group.id ? "olingan" : "Davomat"}
               </button>
             </div>
 
