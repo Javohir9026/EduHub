@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import apiClient from "@/api/ApiClient";
-import {useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 type AttendanceStatus = "present" | "absent";
@@ -59,8 +59,7 @@ const AttendancesMainPage = () => {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
-  const navigate = useNavigate()
-
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -107,47 +106,43 @@ const AttendancesMainPage = () => {
   };
 
   const saveAttendance = async () => {
-  try {
-    setSaving(true);
+    try {
+      setSaving(true);
 
-    const today = new Date().toISOString().split("T")[0];
-    const teacherId = Number(localStorage.getItem("teacher_id"));
+      const today = new Date().toISOString().split("T")[0];
+      const teacherId = Number(localStorage.getItem("teacher_id"));
 
-    const token = localStorage.getItem("access_token");
-    const api = import.meta.env.VITE_API_URL;
+      const token = localStorage.getItem("access_token");
+      const api = import.meta.env.VITE_API_URL;
 
-    // ✅ students array
-    const studentsPayload = students.map((s) => ({
-      studentId: s.id,
-      status: s.status === "present" ? "PRESENT" : "ABSENT",
-    }));
+      const studentsPayload = students.map((s) => ({
+        studentId: s.id,
+        status: s.status === "present" ? "PRESENT" : "ABSENT",
+      }));
 
-    // ✅ bitta payload
-    const payload = {
-      groupId: Number(id),
-      teacherId: teacherId,
-      date: today,
-      students: studentsPayload,
-    };
+      const payload = {
+        groupId: Number(id),
+        teacherId: teacherId,
+        date: today,
+        students: studentsPayload,
+      };
 
-    console.log("YUBORILAYOTGAN:", payload);
+      await apiClient.post(`${api}/attendances`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-    // ✅ BITTA POST
-    await apiClient.post(`${api}/attendances`, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    toast.success("guruhdan davomat olindi");
-    navigate(`/AttendancessUpdatePage/${id}?date=${today}`);
-  } catch (error: any) {
-    console.log("ERROR RESPONSE:", error.response?.data);
-    console.log("ERROR STATUS:", error.response?.status);
-  } finally {
-    setSaving(false);
-  }
-};
+      toast.success("guruhdan davomat olindi");
+      navigate(`/attendances`, {
+        state: { updatedGroupId: Number(id) },
+      });
+    } catch (error: any) {
+      console.log(error.response?.data);
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const presentCount = students.filter((s) => s.status === "present").length;
 
@@ -156,10 +151,46 @@ const AttendancesMainPage = () => {
       ? Math.round((presentCount / students.length) * 100)
       : 0;
 
+  /* ── SKELETON ── */
   if (loading) {
     return (
-      <div className="text-center mt-20 text-gray-500">
-        Studentlar yuklanmoqda...
+      <div className="min-h-screen bg-gray-100 p-6 animate-pulse">
+        <div className="max-w-4xl mx-auto">
+          {/* Header skeleton */}
+          <div className="flex justify-between mb-8">
+            <div>
+              <div className="h-6 w-40 bg-gray-300 rounded mb-2" />
+              <div className="h-4 w-32 bg-gray-200 rounded" />
+            </div>
+
+            <div className="w-20 h-16 bg-gray-300 rounded-xl" />
+          </div>
+
+          {/* Student skeleton */}
+          <div className="bg-white rounded-xl shadow border">
+            {[...Array(6)].map((_, i) => (
+              <div
+                key={i}
+                className="flex items-center justify-between px-6 py-4 border-b last:border-none"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gray-300 rounded-lg" />
+                  <div className="h-4 w-32 bg-gray-300 rounded" />
+                </div>
+
+                <div className="flex gap-2">
+                  <div className="w-16 h-6 bg-gray-300 rounded" />
+                  <div className="w-16 h-6 bg-gray-300 rounded" />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Button skeleton */}
+          <div className="flex justify-end mt-6">
+            <div className="w-32 h-12 bg-gray-300 rounded-xl" />
+          </div>
+        </div>
       </div>
     );
   }
@@ -194,9 +225,7 @@ const AttendancesMainPage = () => {
                   {student.avatar}
                 </div>
 
-                <div>
-                  <p className="font-medium">{student.name}</p>
-                </div>
+                <p className="font-medium">{student.name}</p>
               </div>
 
               <div className="flex gap-2">
