@@ -111,6 +111,7 @@ export default function PaymentInfoPage() {
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
   const [payment, setPayment] = useState<Payment>();
+
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -268,8 +269,8 @@ export default function PaymentInfoPage() {
                 icon={<CreditCard className="w-4 h-4" />}
                 label="To'lov holati"
                 value={
-                  (payment?.paidAmount ?? 0) + (payment?.discount ?? 0) >=
-                  (payment?.amount ?? 0)
+                  Number(payment?.paidAmount ?? 0) + Number(payment?.discount ?? 0) >=
+                  Number(payment?.amount ?? 0)
                     ? "To'liq to'langan ✓"
                     : "Qisman to'langan"
                 }
