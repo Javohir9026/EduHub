@@ -53,7 +53,7 @@ export function PaymentForm({
   editingPayment,
 }: PaymentFormProps) {
   const [form, setForm] = useState(defaultForm);
-
+  const [error, setError] = useState("");
   const formatCurrency = (value: string) => {
     const numbers = value.replace(/\D/g, "");
     if (!numbers) return "";
@@ -64,6 +64,17 @@ export function PaymentForm({
   };
   const [groups, setGroups] = useState<GroupDetail[]>([]);
   const [loading, setloading] = useState(false);
+  useEffect(() => {
+    const paid = parseNumber(form.paidAmount || "0");
+    const discount = parseNumber(form.discount || "0");
+    const total = paid + discount;
+
+    if (total > Number(form.amount)) {
+      setError("To'langan summa va chegirma jami miqdordan oshib ketdi!");
+    } else {
+      setError("");
+    }
+  }, [form.paidAmount, form.discount, form.amount]);
   const fetchGroups = async () => {
     try {
       setloading(true);
@@ -117,6 +128,8 @@ export function PaymentForm({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (error) return;
 
     if (!form.student_id || !form.group_id || !form.month) return;
 
@@ -303,6 +316,7 @@ export function PaymentForm({
                 </div>,
               )}
             </div>
+            {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
 
             {field(
               "Sana",
