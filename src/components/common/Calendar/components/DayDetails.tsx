@@ -194,7 +194,8 @@ const DayDetailsDrawer: FC<DayDetailsDrawerProps> = ({
 
               <div className="space-y-2">
                 {dayData.payments.map((payment, i) => (
-                  <div
+                  <Link
+                  to={`/payment-info/${payment.id}`}
                     key={i}
                     className="flex items-center gap-3 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/50"
                   >
@@ -207,7 +208,7 @@ const DayDetailsDrawer: FC<DayDetailsDrawerProps> = ({
                         {Number(payment.amount).toLocaleString()} / {Number(payment.paidAmount).toLocaleString()} UZS
                       </p>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </section>
