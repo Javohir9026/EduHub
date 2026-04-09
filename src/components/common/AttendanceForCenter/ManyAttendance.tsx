@@ -10,7 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { StudentCreateModal } from "../student/StudentCreateModal";
 import {
   Table,
   TableBody,
@@ -28,11 +27,27 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import type { Group } from "./TypesGroup";
+import LessonCreateModal from "./LessonCreateModal";
 const ManyAttendance = () => {
   const [tableData, setTableData] = useState<Group[]>([]);
   const api = import.meta.env.VITE_API_URL;
   const id = localStorage.getItem("id");
   const token = localStorage.getItem("access_token");
+  const today = new Date();
+
+  const days = [
+    "YAKSHANBA",
+    "DUSHANBA",
+    "SESHANBA",
+    "CHORSHANBA",
+    "PAYSHANBA",
+    "JUMA",
+    "SHANBA",
+  ];
+
+  const todayName = days[today.getDay()];
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
@@ -42,7 +57,7 @@ const ManyAttendance = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-
+      console.log(res.data.data);
       setTableData(res.data.data || []);
     } catch (error) {
       console.log("error", error);
@@ -62,14 +77,25 @@ const ManyAttendance = () => {
     fetchData();
   }, [fetchData]);
 
-  const filteredData = tableData.filter(
-    (group) =>
+  const filteredData = tableData.filter((group) => {
+    const lessonDaysArray = group.lessonDays
+      ?.split(",")
+      .map((day) => day.trim());
+
+    // bugungi kunga mosligini tekshirish
+    const isTodayLesson = lessonDaysArray?.includes(todayName);
+
+    // search filter
+    const matchesSearch =
       group.name.toLowerCase().includes(search.toLowerCase()) ||
       group.lessonTime.toLowerCase().includes(search.toLowerCase()) ||
       group.currentStudents.toString().includes(search) ||
-      group.room.toLowerCase().includes(search.toLowerCase()),
-  );
+      group.room.toLowerCase().includes(search.toLowerCase());
 
+    return isTodayLesson && matchesSearch;
+  });
+  console.log(todayName);
+  console.log(filteredData);
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -77,6 +103,9 @@ const ManyAttendance = () => {
   useEffect(() => {
     setCurrentPage(1);
   }, [itemsPerPage, search]);
+  const navigate = useNavigate();
+  const todayDate = new Date().toISOString().slice(0, 10);
+
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
@@ -131,6 +160,9 @@ const ManyAttendance = () => {
                 <TableCell className="hidden xl:table-cell px-5 py-4 text-center whitespace-nowrap">
                   Xona
                 </TableCell>
+                <TableCell className="px-5 py-4 text-center whitespace-nowrap">
+                  Status
+                </TableCell>
                 <TableCell className="px-5 py-4 whitespace-nowrap text-center">
                   Qo'shimcha
                 </TableCell>
@@ -164,41 +196,75 @@ const ManyAttendance = () => {
                       <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                     </TableCell>
 
+                    <TableCell className="hidden xl:table-cell px-5 py-4">
+                      <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    </TableCell>
+
                     {/* Qo'shimcha */}
                     <TableCell className="px-5 py-4">
                       <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                     </TableCell>
                   </TableRow>
                 ))}
-
               {!loading &&
-                currentData.map((group, idx) => (
-                  <TableRow
-                    key={group.id}
-                    className={` text-start sm:text-center  border-b border-gray-200 dark:border-white/[0.05] last:border-b-0 ${
-                      idx % 2 === 0
-                        ? "bg-gray-50 dark:bg-white/5"
-                        : "bg-white dark:bg-white/0"
-                    } hover:bg-gray-100 dark:hover:bg-white/10`}
-                  >
-                    <TableCell className="px-5 py-4 whitespace-nowrap">
-                      {group.name}
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell px-5 py-4">
-                      {group.lessonTime}
-                    </TableCell>
-                    <TableCell className="hidden lg:table-cell px-5 py-4">
-                      {group.currentStudents}
-                    </TableCell>
-                    <TableCell className="hidden xl:table-cell px-5 py-4">
-                      {group.room}
-                    </TableCell>
-                    <TableCell className="px-5 py-4 flex sm:gap-2 justify-center">
-                      <Button>Davomat</Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                currentData.map((group, idx) => {
+                  const todayDate = new Date().toISOString().slice(0, 10);
 
+                  const todayLesson = group.lessons?.find(
+                    (lesson) => lesson.lessonDate === todayDate,
+                  );
+
+                  return (
+                    <TableRow
+                      key={group.id}
+                      className={` text-start sm:text-center  border-b border-gray-200 dark:border-white/[0.05] last:border-b-0 ${
+                        idx % 2 === 0
+                          ? "bg-gray-50 dark:bg-white/5"
+                          : "bg-white dark:bg-white/0"
+                      } hover:bg-gray-100 dark:hover:bg-white/10`}
+                    >
+                      <TableCell className="px-5 py-4 whitespace-nowrap">
+                        {group.name}
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell px-5 py-4">
+                        {group.lessonTime.slice(0, 5)}
+                      </TableCell>
+                      <TableCell className="hidden lg:table-cell px-5 py-4">
+                        {group.currentStudents}
+                      </TableCell>
+                      <TableCell className="hidden xl:table-cell px-5 py-4">
+                        {group.room}
+                      </TableCell>
+                      <TableCell className="px-5 py-4 text-center">
+                        {todayLesson ? (
+                          <span className="px-3 py-1 rounded-full text-xs bg-green-100 text-green-600">
+                            Olingan
+                          </span>
+                        ) : (
+                          <span className="px-3 py-1 rounded-full text-xs bg-red-100 text-red-600">
+                            Olinmagan
+                          </span>
+                        )}
+                      </TableCell>
+                      <TableCell className="px-5 py-4 flex sm:gap-2 justify-center">
+                        <Button
+                          variant={"outline"}
+                          onClick={() => {
+                            {
+                              todayLesson &&
+                                navigate(`/attendance-lesson/${todayLesson.id}`);
+                            }
+                            setSelectedGroup(group);
+                            setOpenModal(true);
+                          }}
+                          className="bg-blue-500 hover:text-white hover:bg-blue-400 dark:bg-blue-500 dark:bg-blue-500 dark:hover:bg-blue-400 cursor-pointer text-white"
+                        >
+                          Davomat
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               {!loading && filteredData.length === 0 && (
                 <TableRow>
                   <TableCell
@@ -262,6 +328,26 @@ const ManyAttendance = () => {
             </PaginationContent>
           </Pagination>
         </div>
+      )}
+      {selectedGroup && (
+        <LessonCreateModal
+          open={openModal}
+          setOpen={setOpenModal}
+          data={{
+            group: selectedGroup.name || "",
+            groupId: selectedGroup.id || 0,
+            teacherId: selectedGroup.teacher.id || 0,
+            teacher:
+              selectedGroup.teacher.name +
+                " " +
+                selectedGroup.teacher.lastName || "",
+            lessonDate: new Date().toISOString().slice(0, 10),
+            startTime: selectedGroup.lessonTime,
+          }}
+          onSuccess={(lessonId) => {
+            navigate(`/attendance/${lessonId}`);
+          }}
+        />
       )}
     </div>
   );

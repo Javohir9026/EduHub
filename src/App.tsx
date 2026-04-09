@@ -27,6 +27,7 @@ import AttendancessMainPage from "./pages/Davomat/AttendacessMainPage";
 import { PaymentsPage } from "./pages/Payment/Paymentspage";
 import PaymentInfoPage from "./pages/Payment/PaymentInfoPage";
 import AttendancesCenter from "./pages/DavomatForCenter/AttendancesCenter";
+import AttendanceLesson from "./pages/DavomatForCenter/AttendanceLesson";
 
 const App = () => {
   return (
@@ -205,6 +206,14 @@ const App = () => {
             element={
               <LearningCenterRoute>
                 <PaymentInfoPage />
+              </LearningCenterRoute>
+            }
+          />
+          <Route
+            path="/attendance-lesson/:id"
+            element={
+              <LearningCenterRoute>
+                <AttendanceLesson />
               </LearningCenterRoute>
             }
           />
