@@ -2,7 +2,7 @@ export interface Attendance {
   id: number;
   date: string;
   status: "PRESENT" | "ABSENT" | "LATE"; // kerak bo‘lsa kengaytirasan
-  group: Group;
+  group: GroupForAttendance;
   lesson: Lesson;
   student: Student;
   teacher: Teacher;
@@ -10,7 +10,7 @@ export interface Attendance {
   updatedAt: string;
 }
 
-export interface Group {
+export interface GroupForAttendance {
   id: number;
   name: string;
 }
@@ -19,7 +19,14 @@ export interface Student {
   id: number;
   fullName: string;
 }
-
+export interface Groups {
+  id: number;
+  name: string;
+  lessonDays: string;
+  lessonTime: string;
+  monthlyPrice: number;
+  currentStudents: number;
+}
 export interface Teacher {
   id: number;
   fullName: string;
@@ -31,7 +38,7 @@ export interface Lesson {
   lessonDate: string;
   startTime: string;
   endTime: string;
-  group: Group;
+  group: GroupForAttendance;
   teacher: TeacherForLesson;
 }
 

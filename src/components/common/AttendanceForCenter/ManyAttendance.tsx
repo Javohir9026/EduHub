@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import type { Attendance } from "./types";
 import apiClient from "@/api/ApiClient";
 import SearchInput from "@/components/ui/SearchInput";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +11,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { StudentCreateModal } from "../student/StudentCreateModal";
-import { Info,  Trash } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -22,18 +20,6 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
-import {
   Pagination,
   PaginationContent,
   PaginationItem,
@@ -41,27 +27,23 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import type { Group } from "./TypesGroup";
 const ManyAttendance = () => {
-  const [tableData, setTableData] = useState<Attendance[]>([]);
+  const [tableData, setTableData] = useState<Group[]>([]);
   const api = import.meta.env.VITE_API_URL;
+  const id = localStorage.getItem("id");
   const token = localStorage.getItem("access_token");
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
 
-      const res = await apiClient.get(
-        `${api}/attendances/learning-center/findAll`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const res = await apiClient.get(`${api}/groups/learning-center/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
-      console.log("attendance", res);
-
-      // 🔥 qo‘shildi
-      setTableData(res.data || []);
+      setTableData(res.data.data || []);
     } catch (error) {
       console.log("error", error);
     } finally {
@@ -72,24 +54,8 @@ const ManyAttendance = () => {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const navigate = useNavigate();
-  const [deletingId, setDeletingId] = useState<string | number | null>(null);
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
-  const handleDelete = async (id: string | number) => {
-    try {
-      setDeletingId(id);
-      await apiClient.delete(`${api}/attendances/learning-center/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      await fetchData();
-      setDeletingId(null);
-      toast.success("Davomat Muvaffaqiyatli O'chirildi!");
-    } catch (error) {
-      console.log("O'chirishda xatolik:", error);
-      setDeletingId(null);
-    }
-  };
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -97,17 +63,11 @@ const ManyAttendance = () => {
   }, [fetchData]);
 
   const filteredData = tableData.filter(
-    (attendance) =>
-      attendance.group.name.toLowerCase().includes(search.toLowerCase()) ||
-      attendance.student.fullName
-        .toLowerCase()
-        .includes(search.toLowerCase()) ||
-      attendance.teacher.fullName
-        .toLowerCase()
-        .includes(search.toLowerCase()) ||
-      attendance.date.toLowerCase().includes(search.toLowerCase()) ||
-      attendance.status.toLowerCase().includes(search.toLowerCase()) ||
-      attendance.lesson.name.toLowerCase().includes(search.toLowerCase()),
+    (group) =>
+      group.name.toLowerCase().includes(search.toLowerCase()) ||
+      group.lessonTime.toLowerCase().includes(search.toLowerCase()) ||
+      group.currentStudents.toString().includes(search) ||
+      group.room.toLowerCase().includes(search.toLowerCase()),
   );
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -122,7 +82,7 @@ const ManyAttendance = () => {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
         <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 w-full sm:w-auto">
           <h1 className="text-2xl sm:text-start text-center font-bold mb-2 sm:mb-0">
-            Barcha Davomatlar
+            Bugungi Davomatlar
           </h1>
 
           <SearchInput
@@ -148,11 +108,6 @@ const ManyAttendance = () => {
               </SelectGroup>
             </SelectContent>
           </Select>
-
-          <StudentCreateModal
-            onSuccess={fetchData}
-            classname="flex items-center gap-2 px-3 py-1 rounded-lg bg-blue-500 text-white hover:bg-blue-500/80 cursor-pointer"
-          />
         </div>
       </div>
 
@@ -168,13 +123,13 @@ const ManyAttendance = () => {
                   Guruh Nomi
                 </TableCell>
                 <TableCell className="hidden md:table-cell px-5 py-4 text-center whitespace-nowrap">
-                  Mavzu
+                  Boshlanish vaqti
                 </TableCell>
                 <TableCell className="hidden lg:table-cell px-5 py-4 text-center whitespace-nowrap">
-                  Sana
+                  O'quvchilar soni
                 </TableCell>
                 <TableCell className="hidden xl:table-cell px-5 py-4 text-center whitespace-nowrap">
-                  Holati
+                  Xona
                 </TableCell>
                 <TableCell className="px-5 py-4 whitespace-nowrap text-center">
                   Qo'shimcha
@@ -217,9 +172,9 @@ const ManyAttendance = () => {
                 ))}
 
               {!loading &&
-                currentData.map((attendance, idx) => (
+                currentData.map((group, idx) => (
                   <TableRow
-                    key={attendance.id}
+                    key={group.id}
                     className={` text-start sm:text-center  border-b border-gray-200 dark:border-white/[0.05] last:border-b-0 ${
                       idx % 2 === 0
                         ? "bg-gray-50 dark:bg-white/5"
@@ -227,77 +182,19 @@ const ManyAttendance = () => {
                     } hover:bg-gray-100 dark:hover:bg-white/10`}
                   >
                     <TableCell className="px-5 py-4 whitespace-nowrap">
-                      {attendance.group.name}
+                      {group.name}
                     </TableCell>
                     <TableCell className="hidden md:table-cell px-5 py-4">
-                      {attendance.lesson.name}
+                      {group.lessonTime}
                     </TableCell>
                     <TableCell className="hidden lg:table-cell px-5 py-4">
-                      {attendance.lesson.lessonDate}
+                      {group.currentStudents}
                     </TableCell>
                     <TableCell className="hidden xl:table-cell px-5 py-4">
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium inline-block ${
-                          attendance.status === "PRESENT"
-                            ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
-                            : "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300"
-                        }`}
-                      >
-                        {attendance.status === "PRESENT"
-                          ? "Olingan"
-                          : "Olinmagan"}
-                      </span>
+                      {group.room}
                     </TableCell>
                     <TableCell className="px-5 py-4 flex sm:gap-2 justify-center">
-                      {/* <StudentEditModal
-                        student={student}
-                        onSuccess={fetchStudents}
-                        classname="hidden sm:flex dark:bg-blue-500 bg-blue-500 hover:bg-blue-500/80 hover:text-white cursor-pointer text-white rounded-lg  items-center justify-center gap-2"
-                      /> */}
-                      <Button
-                        onClick={() =>
-                          navigate(`/attendance-info/${attendance.id}`)
-                        }
-                        className="bg-blue-500 hover:bg-blue-500/80 hover:text-white cursor-pointer text-white rounded-lg flex items-center justify-center gap-2"
-                      >
-                        <Info className="w-4 h-4" />
-                      </Button>
-                      <div className="hidden sm:block">
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button className="bg-red-600 hover:bg-red-700 hover:text-white cursor-pointer text-white rounded-lg flex items-center justify-center gap-2">
-                              <Trash className="w-4 h-4" />
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                O'chirishni tasdiqlaysizmi?
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Haqiqatdan ham ishonchingiz komilmi?
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel className="cursor-pointer">
-                                Bekor qilish
-                              </AlertDialogCancel>
-                              <AlertDialogAction
-                                disabled={deletingId === attendance.id}
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  handleDelete(attendance.id);
-                                }}
-                                className="bg-red-600 hover:bg-red-700 hover:text-white cursor-pointer text-white"
-                              >
-                                {deletingId === attendance.id
-                                  ? "O'chirilmoqda..."
-                                  : "Ha, O'chirish"}
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </div>
+                      <Button>Davomat</Button>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -308,7 +205,7 @@ const ManyAttendance = () => {
                     colSpan={6}
                     className="text-center py-6 text-gray-500"
                   >
-                    Davomatlar topilmadi!
+                    Bugungi Darslar topilmadi!
                   </TableCell>
                 </TableRow>
               )}
