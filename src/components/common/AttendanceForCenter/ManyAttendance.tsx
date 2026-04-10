@@ -345,7 +345,7 @@ const ManyAttendance = () => {
             startTime: selectedGroup.lessonTime,
           }}
           onSuccess={(lessonId) => {
-            navigate(`/attendance/${lessonId}`);
+            navigate(`/attendance-lesson/${lessonId}`);
           }}
         />
       )}
