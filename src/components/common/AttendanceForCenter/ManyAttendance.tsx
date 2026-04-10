@@ -230,7 +230,7 @@ const ManyAttendance = () => {
                         {group.lessonTime.slice(0, 5)}
                       </TableCell>
                       <TableCell className="hidden lg:table-cell px-5 py-4">
-                        {group.currentStudents}
+                        {group.groupStudents.length}
                       </TableCell>
                       <TableCell className="hidden xl:table-cell px-5 py-4">
                         {group.room}
