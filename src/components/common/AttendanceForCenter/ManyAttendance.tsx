@@ -237,11 +237,11 @@ const ManyAttendance = () => {
                       </TableCell>
                       <TableCell className="px-5 py-4 text-center">
                         {todayLesson ? (
-                          <span className="px-3 py-1 rounded-full text-xs dark:bg-green-950 bg-green-100 text-green-600">
+                          <span className="px-3 py-1 rounded-full text-xs dark:bg-green-950 bg-green-100 text-green-600 dark:text-green-500">
                             Olingan
                           </span>
                         ) : (
-                          <span className="px-3 py-1 rounded-full text-xs dark:bg-red-950 bg-red-100 text-red-600">
+                          <span className="px-3 py-1 rounded-full text-xs dark:bg-red-950 bg-red-100 text-red-600 dark:text-red-400">
                             Olinmagan
                           </span>
                         )}
