@@ -81,7 +81,7 @@ const AttendanceLesson = () => {
         students: attendance,
       };
 
-      await apiClient.post(
+      const res = await apiClient.post(
         `${api}/attendances/learning-center/create`,
         payload,
         {
@@ -90,7 +90,8 @@ const AttendanceLesson = () => {
           },
         },
       );
-
+      console.log(res)
+      console.log(payload)
       toast.success("Davomat saqlandi");
       navigate("/attendances-center");
     } catch (error) {
@@ -174,7 +175,7 @@ const AttendanceLesson = () => {
                         ${
                           current?.status === "PRESENT"
                             ? "bg-green-500 text-white"
-                            : "bg-gray-200"
+                            : "bg-gray-200 dark:bg-gray-700"
                         }
                       `}
                     >
@@ -190,7 +191,7 @@ const AttendanceLesson = () => {
                         ${
                           current?.status === "ABSENT"
                             ? "bg-red-500 text-white"
-                            : "bg-gray-200"
+                            : "bg-gray-200 dark:bg-gray-700"
                         }
                       `}
                     >
