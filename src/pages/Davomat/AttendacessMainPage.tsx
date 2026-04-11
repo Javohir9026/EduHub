@@ -8,7 +8,7 @@ type AttendanceStatus = "present" | "absent";
 interface Student {
   id: number;
   name: string;
-  avatar: string;
+  initials: string;
   status: AttendanceStatus;
 }
 
@@ -38,226 +38,250 @@ interface Group {
   groupStudents: GroupStudent[];
 }
 
-const statusConfig = {
-  present: {
-    label: "Keldi",
-    color: "text-green-600",
-    bg: "bg-green-100",
-    active: "bg-green-500 text-white",
-  },
-  absent: {
-    label: "Kelmadi",
-    color: "text-red-600",
-    bg: "bg-red-100",
-    active: "bg-red-500 text-white",
-  },
-};
-
 const AttendancesMainPage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
-  const navigate = useNavigate();
+
+  const [lessonName, setLessonName] = useState("");
+  const [lessonDesc, setLessonDesc] = useState("");
+  const [startTime, setStartTime] = useState("14:00:00");
+  const [endTime, setEndTime] = useState("16:00:00");
 
   useEffect(() => {
+    if (!id) return;
+
     const fetchStudents = async () => {
       try {
         setLoading(true);
-
         const token = localStorage.getItem("access_token");
         const api = import.meta.env.VITE_API_URL;
 
         const res = await apiClient.get(`${api}/groups/teacher/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         const group: Group = res.data.data;
 
-        const students: Student[] = group.groupStudents.map((gs) => ({
-          id: gs.student.id,
-          name: gs.student.fullName,
-          avatar: gs.student.fullName
-            .split(" ")
-            .map((n) => n[0])
-            .join("")
-            .toUpperCase(),
-          status: "present",
-        }));
-
-        setStudents(students);
+        setStudents(
+          group.groupStudents.map((gs) => ({
+            id: gs.student.id,
+            name: gs.student.fullName,
+            initials: gs.student.fullName
+              .split(" ")
+              .map((n) => n[0])
+              .join("")
+              .toUpperCase()
+              .slice(0, 2),
+            status: "present",
+          }))
+        );
       } catch (error) {
-        console.error("Studentlarni olishda xatolik", error);
+        console.error("O'quvchilarni olishda xatolik:", error);
+        toast.error("O'quvchilarni yuklashda xatolik");
       } finally {
         setLoading(false);
       }
     };
 
-    if (id) fetchStudents();
+    fetchStudents();
   }, [id]);
 
-  const setStatus = (studentId: number, status: AttendanceStatus) => {
+  const toggleStatus = (studentId: number, status: AttendanceStatus) => {
     setStudents((prev) =>
-      prev.map((s) => (s.id === studentId ? { ...s, status } : s)),
+      prev.map((s) => (s.id === studentId ? { ...s, status } : s))
     );
   };
 
   const saveAttendance = async () => {
+    if (!lessonName.trim()) {
+      toast.error("Dars nomini kiriting");
+      return;
+    }
+
     try {
       setSaving(true);
 
-      const today = new Date().toISOString().split("T")[0];
-      const teacherId = Number(localStorage.getItem("teacher_id"));
-
       const token = localStorage.getItem("access_token");
       const api = import.meta.env.VITE_API_URL;
+      const teacherId = Number(localStorage.getItem("teacher_id"));
+      const today = new Date().toISOString().split("T")[0];
 
-      const studentsPayload = students.map((s) => ({
-        studentId: s.id,
-        status: s.status === "present" ? "PRESENT" : "ABSENT",
-      }));
-
-      const payload = {
-        groupId: Number(id),
-        teacherId: teacherId,
-        date: today,
-        students: studentsPayload,
-      };
-
-      await apiClient.post(`${api}/attendances`, payload, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const lessonRes = await apiClient.post(
+        `${api}/lessons`,
+        {
+          name: lessonName,
+          description: lessonDesc,
+          groupId: Number(id),
+          teacherId,
+          lessonDate: today,
+          startTime,
+          endTime,
         },
-      });
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
-      toast.success("guruhdan davomat olindi");
-      navigate(`/attendances`, {
-        state: { updatedGroupId: Number(id) },
-      });
+      const lessonId = lessonRes.data.data.id;
+
+      await apiClient.post(
+        `${api}/attendances`,
+        {
+          groupId: Number(id),
+          teacherId,
+          lessonId,
+          date: today,
+          students: students.map((s) => ({
+            studentId: s.id,
+            status: s.status === "present" ? "PRESENT" : "ABSENT",
+          })),
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      toast.success("Davomat saqlandi");
+      navigate("/attendances", { state: { updatedGroupId: Number(id) } });
     } catch (error: any) {
-      console.log(error.response?.data);
+      console.error(error.response?.data);
+      toast.error("Xatolik yuz berdi");
     } finally {
       setSaving(false);
     }
   };
 
   const presentCount = students.filter((s) => s.status === "present").length;
-
+  const absentCount = students.length - presentCount;
   const attendanceRate =
     students.length > 0
       ? Math.round((presentCount / students.length) * 100)
       : 0;
 
-  /* ── SKELETON ── */
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-100 p-6 animate-pulse">
-        <div className="max-w-4xl mx-auto">
-          {/* Header skeleton */}
-          <div className="flex justify-between mb-8">
-            <div>
-              <div className="h-6 w-40 bg-gray-300 rounded mb-2" />
-              <div className="h-4 w-32 bg-gray-200 rounded" />
-            </div>
-
-            <div className="w-20 h-16 bg-gray-300 rounded-xl" />
-          </div>
-
-          {/* Student skeleton */}
-          <div className="bg-white rounded-xl shadow border">
-            {[...Array(6)].map((_, i) => (
-              <div
-                key={i}
-                className="flex items-center justify-between px-6 py-4 border-b last:border-none"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gray-300 rounded-lg" />
-                  <div className="h-4 w-32 bg-gray-300 rounded" />
-                </div>
-
-                <div className="flex gap-2">
-                  <div className="w-16 h-6 bg-gray-300 rounded" />
-                  <div className="w-16 h-6 bg-gray-300 rounded" />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Button skeleton */}
-          <div className="flex justify-end mt-6">
-            <div className="w-32 h-12 bg-gray-300 rounded-xl" />
-          </div>
-        </div>
+      <div className="min-h-screen bg-gray-50 dark:bg-black flex items-center justify-center">
+        <p className="text-sm text-gray-400 dark:text-gray-500">
+          Yuklanmoqda...
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gray-50 dark:bg-black p-4 md:p-8">
+      <div className="max-w-2xl mx-auto">
+
         {/* Header */}
-        <div className="flex justify-between mb-8">
+        <div className="flex items-start justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold">📋 Davomat</h1>
-            <p className="text-sm text-gray-500">
-              Jami o‘quvchilar: {students.length}
+            <h1 className="text-xl font-medium text-gray-900 dark:text-white">
+              Davomat
+            </h1>
+            <p className="text-sm text-gray-400 dark:text-gray-500 mt-0.5">
+              {students.length} ta o'quvchi
             </p>
           </div>
-
-          <div className="bg-indigo-500 text-white px-6 py-3 rounded-xl">
-            <div className="text-xl font-bold">{attendanceRate}%</div>
-            <div className="text-xs">Davomat</div>
+          <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-xl px-4 py-2.5 text-center min-w-[64px]">
+            <p className="text-2xl font-medium text-gray-900 dark:text-white leading-none">
+              {attendanceRate}%
+            </p>
+            <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-1">
+              davomat
+            </p>
           </div>
         </div>
 
-        {/* Student list */}
-        <div className="bg-white rounded-xl shadow border">
+        {/* Lesson */}
+        <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-xl p-4 mb-3">
+          <p className="text-xs font-medium text-gray-400 dark:text-gray-500 mb-3">
+            Dars ma'lumotlari
+          </p>
+
+          <div className="grid grid-cols-2 gap-2.5">
+            <input
+              className="col-span-2 border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-800 dark:text-white placeholder:text-gray-300 dark:placeholder:text-gray-500 rounded-lg px-3 py-2 text-sm outline-none"
+              type="text"
+              placeholder="Dars nomi *"
+              value={lessonName}
+              onChange={(e) => setLessonName(e.target.value)}
+            />
+
+            <input
+              className="col-span-2 border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-800 dark:text-white placeholder:text-gray-300 dark:placeholder:text-gray-500 rounded-lg px-3 py-2 text-sm outline-none"
+              type="text"
+              placeholder="Izoh"
+              value={lessonDesc}
+              onChange={(e) => setLessonDesc(e.target.value)}
+            />
+
+            <input
+              className="border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-800 dark:text-white rounded-lg px-3 py-2 text-sm"
+              type="time"
+              value={startTime.slice(0, 5)}
+              onChange={(e) => setStartTime(e.target.value + ":00")}
+            />
+
+            <input
+              className="border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-800 dark:text-white rounded-lg px-3 py-2 text-sm"
+              type="time"
+              value={endTime.slice(0, 5)}
+              onChange={(e) => setEndTime(e.target.value + ":00")}
+            />
+          </div>
+        </div>
+
+        {/* Students */}
+        <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-xl overflow-hidden mb-4">
           {students.map((student) => (
             <div
               key={student.id}
-              className="flex items-center justify-between px-6 py-4 border-b last:border-none"
+              className="flex items-center justify-between px-4 py-3 border-b border-gray-50 dark:border-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-800"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center text-sm font-bold">
-                  {student.avatar}
+                <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs flex items-center justify-center">
+                  {student.initials}
                 </div>
-
-                <p className="font-medium">{student.name}</p>
+                <span className="text-sm text-gray-800 dark:text-white">
+                  {student.name}
+                </span>
               </div>
 
-              <div className="flex gap-2">
-                {(Object.keys(statusConfig) as AttendanceStatus[]).map(
-                  (status) => {
-                    const cfg = statusConfig[status];
-                    const active = student.status === status;
+              <div className="flex gap-1">
+                <button
+                  onClick={() => toggleStatus(student.id, "present")}
+                  className={`px-3 py-1.5 text-xs rounded-lg ${
+                    student.status === "present"
+                      ? "bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400"
+                      : "text-gray-400 border dark:border-zinc-700"
+                  }`}
+                >
+                  Keldi
+                </button>
 
-                    return (
-                      <button
-                        key={status}
-                        onClick={() => setStatus(student.id, status)}
-                        className={`px-3 py-1 text-xs rounded font-semibold
-                        ${active ? cfg.active : `${cfg.bg} ${cfg.color}`}`}
-                      >
-                        {cfg.label}
-                      </button>
-                    );
-                  },
-                )}
+                <button
+                  onClick={() => toggleStatus(student.id, "absent")}
+                  className={`px-3 py-1.5 text-xs rounded-lg ${
+                    student.status === "absent"
+                      ? "bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400"
+                      : "text-gray-400 border dark:border-zinc-700"
+                  }`}
+                >
+                  Kelmadi
+                </button>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="flex justify-end mt-6">
+        {/* Button */}
+        <div className="flex justify-end">
           <button
             onClick={saveAttendance}
             disabled={saving}
-            className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold disabled:opacity-50"
+            className="bg-gray-900 dark:bg-white text-white dark:text-black px-6 py-2.5 rounded-xl text-sm"
           >
-            {saving ? "Saqlanmoqda..." : "💾 Saqlash"}
+            {saving ? "Saqlanmoqda..." : "Saqlash"}
           </button>
         </div>
       </div>
