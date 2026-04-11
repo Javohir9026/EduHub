@@ -107,7 +107,7 @@ const AttendancesMainPage = () => {
 
       const token = localStorage.getItem("access_token");
       const api = import.meta.env.VITE_API_URL;
-      const teacherId = Number(localStorage.getItem("teacher_id"));
+      const teacherId = localStorage.getItem("id");
       const today = new Date().toISOString().split("T")[0];
 
       const lessonRes = await apiClient.post(
@@ -124,8 +124,7 @@ const AttendancesMainPage = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      const lessonId = lessonRes.data.data.id;
-
+      const lessonId = lessonRes.data.id;
       await apiClient.post(
         `${api}/attendances`,
         {
@@ -144,7 +143,7 @@ const AttendancesMainPage = () => {
       toast.success("Davomat saqlandi");
       navigate("/attendances", { state: { updatedGroupId: Number(id) } });
     } catch (error: any) {
-      console.error(error.response?.data);
+      console.error(error);
       toast.error("Xatolik yuz berdi");
     } finally {
       setSaving(false);
