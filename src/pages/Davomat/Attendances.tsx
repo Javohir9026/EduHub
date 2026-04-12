@@ -7,6 +7,7 @@ import {
   Calendar,
   GraduationCap,
   BookOpen,
+  CheckCircle2,
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -26,13 +27,54 @@ type Group = {
   teacher: Teacher;
 };
 
+// ── Bugungi sana uchun localStorage key ──────────────────────────────────────
+const getTodayKey = () => {
+  const today = new Date().toISOString().slice(0, 10); // "2025-06-17"
+  return `attendance_taken_${today}`;
+};
+
+const getAttendedGroups = (): number[] => {
+  try {
+    const raw = localStorage.getItem(getTodayKey());
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+};
+
+const markGroupAttended = (groupId: number) => {
+  const current = getAttendedGroups();
+  if (!current.includes(groupId)) {
+    localStorage.setItem(getTodayKey(), JSON.stringify([...current, groupId]));
+  }
+};
+// ─────────────────────────────────────────────────────────────────────────────
+
 const TeacherGroupsTable = () => {
   const [groups, setGroups] = useState<Group[]>([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  const [attendedIds, setAttendedIds] = useState<number[]>([]);
 
+  const navigate = useNavigate();
   const location = useLocation();
-  const updatedGroupId = location.state?.updatedGroupId;
+
+  // Agar boshqa sahifadan updatedGroupId bilan qaytilsa — uni ham belgilaymiz
+  const updatedGroupId: number | undefined = location.state?.updatedGroupId;
+
+  // ── Sahifa ochilganda localStorage dan o'qiymiz ──────────────────────────
+  useEffect(() => {
+    const stored = getAttendedGroups();
+
+    if (updatedGroupId && !stored.includes(updatedGroupId)) {
+      markGroupAttended(updatedGroupId);
+      setAttendedIds([...stored, updatedGroupId]);
+    } else {
+      setAttendedIds(stored);
+    }
+  }, [updatedGroupId]);
+
+  // ── Helper: bu guruhda bugun davomat olinganmi? ──────────────────────────
+  const isAttended = (groupId: number) => attendedIds.includes(groupId);
 
   const fetchGroups = async () => {
     try {
@@ -154,6 +196,38 @@ const TeacherGroupsTable = () => {
   const teacherName = (g: Group) =>
     `${g.teacher?.firstName ?? ""} ${g.teacher?.lastName ?? ""}`.trim() || "—";
 
+  const ActionButton = ({
+    group,
+    mobile = false,
+  }: {
+    group: Group;
+    mobile?: boolean;
+  }) => {
+    if (isAttended(group.id)) {
+      return (
+        <span
+          className={`inline-flex items-center gap-1.5 text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950/50 text-xs font-semibold px-3.5 py-2 rounded-xl border border-green-200 dark:border-green-800 ${
+            mobile ? "" : ""
+          }`}
+        >
+          <CheckCircle2 size={13} />
+          Olingan
+        </span>
+      );
+    }
+
+    return (
+      <button
+        onClick={() =>
+          navigate(`/group-info/AttendancessMainPage/${group.id}`)
+        }
+        className="inline-flex items-center gap-1.5 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition-colors duration-150 shadow-sm shadow-blue-200 dark:shadow-none"
+      >
+        <Info size={13} /> Davomat
+      </button>
+    );
+  };
+
   return (
     <>
       {/* ── DESKTOP TABLE ── */}
@@ -238,14 +312,7 @@ const TeacherGroupsTable = () => {
                 </td>
 
                 <td className="px-5 py-4 text-right">
-                  <button
-                    onClick={() =>
-                      navigate(`/group-info/AttendancessMainPage/${group.id}`)
-                    }
-                    className="inline-flex items-center gap-1.5 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition-colors duration-150 shadow-sm shadow-blue-200 dark:shadow-none"
-                  >
-                    <Info size={13} /> Davomat
-                  </button>
+                  <ActionButton group={group} />
                 </td>
               </tr>
             ))}
@@ -270,21 +337,7 @@ const TeacherGroupsTable = () => {
                   {group.name}
                 </span>
               </div>
-              <button
-                onClick={() =>
-                  navigate(`/group-info/AttendancessMainPage/${group.id}`)
-                }
-                className={`inline-flex items-center gap-1.5 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition-colors duration-150 shadow-sm
-    ${
-      updatedGroupId === group.id
-        ? "bg-green-500 hover:bg-green-600"
-        : "bg-blue-500 hover:bg-blue-600"
-    }
-  `}
-              >
-                <Info size={13} />
-                {updatedGroupId === group.id ? "olingan" : "Davomat"}
-              </button>
+              <ActionButton group={group} mobile />
             </div>
 
             {/* Stats row */}
