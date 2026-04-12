@@ -284,6 +284,7 @@ const AttendancesMainPage = () => {
         </div>
       </div>
     </div>
+    
   );
 };
 
