@@ -77,7 +77,7 @@ const AttendancesMainPage = () => {
               .toUpperCase()
               .slice(0, 2),
             status: "present",
-          }))
+          })),
         );
       } catch (error) {
         console.error("O'quvchilarni olishda xatolik:", error);
@@ -92,7 +92,7 @@ const AttendancesMainPage = () => {
 
   const toggleStatus = (studentId: number, status: AttendanceStatus) => {
     setStudents((prev) =>
-      prev.map((s) => (s.id === studentId ? { ...s, status } : s))
+      prev.map((s) => (s.id === studentId ? { ...s, status } : s)),
     );
   };
 
@@ -121,7 +121,7 @@ const AttendancesMainPage = () => {
           startTime,
           endTime,
         },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       const lessonId = lessonRes.data.id;
@@ -137,7 +137,7 @@ const AttendancesMainPage = () => {
             status: s.status === "present" ? "PRESENT" : "ABSENT",
           })),
         },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       toast.success("Davomat saqlandi");
@@ -170,7 +170,6 @@ const AttendancesMainPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-black p-4 md:p-8">
       <div className="max-w-2xl mx-auto">
-
         {/* Header */}
         <div className="flex items-start justify-between mb-6">
           <div>
@@ -285,6 +284,7 @@ const AttendancesMainPage = () => {
         </div>
       </div>
     </div>
+    
   );
 };
 
