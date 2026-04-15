@@ -104,7 +104,6 @@ const ManyAttendance = () => {
     setCurrentPage(1);
   }, [itemsPerPage, search]);
   const navigate = useNavigate();
-  const todayDate = new Date().toISOString().slice(0, 10);
 
   return (
     <div>
@@ -214,6 +213,12 @@ const ManyAttendance = () => {
                     (lesson) => lesson.lessonDate === todayDate,
                   );
 
+                  const attendanceStatus =
+                    todayLesson &&
+                    todayLesson.attendances &&
+                    todayLesson.attendances.length > 0
+                      ? true
+                      : false;
                   return (
                     <TableRow
                       key={group.id}
@@ -236,7 +241,7 @@ const ManyAttendance = () => {
                         {group.room}
                       </TableCell>
                       <TableCell className="px-5 py-4 text-center">
-                        {todayLesson ? (
+                        {attendanceStatus ? (
                           <span className="px-3 py-1 rounded-full text-xs dark:bg-green-950 bg-green-100 text-green-600 dark:text-green-500">
                             Olingan
                           </span>
@@ -252,7 +257,9 @@ const ManyAttendance = () => {
                           onClick={() => {
                             {
                               todayLesson &&
-                                navigate(`/attendance-lesson/${todayLesson.id}`);
+                                navigate(
+                                  `/attendance-lesson/${todayLesson.id}`,
+                                );
                             }
                             setSelectedGroup(group);
                             setOpenModal(true);

@@ -21,7 +21,7 @@ export default function RoleSwitcher({ onChange }: RoleSwitcherProps) {
 
   const handleSelect = (role: Role) => {
     setSelected(role);
-    onChange?.(role); // parentga yuboradi
+    onChange?.(role); 
   };
 
   return (

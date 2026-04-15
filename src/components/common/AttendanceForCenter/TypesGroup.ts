@@ -34,6 +34,7 @@ export interface Student {
 export interface Lesson {
   id: number;
   name: string;
+  attendances: Attendance[];
   lessonDate: string;
 }
 
