@@ -40,15 +40,17 @@ type Group = {
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function getDayLabel(days: number) {
-  if (days === 7) return "Every day";
-  if (days >= 5) return `${days}× / week`;
-  if (days === 1) return "Once / week";
-  return `${days}× / week`;
+  if (days === 7) return "Har kuni";
+  if (days >= 5) return `${days} marta / hafta`;
+  if (days === 1) return "Haftada 1 marta";
+  return `${days} marta / hafta`;
 }
 
 function getCapacityColor(students: number) {
-  if (students >= 20) return "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400";
-  if (students >= 14) return "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400";
+  if (students >= 20)
+    return "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400";
+  if (students >= 14)
+    return "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400";
   return "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400";
 }
 
@@ -57,10 +59,10 @@ function getCapacityColor(students: number) {
 function SkeletonRows() {
   return (
     <>
-      {Array.from({ length: 5 }).map((_, i) => (
-        <TableRow key={i} className="border-b border-slate-100 dark:border-slate-800">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <TableRow key={i}>
           {Array.from({ length: 6 }).map((_, j) => (
-            <TableCell key={j} className="py-4 px-5">
+            <TableCell key={j} className="py-4 px-4">
               <Skeleton className="h-5 w-full rounded-md bg-slate-200 dark:bg-slate-700" />
             </TableCell>
           ))}
@@ -70,40 +72,13 @@ function SkeletonRows() {
   );
 }
 
-// ─── Empty state ─────────────────────────────────────────────────────────────
-
-function EmptyState() {
-  return (
-    <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
-      <div className="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-        <BookOpen className="w-7 h-7 text-slate-400 dark:text-slate-500" />
-      </div>
-      <div>
-        <p className="text-base font-semibold text-slate-700 dark:text-slate-200">
-          No groups found
-        </p>
-        <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">
-          You haven't been assigned to any groups yet.
-        </p>
-      </div>
-    </div>
-  );
-}
-
 // ─── Error state ─────────────────────────────────────────────────────────────
 
 function ErrorState({ message }: { message: string }) {
   return (
-    <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
-      <div className="w-16 h-16 rounded-2xl bg-rose-50 dark:bg-rose-900/20 flex items-center justify-center">
-        <AlertCircle className="w-7 h-7 text-rose-500" />
-      </div>
-      <div>
-        <p className="text-base font-semibold text-slate-700 dark:text-slate-200">
-          Failed to load groups
-        </p>
-        <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">{message}</p>
-      </div>
+    <div className="flex flex-col items-center justify-center py-10 gap-3 text-center">
+      <AlertCircle className="w-6 h-6 text-red-500" />
+      <p className="text-sm text-red-500">{message}</p>
     </div>
   );
 }
@@ -135,12 +110,9 @@ export default function MyGroupsPage() {
         );
 
         const data = res.data?.data || res.data || [];
-
         setGroups(data);
       } catch (err: any) {
-        setError(
-          err?.response?.data?.message || "Failed to load groups"
-        );
+        setError(err?.response?.data?.message || "Xatolik yuz berdi");
       } finally {
         setLoading(false);
       }
@@ -149,71 +121,57 @@ export default function MyGroupsPage() {
     fetchGroups();
   }, []);
 
-  const headerCells = [
-    { label: "Group Name", icon: <BookOpen className="w-3.5 h-3.5" /> },
-    { label: "Students", icon: <Users className="w-3.5 h-3.5" /> },
-    { label: "Lesson Days", icon: <CalendarDays className="w-3.5 h-3.5" /> },
-    { label: "Lesson Time", icon: <Clock className="w-3.5 h-3.5" /> },
-    { label: "Teacher", icon: <GraduationCap className="w-3.5 h-3.5" /> },
-    { label: "Action", icon: null },
-  ];
-
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div className="min-h-screen dark:bg-black transition-colors">
 
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center shadow-md shadow-indigo-200 dark:shadow-indigo-900/40">
-              <BookOpen className="w-4.5 h-4.5 text-white" />
-            </div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50">
-              My Groups
-            </h1>
-          </div>
-          <p className="text-sm text-slate-500 dark:text-slate-400 ml-12">
-            All groups you are currently enrolled in or managing.
-          </p>
-        </div>
+      {/* FULL WIDTH */}
+      <div className="w-full px-2 sm:px-4 lg:px-6 py-6">
 
-        {/* Card */}
-        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden transition-colors duration-300">
+        <div className="w-full rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-black overflow-hidden">
 
-          {/* Stats */}
-          {!loading && !error && groups.length > 0 && (
-            <div className="flex items-center gap-6 px-6 py-3.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
-              <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
-                Total groups:{" "}
-                <span className="text-slate-800 dark:text-slate-100 font-semibold">
-                  {groups.length}
-                </span>
-              </span>
-              <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
-                Total students:{" "}
-                <span className="text-slate-800 dark:text-slate-100 font-semibold">
-                  {groups.reduce((s, g) => s + g.currentStudents, 0)}
-                </span>
-              </span>
-            </div>
-          )}
-
-          {/* Table */}
           <div className="overflow-x-auto">
-            <Table>
+            <Table className="min-w-[800px] w-full">
+
               <TableHeader>
-                <TableRow className="border-b border-slate-100 dark:border-slate-800 hover:bg-transparent">
-                  {headerCells.map(({ label, icon }) => (
-                    <TableCell
-                      key={label}
-                      className="px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 bg-slate-50/80 dark:bg-slate-800/50 whitespace-nowrap"
-                    >
-                      <span className="flex items-center gap-1.5">
-                        {icon}
-                        {label}
-                      </span>
-                    </TableCell>
-                  ))}
+                <TableRow className="bg-gray-100 dark:bg-gray-900">
+                  <TableCell className="px-4 py-3 text-xs font-semibold">
+                    <span className="flex items-center gap-1">
+                      <BookOpen className="w-4 h-4" />
+                      Guruh
+                    </span>
+                  </TableCell>
+
+                  <TableCell className="px-4 py-3 text-xs font-semibold">
+                    <span className="flex items-center gap-1">
+                      <Users className="w-4 h-4" />
+                      O‘quvchilar
+                    </span>
+                  </TableCell>
+
+                  <TableCell className="px-4 py-3 text-xs font-semibold">
+                    <span className="flex items-center gap-1">
+                      <CalendarDays className="w-4 h-4" />
+                      Kunlar
+                    </span>
+                  </TableCell>
+
+                  <TableCell className="px-4 py-3 text-xs font-semibold">
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-4 h-4" />
+                      Vaqt
+                    </span>
+                  </TableCell>
+
+                  <TableCell className="px-4 py-3 text-xs font-semibold">
+                    <span className="flex items-center gap-1">
+                      <GraduationCap className="w-4 h-4" />
+                      O‘qituvchi
+                    </span>
+                  </TableCell>
+
+                  <TableCell className="px-4 py-3 text-xs font-semibold">
+                    Amal
+                  </TableCell>
                 </TableRow>
               </TableHeader>
 
@@ -222,84 +180,65 @@ export default function MyGroupsPage() {
                   <SkeletonRows />
                 ) : error ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="p-0">
+                    <TableCell colSpan={6}>
                       <ErrorState message={error} />
-                    </TableCell>
-                  </TableRow>
-                ) : groups.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={6} className="p-0">
-                      <EmptyState />
                     </TableCell>
                   </TableRow>
                 ) : (
                   groups.map((group, idx) => (
                     <TableRow
                       key={group.id}
-                      className={[
-                        "border-b border-slate-100 dark:border-slate-800/70",
-                        "transition-colors duration-150",
-                        "hover:bg-indigo-50/60 dark:hover:bg-indigo-950/30",
-                        "group cursor-default",
+                      className={`${
                         idx % 2 === 0
-                          ? "bg-white dark:bg-slate-900"
-                          : "bg-slate-50/40 dark:bg-slate-800/20",
-                      ].join(" ")}
+                          ? "bg-white dark:bg-black"
+                          : "bg-gray-50 dark:bg-gray-900"
+                      } hover:bg-indigo-50 dark:hover:bg-gray-800 transition`}
                     >
-                      <TableCell className="px-5 py-4 font-semibold text-slate-800 dark:text-slate-100 whitespace-nowrap">
-                        <div className="flex items-center gap-2.5">
-                          <span className="w-2 h-2 rounded-full bg-indigo-500 shrink-0" />
-                          {group.name}
-                        </div>
+                      <TableCell className="px-4 py-3 font-medium">
+                        {group.name}
                       </TableCell>
 
-                      <TableCell className="px-5 py-4 whitespace-nowrap">
+                      <TableCell className="px-4 py-3">
                         <Badge
-                          className={[
-                            "text-xs font-semibold px-2.5 py-0.5 rounded-full border-0",
-                            getCapacityColor(group.currentStudents),
-                          ].join(" ")}
+                          className={`${getCapacityColor(
+                            group.currentStudents
+                          )} text-xs`}
                         >
-                          {group.currentStudents} students
+                          {group.currentStudents} ta
                         </Badge>
                       </TableCell>
 
-                      <TableCell className="px-5 py-4 text-sm text-slate-600 dark:text-slate-300 whitespace-nowrap">
+                      <TableCell className="px-4 py-3 text-sm">
                         {getDayLabel(group.lessonDays)}
                       </TableCell>
 
-                      <TableCell className="px-5 py-4 text-sm text-slate-600 dark:text-slate-300 whitespace-nowrap font-mono">
+                      <TableCell className="px-4 py-3 text-sm font-mono">
                         {group.lessonTime}
                       </TableCell>
 
-                      <TableCell className="px-5 py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-2.5 ">
-                          {/* <div className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center text-white text-xs font-bold shrink-0"> */}
-                            {/* {group.teacher?.firstName?.[0] || "?"} */}
-                            {/* {group.teacher?.lastName?.[0] || "?"} */}
-                          {/* </div> */}
-                          <span className="text-sm text-slate-700 dark:text-slate-200 font-medium">
-                            {group.teacher
-                              ? `${group.teacher.lastName}`
-                              : "No teacher"}
-                          </span>
-                        </div>
+                      <TableCell className="px-4 py-3 text-sm">
+                        {group.teacher
+                          ? `${group.teacher.lastName}`
+                          : "—"}
                       </TableCell>
 
-                      <TableCell className="px-5 py-4 whitespace-nowrap">
+                      <TableCell className="px-4 py-3">
                         <Button
                           size="sm"
-                          onClick={() => navigate(`/group-info/${group.id}`)}
-                          className="gap-1.5 font-medium text-xs rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white"
+                          onClick={() =>
+                            navigate(`/group-info/${group.id}`)
+                          }
+                          className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs"
                         >
-                          Details
-                          <ArrowRight className="w-3.5 h-3.5" />
+                          Batafsil
+                          <ArrowRight className="w-4 h-4 ml-1" />
                         </Button>
                       </TableCell>
                     </TableRow>
                   ))
                 )}
               </TableBody>
+
             </Table>
           </div>
         </div>
