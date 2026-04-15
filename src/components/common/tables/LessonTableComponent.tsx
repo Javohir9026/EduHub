@@ -155,10 +155,10 @@ export default function LessonTableComponent() {
             </SelectContent>
           </Select>
 
-          <GroupCreateModal
+          {/* <GroupCreateModal
             onSuccess={fetchGroups}
             classname="flex items-center gap-2 px-3 py-1 rounded-lg bg-blue-500 text-white hover:bg-blue-500/80 cursor-pointer"
-          />
+          /> */}
         </div>
       </div>
 
