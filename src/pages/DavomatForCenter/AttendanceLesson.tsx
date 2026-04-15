@@ -33,7 +33,7 @@ const AttendanceLesson = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-
+      console.log(res.data.data)
       setData(res.data.data);
     } catch (error) {
       console.log(error);
