@@ -28,6 +28,8 @@ import { PaymentsPage } from "./pages/Payment/Paymentspage";
 import PaymentInfoPage from "./pages/Payment/PaymentInfoPage";
 import AttendancesCenter from "./pages/DavomatForCenter/AttendancesCenter";
 import AttendanceLesson from "./pages/DavomatForCenter/AttendanceLesson";
+import Lessons from "./pages/Lessons/Lessons";
+import LessonInfoPage from "./pages/Lessons/LessonInfoPage";
 
 const App = () => {
   return (
@@ -214,6 +216,22 @@ const App = () => {
             element={
               <LearningCenterRoute>
                 <AttendanceLesson />
+              </LearningCenterRoute>
+            }
+          />
+          <Route
+            path="/lessons"
+            element={
+              <LearningCenterRoute>
+                <Lessons />
+              </LearningCenterRoute>
+            }
+          />
+          <Route
+            path="/lesson-info/:id"
+            element={
+              <LearningCenterRoute>
+                <LessonInfoPage />
               </LearningCenterRoute>
             }
           />
