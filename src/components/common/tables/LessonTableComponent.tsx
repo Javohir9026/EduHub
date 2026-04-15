@@ -65,7 +65,7 @@ export default function LessonTableComponent() {
       const endDate = today.toISOString().split("T")[0];
 
       const start = new Date();
-      start.setDate(today.getDate() - 15);
+      start.setDate(today.getDate() - 7);
       const startDate = start.toISOString().split("T")[0];
 
       const res = await apiClient.get(`${api}/lessons/range/`, {
@@ -76,8 +76,8 @@ export default function LessonTableComponent() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      setTableData(res.data.data || []);
-      console.log(res.data.data);
+      setTableData(res.data || []);
+      console.log(res.data);
     } catch (error) {
       console.log("FETCH ERROR:", error);
     } finally {
@@ -107,7 +107,7 @@ export default function LessonTableComponent() {
   const filteredData = tableData.filter((lesson) =>
     lesson.name.toLowerCase().includes(search.toLowerCase()) ||
     lesson.group.name.toLowerCase().includes(search.toLowerCase()) ||
-    lesson.teacher.firstName.toLowerCase().includes(search.toLowerCase()) ||
+    lesson.teacher.name.toLowerCase().includes(search.toLowerCase()) ||
     lesson.teacher.lastName.toLowerCase().includes(search.toLowerCase()) ||
     lesson.lessonDate.toLowerCase().includes(search.toLowerCase()),
   );
@@ -173,14 +173,17 @@ export default function LessonTableComponent() {
                 >
                   Dars Nomi
                 </TableCell>
-                <TableCell className="hidden lg:table-cell px-5 py-4 text-center whitespace-nowrap">
+                <TableCell className="hidden sm:table-cell px-5 py-4 text-center whitespace-nowrap">
                   Guruh
                 </TableCell>
-                <TableCell className="hidden xl:table-cell px-5 py-4 text-center whitespace-nowrap">
+                <TableCell className="hidden lg:table-cell px-5 py-4 text-center whitespace-nowrap">
                   O'qituvchi
                 </TableCell>
                 <TableCell className="hidden xl:table-cell px-5 py-4 text-center whitespace-nowrap">
                   Dars Vaqti
+                </TableCell>
+                <TableCell className="hidden xl:table-cell px-5 py-4 text-center whitespace-nowrap">
+                  Dars Sanasi
                 </TableCell>
                 <TableCell className="px-5 py-4 whitespace-nowrap text-center">
                   Qo'shimcha
@@ -214,6 +217,10 @@ export default function LessonTableComponent() {
                     <TableCell className="hidden xl:table-cell px-5 py-4">
                       <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                     </TableCell>
+                    
+                    <TableCell className="hidden xl:table-cell px-5 py-4">
+                      <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    </TableCell>
 
                     {/* Qo'shimcha */}
                     <TableCell className="px-5 py-4">
@@ -235,14 +242,17 @@ export default function LessonTableComponent() {
                     <TableCell className="px-5 py-4 whitespace-nowrap">
                       {lesson.name}
                     </TableCell>
-                    <TableCell className="hidden md:table-cell px-5 py-4">
+                    <TableCell className="hidden sm:table-cell px-5 py-4">
                       {lesson.group.name}
                     </TableCell>
                     <TableCell className="hidden lg:table-cell px-5 py-4">
-                      {lesson.teacher.firstName} {lesson.teacher.lastName}
+                      {lesson.teacher.name} {lesson.teacher.lastName}
                     </TableCell>
                     <TableCell className="hidden xl:table-cell px-5 py-4">
                       {lesson.startTime} - {lesson.endTime}
+                    </TableCell>
+                    <TableCell className="hidden xl:table-cell px-5 py-4">
+                      {lesson.lessonDate}
                     </TableCell>
                     <TableCell className="px-5 py-4 flex sm:gap-2 justify-center">
                       {/* <GroupEditModal

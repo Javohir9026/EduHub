@@ -7,7 +7,7 @@ type Group = {
 
 type Teacher = {
   id: number;
-  firstName: string;
+  name: string;
   lastName: string;
 };
 
