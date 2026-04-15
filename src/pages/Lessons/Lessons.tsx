@@ -1,5 +1,5 @@
 import { BreadcrumbBasic } from "@/components/common/BreadCrumb"
-import GroupTableComponent from "@/components/common/tables/GroupTableComponents"
+import LessonTableComponent from "@/components/common/tables/LessonTableComponent"
 
 const Lessons = () => {
   return (
@@ -12,7 +12,7 @@ const Lessons = () => {
           ]}
         />
       </div>
-      <div className="py-3"><GroupTableComponent /></div>
+      <div className="py-3"><LessonTableComponent /></div>
     </div>
   )
 }
