@@ -90,12 +90,12 @@ const LessonInfoPage = () => {
 
   return (
     <div className="p-4 sm:p-6 lg:p-10 bg-gray-50 dark:bg-background min-h-screen">
-      <div className="flex justify-end">
+      <div className="flex justify-end mb-10">
         <BreadcrumbBasic
           items={[
             { title: "Bosh sahifa", href: "/" },
             { title: "Darslar", href: "/lessons" },
-            { title: lessonName, href: `/lesson-info/${lesson?.id}` },
+            { title: lessonName || "Yuklanmoqda...", href: `/lesson-info/${lesson?.id}` },
           ]}
         />
       </div>
