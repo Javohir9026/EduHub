@@ -135,7 +135,8 @@ export default function MyGroupsPage() {
               <TableHeader>
                 <TableRow className="bg-gray-100 dark:bg-gray-900">
                   <TableCell className="px-4 py-3 text-xs font-semibold">
-                    <span className="flex items-center gap-1">
+                    <span className="flex items-center gap-1"> 
+                      
                       <BookOpen className="w-4 h-4" />
                       Guruh
                     </span>
