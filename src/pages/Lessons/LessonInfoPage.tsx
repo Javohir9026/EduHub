@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Calendar, Clock, User, Users, BookOpen } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import apiClient from "@/api/ApiClient";
 import { BreadcrumbBasic } from "@/components/common/BreadCrumb";
 
@@ -146,28 +146,28 @@ const LessonInfoPage = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 dark:bg-white/5">
+              <div className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10" >
                 <User className="text-blue-500" />
-                <div>
+                <Link to={`/teacher-info/${lesson?.teacher.id}`}>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    O‘qituvchi
+                    O'qituvchi
                   </p>
                   <p className="font-semibold text-gray-800 dark:text-white">
                     {lesson?.teacher.name} {lesson?.teacher.lastName}
                   </p>
-                </div>
+                </Link>
               </div>
 
-              <div className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 dark:bg-white/5">
+              <div className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10">
                 <Users className="text-blue-500" />
-                <div>
+                <Link to={`/group-info/${lesson?.group.id}`}>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     Guruh
                   </p>
                   <p className="font-semibold text-gray-800 dark:text-white">
                     {lesson?.group.name}
                   </p>
-                </div>
+                </Link>
               </div>
             </div>
 

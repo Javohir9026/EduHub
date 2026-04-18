@@ -48,6 +48,7 @@ import SearchInput from "@/components/ui/SearchInput";
 import { toast } from "sonner";
 import { GroupCreateModal } from "../Group/GroupCreateModal";
 import { GroupEditModal } from "../Group/GroupEditModal";
+import AddStudentToGroupModal from "../Group/AddStudentToGroupModal";
 
 export default function GroupTableComponent() {
   const [tableData, setTableData] = useState<Group[]>([]);
@@ -70,7 +71,7 @@ export default function GroupTableComponent() {
         },
       );
       setTableData(res.data.data || []);
-      console.log(res.data.data)
+      console.log(res.data.data);
     } catch (error) {
       console.log("FETCH ERROR:", error);
     } finally {
@@ -143,11 +144,13 @@ export default function GroupTableComponent() {
               </SelectGroup>
             </SelectContent>
           </Select>
-
-          <GroupCreateModal
-            onSuccess={fetchGroups}
-            classname="flex items-center gap-2 px-3 py-1 rounded-lg bg-blue-500 text-white hover:bg-blue-500/80 cursor-pointer"
-          />
+          <div className="flex gap-2">
+            <AddStudentToGroupModal />
+            <GroupCreateModal
+              onSuccess={fetchGroups}
+              classname="flex items-center gap-2 px-3 py-1 rounded-lg bg-blue-500 text-white hover:bg-blue-500/80 cursor-pointer"
+            />
+          </div>
         </div>
       </div>
 
