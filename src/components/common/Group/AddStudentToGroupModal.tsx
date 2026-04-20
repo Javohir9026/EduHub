@@ -15,6 +15,8 @@ import StudentUpdateGroupSelect from "../student/StudentGroupSelect";
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import type { Student } from "@/lib/types";
+import apiClient from "@/api/ApiClient";
+import { toast } from "sonner";
 
 const AddStudentToGroupModal = () => {
   const [open, setOpen] = useState(false);
@@ -23,7 +25,26 @@ const AddStudentToGroupModal = () => {
 
   const isValid = groupId !== null && selectedStudents.length > 0;
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    // try {
+    //   const api = import.meta.env.VITE_API_URL;
+    //   const res = await apiClient.post(
+    //     `${api}/students/add-to-group`,
+    //     {
+    //       groupId,
+    //       studentIds: selectedStudents.map((s) => s.id),
+    //     },
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    //       },
+    //     },
+    //   );
+    //   console.log("Backend javobi:", res.data);
+    //   toast.success("O'quvchilar guruhga muvaffaqiyatli qo'shildi!");
+    // } catch (error) {
+    //   console.log(error);
+    // }
     const data = {
       groupId,
       studentIds: selectedStudents.map((s) => s.id),
