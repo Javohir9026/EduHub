@@ -1,6 +1,6 @@
 import apiClient from "@/api/ApiClient";
 import type { GroupDetail } from "@/lib/types";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import {
   Users,
@@ -13,12 +13,26 @@ import {
 } from "lucide-react";
 import { BreadcrumbBasic } from "@/components/common/BreadCrumb";
 
+const DAY_MAP: Record<string, string> = {
+  DUSHANBA: "1", SESHANBA: "2", CHORSHANBA: "3",
+  PAYSHANBA: "4", JUMA: "5", SHANBA: "6", YAKSHANBA: "7",
+};
+const formatLessonDays = (days: string): string => {
+  if (!days) return "-";
+  return days
+    .split(",")
+    .map((d) => DAY_MAP[d.trim()] ?? d.trim())
+    .sort((a, b) => Number(a) - Number(b))
+    .join("-");
+};
+
 export const GroupInfo = () => {
   const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState(false);
   const [group, setGroup] = useState<GroupDetail | null>(null);
   const role = localStorage.getItem("role");
   const navigate = useNavigate();
+
   useEffect(() => {
     const fetchGroup = async () => {
       try {
@@ -47,35 +61,23 @@ export const GroupInfo = () => {
     if (id) fetchGroup();
   }, [id]);
 
-  // Sana format
   const formatDate = (date: string) =>
     new Date(date).toLocaleDateString("uz-UZ");
 
-  // ----- SKELETON LOADING -----
   if (loading) {
     return (
       <div className="min-h-screen p-6 space-y-8 animate-pulse">
-        {/* Header skeleton */}
         <div className="h-40 bg-gray-300 dark:bg-gray-700 rounded-2xl w-full md:w-3/4 mx-auto"></div>
-
-        {/* Info Cards skeleton */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[...Array(6)].map((_, i) => (
-            <div
-              key={i}
-              className="h-24 bg-gray-300  dark:bg-gray-700 rounded-xl w-full"
-            ></div>
+            <div key={i} className="h-24 bg-gray-300 dark:bg-gray-700 rounded-xl w-full"></div>
           ))}
         </div>
-
-        {/* Teacher & Center skeleton */}
         <div className="grid md:grid-cols-2 gap-6">
-          <div className="h-40 bg-gray-300 rounded-xl  dark:bg-gray-700 w-full"></div>
-          <div className="h-40 bg-gray-300 rounded-xl  dark:bg-gray-700 w-full"></div>
+          <div className="h-40 bg-gray-300 rounded-xl dark:bg-gray-700 w-full"></div>
+          <div className="h-40 bg-gray-300 rounded-xl dark:bg-gray-700 w-full"></div>
         </div>
-
-        {/* Students skeleton */}
-        <div className="h-64 bg-gray-300  dark:bg-gray-700 rounded-xl w-full"></div>
+        <div className="h-64 bg-gray-300 dark:bg-gray-700 rounded-xl w-full"></div>
       </div>
     );
   }
@@ -99,6 +101,7 @@ export const GroupInfo = () => {
           ]}
         />
       </div>
+
       <div className="min-h-screen p-6 space-y-8">
         {/* HEADER */}
         <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-8 rounded-2xl shadow-xl">
@@ -115,7 +118,7 @@ export const GroupInfo = () => {
         </div>
 
         {/* INFO CARDS */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 ">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <InfoCard icon={<Calendar />} title="Boshlanish">
             {formatDate(group.startDate)}
           </InfoCard>
@@ -125,11 +128,11 @@ export const GroupInfo = () => {
           </InfoCard>
 
           <InfoCard icon={<Clock />} title="Dars vaqti">
-            {group.lessonTime} | {group.lessonDays} kun/hafta
+            {group.lessonTime} | {formatLessonDays(String(group.lessonDays))} kun/hafta
           </InfoCard>
 
           <InfoCard icon={<DollarSign />} title="Oylik to'lov">
-            {group.monthlyPrice.toLocaleString()} so'm
+            {Number(group.monthlyPrice).toLocaleString("uz-UZ")} so'm
           </InfoCard>
 
           <InfoCard icon={<Home />} title="Xona">
@@ -153,7 +156,7 @@ export const GroupInfo = () => {
             <div>
               {role === "center" ? (
                 <div
-                  className="bg-white shadow-lg rounded-xl p-6 dark:!bg-fullbg cursor-pointer hover:shadow-xl transition"
+                  className="bg-white shadow-lg rounded-xl p-6 dark:!bg-fullbg cursor-pointer hover:bg-blue-50 dark:hover:bg-gray-700 hover:shadow-xl transition"
                   onClick={() => navigate(`/teacher-info/${group.teacher.id}`)}
                 >
                   <h2 className="text-xl font-bold mb-4">O'qituvchi</h2>
@@ -164,7 +167,7 @@ export const GroupInfo = () => {
                   <p className="text-gray-500">{group.teacher.email}</p>
                 </div>
               ) : (
-                <div className="bg-white shadow-lg rounded-xl p-6 dark:!bg-fullbg">
+                <div className="bg-white shadow-lg rounded-xl p-6 dark:!bg-fullbg hover:bg-blue-50 dark:hover:bg-gray-700 transition">
                   <h2 className="text-xl font-bold mb-4">O'qituvchi</h2>
                   <p className="font-semibold">
                     {group.teacher.name} {group.teacher.lastName}
@@ -178,7 +181,7 @@ export const GroupInfo = () => {
             ""
           )}
 
-          <div className="bg-white shadow-lg rounded-xl p-6 dark:!bg-fullbg">
+          <div className="bg-white shadow-lg rounded-xl p-6 dark:!bg-fullbg hover:bg-blue-50 dark:hover:bg-gray-700 transition">
             <h2 className="text-xl font-bold mb-4">O'quv markaz</h2>
             <p className="font-semibold">{group.learningCenter.name}</p>
             <p className="text-gray-500">{group.learningCenter.address}</p>
@@ -201,7 +204,7 @@ export const GroupInfo = () => {
                   <Link
                     key={gs.id}
                     to={`/student-info/${gs.student.id}`}
-                    className="p-4 border rounded-2xl hover:shadow-lg transition bg-white dark:bg-gray-800 flex justify-between items-center"
+                    className="p-4 border rounded-2xl hover:shadow-lg transition bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-gray-700 flex justify-between items-center"
                   >
                     <div className="flex flex-col">
                       <p className="font-semibold">{gs.student.fullName}</p>
@@ -209,14 +212,14 @@ export const GroupInfo = () => {
                         {gs.student.phone}
                       </p>
                     </div>
-                    <span className="text-gray-400 group-hover:text-blue-500 transition">
+                    <span className="text-gray-400 transition">
                       <ChevronRight />
                     </span>
                   </Link>
                 ) : (
                   <div
                     key={gs.id}
-                    className="p-4 border rounded-2xl bg-white dark:bg-gray-800 flex justify-between items-center"
+                    className="p-4 border rounded-2xl bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-gray-700 transition flex justify-between items-center"
                   >
                     <div className="flex flex-col">
                       <p className="font-semibold">{gs.student.fullName}</p>
@@ -235,7 +238,6 @@ export const GroupInfo = () => {
   );
 };
 
-/* REUSABLE CARD */
 const InfoCard = ({
   icon,
   title,
