@@ -24,9 +24,7 @@ import {
 
 import { Button } from "../../ui/button";
 import { Info, Trash } from "lucide-react";
-import { StudentEditModal } from "../student/StudentEditModal";
 import { useNavigate } from "react-router-dom";
-import { StudentCreateModal } from "../student/StudentCreateModal";
 
 import {
   Pagination,
@@ -46,10 +44,25 @@ import {
 } from "@/components/ui/select";
 import SearchInput from "@/components/ui/SearchInput";
 import { toast } from "sonner";
-import { GroupCreateModal } from "../Group/GroupCreateModal";
 import { GroupEditModal } from "../Group/GroupEditModal";
 import GroupActions from "../Group/GroupActions"; // <-- yangi component
-
+const DAY_MAP: Record<string, string> = {
+  DUSHANBA: "1",
+  SESHANBA: "2",
+  CHORSHANBA: "3",
+  PAYSHANBA: "4",
+  JUMA: "5",
+  SHANBA: "6",
+  YAKSHANBA: "7",
+};
+const formatLessonDays = (days: string): string => {
+  if (!days) return "-";
+  return days
+    .split(",")
+    .map((d) => DAY_MAP[d.trim()] ?? d.trim())
+    .sort((a, b) => Number(a) - Number(b)) // sort qo'shildi
+    .join(" - ");
+};
 export default function GroupTableComponent() {
   const [tableData, setTableData] = useState<Group[]>([]);
   const [loading, setLoading] = useState(false);
@@ -221,7 +234,7 @@ export default function GroupTableComponent() {
                       {group.currentStudents}
                     </TableCell>
                     <TableCell className="hidden lg:table-cell px-5 py-4">
-                      {group.lessonDays}
+                      {formatLessonDays(group.lessonDays)}
                     </TableCell>
                     <TableCell className="hidden xl:table-cell px-5 py-4">
                       {group.lessonTime}
