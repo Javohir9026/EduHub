@@ -1,25 +1,39 @@
 import apiClient from "@/api/ApiClient";
 import { useEffect, useRef, useState } from "react";
 import type { Student } from "@/lib/types";
-import { Check, ChevronDown, Search, X } from "lucide-react";
+import { Check, ChevronDown, Search, X, Loader2 } from "lucide-react";
+
 interface StudentsSelectProps {
   selectedStudents: Student[];
   setSelectedStudents: React.Dispatch<React.SetStateAction<Student[]>>;
+  groupId: number | null;
 }
-const StudentsSelect = ({ selectedStudents, setSelectedStudents }: StudentsSelectProps) => {
+
+const StudentsSelect = ({
+  selectedStudents,
+  setSelectedStudents,
+  groupId,
+}: StudentsSelectProps) => {
   const [loading, setLoading] = useState(false);
-  const [students, setStudents] = useState<Student[]>([]);
+  const [groupLoading, setGroupLoading] = useState(false);
+  const [allStudents, setAllStudents] = useState<Student[]>([]);
+  const [groupStudentIds, setGroupStudentIds] = useState<Set<string>>(
+    new Set(),
+  );
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  const fetchStudents = async () => {
+  const isDisabled = loading || groupLoading;
+
+  // Barcha studentlarni yuklash
+  const fetchAllStudents = async () => {
     const api = import.meta.env.VITE_API_URL;
     const id = localStorage.getItem("id");
     try {
       setLoading(true);
       const res = await apiClient.get(`${api}/learning-centers/${id}/students`);
-      setStudents(res.data.data ?? []);
+      setAllStudents(res.data.data ?? []);
     } catch (error) {
       console.log(error);
     } finally {
@@ -27,9 +41,58 @@ const StudentsSelect = ({ selectedStudents, setSelectedStudents }: StudentsSelec
     }
   };
 
+  // Guruh o'zgarganda — shu guruhdagi studentlarni yuklash (conflict oldini olish)
+  const fetchGroupStudents = async (gId: number) => {
+    const api = import.meta.env.VITE_API_URL;
+    try {
+      setGroupLoading(true);
+      setOpen(false);
+      const res = await apiClient.get(`${api}/groups/${gId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+
+      const groupStudents: unknown[] = res.data.data.groupStudents ?? [];
+
+      // Turli response strukturalarini handle qilamiz:
+      // 1) { id, fullName }         — to'g'ridan student object
+      // 2) { student: { id, ... } } — nested student object
+      // 3) { studentId: number }    — faqat ID field
+      const ids = new Set<string>(
+        groupStudents.map((item: unknown) => {
+          const entry = item as Record<string, unknown>;
+          if (entry.student && typeof entry.student === "object") {
+            return String((entry.student as Record<string, unknown>).id);
+          }
+          if (entry.studentId !== undefined) {
+            return String(entry.studentId);
+          }
+          return String(entry.id);
+        }),
+      );
+
+      console.log("Group student IDs (debug):", ids);
+      setGroupStudentIds(ids);
+    } catch (error) {
+      console.log(error);
+      setGroupStudentIds(new Set());
+    } finally {
+      setGroupLoading(false);
+    }
+  };
+
   useEffect(() => {
-    fetchStudents();
+    fetchAllStudents();
   }, []);
+
+  useEffect(() => {
+    if (groupId !== null) {
+      fetchGroupStudents(groupId);
+    } else {
+      setGroupStudentIds(new Set());
+    }
+  }, [groupId]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -41,7 +104,12 @@ const StudentsSelect = ({ selectedStudents, setSelectedStudents }: StudentsSelec
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const filtered = students.filter((s) =>
+  // Guruhda allaqachon bor studentlarni olib tashlaymiz
+  const availableStudents = allStudents.filter(
+    (s) => !groupStudentIds.has(String(s.id)),
+  );
+
+  const filtered = availableStudents.filter((s) =>
     s.fullName.toLowerCase().includes(search.toLowerCase()),
   );
 
@@ -65,13 +133,18 @@ const StudentsSelect = ({ selectedStudents, setSelectedStudents }: StudentsSelec
     <div ref={ref} className="relative w-full">
       {/* Trigger */}
       <div
-        onClick={() => setOpen((prev) => !prev)}
-        className="min-h-10 w-full cursor-pointer rounded-md border border-gray-300 bg-white px-3 py-2 flex flex-wrap gap-1 items-center
-          dark:border-gray-600 dark:bg-gray-800"
+        onClick={() => !isDisabled && setOpen((prev) => !prev)}
+        className={`min-h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 flex flex-wrap gap-1 items-center
+          dark:border-gray-600 dark:bg-gray-800
+          ${isDisabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
       >
         {selectedStudents.length === 0 ? (
           <span className="text-gray-400 text-sm dark:text-gray-500">
-            Talabalarni tanlang...
+            {groupLoading
+              ? "Guruh tekshirilmoqda..."
+              : loading
+                ? "Yuklanmoqda..."
+                : "O'quvchilarni tanlang..."}
           </span>
         ) : (
           selectedStudents.map((s) => (
@@ -89,10 +162,17 @@ const StudentsSelect = ({ selectedStudents, setSelectedStudents }: StudentsSelec
             </span>
           ))
         )}
-        <ChevronDown
-          size={16}
-          className={`ml-auto text-gray-400 transition-transform dark:text-gray-500 ${open ? "rotate-180" : ""}`}
-        />
+        {isDisabled ? (
+          <Loader2
+            size={16}
+            className="ml-auto text-gray-400 animate-spin dark:text-gray-500"
+          />
+        ) : (
+          <ChevronDown
+            size={16}
+            className={`ml-auto text-gray-400 transition-transform dark:text-gray-500 ${open ? "rotate-180" : ""}`}
+          />
+        )}
       </div>
 
       {/* Dropdown */}
@@ -117,13 +197,16 @@ const StudentsSelect = ({ selectedStudents, setSelectedStudents }: StudentsSelec
 
           {/* Options */}
           <ul className="max-h-52 overflow-y-auto">
-            {loading ? (
-              <li className="px-4 py-3 text-sm text-gray-400 dark:text-gray-500">
-                Yuklanmoqda...
+            {loading || groupLoading ? (
+              <li className="flex items-center gap-2 px-4 py-3 text-sm text-gray-400 dark:text-gray-500">
+                <Loader2 size={14} className="animate-spin" />
+                {groupLoading ? "Guruh tekshirilmoqda..." : "Yuklanmoqda..."}
               </li>
             ) : filtered.length === 0 ? (
               <li className="px-4 py-3 text-sm text-gray-400 dark:text-gray-500">
-                Talaba topilmadi
+                {availableStudents.length === 0 && allStudents.length > 0
+                  ? "Barcha o'quvchilar bu guruhda mavjud"
+                  : "O'quvchi topilmadi"}
               </li>
             ) : (
               filtered.map((student) => (
