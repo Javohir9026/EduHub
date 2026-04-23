@@ -115,7 +115,9 @@ export default function GroupTableComponent() {
   }, [fetchGroups]);
 
   const filteredData = tableData.filter((group) =>
-    group.name.toLowerCase().includes(search.toLowerCase()),
+    group.name.toLowerCase().includes(search.toLowerCase()) ||
+    group.lessonDays.toLowerCase().includes(search.toLowerCase()) ||
+    group.lessonTime.toLowerCase().includes(search.toLowerCase()),
   );
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -231,7 +233,7 @@ export default function GroupTableComponent() {
                       {group.name}
                     </TableCell>
                     <TableCell className="hidden md:table-cell px-5 py-4">
-                      {group.currentStudents}
+                      {group.groupStudents.length || 0}
                     </TableCell>
                     <TableCell className="hidden lg:table-cell px-5 py-4">
                       {formatLessonDays(group.lessonDays)}
