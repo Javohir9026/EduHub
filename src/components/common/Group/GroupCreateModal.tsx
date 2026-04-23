@@ -75,7 +75,8 @@ export function GroupCreateModal({
     }
     if (name === "startDate" && !value) return "Boshlang'ich sana kiriting!";
     if (name === "endDate" && !value) return "Tugash sana kiriting!";
-    if (name === "lessonDays" && !lessonDays.length) return "O'quv kunlarini tanlang!";
+    if (name === "lessonDays" && !lessonDays.length)
+      return "O'quv kunlarini tanlang!";
     if (name === "lessonTime" && !value) return "Boshlanish vaqtini kiriting!";
     if (name === "monthlyPrice" && !value) return "Oylik summani kiriting!";
     if (name === "maxStudents" && !value) return "Sig'im kiriting!";
@@ -86,15 +87,33 @@ export function GroupCreateModal({
 
   const handleChange = (field: string, value: string) => {
     switch (field) {
-      case "name": setName(value); break;
-      case "startDate": setStartDate(value); break;
-      case "endDate": setEndDate(value); break;
-      case "lessonTime": setLessonTime(value); break;
-      case "monthlyPrice": setMonthlyPrice(value); break;
-      case "maxStudents": setMaxStudents(value); break;
-      case "room": setRoom(value); break;
-      case "description": setDescription(value); break;
-      case "teacher_id": setTeacherId(value); break;
+      case "name":
+        setName(value);
+        break;
+      case "startDate":
+        setStartDate(value);
+        break;
+      case "endDate":
+        setEndDate(value);
+        break;
+      case "lessonTime":
+        setLessonTime(value);
+        break;
+      case "monthlyPrice":
+        setMonthlyPrice(value);
+        break;
+      case "maxStudents":
+        setMaxStudents(value);
+        break;
+      case "room":
+        setRoom(value);
+        break;
+      case "description":
+        setDescription(value);
+        break;
+      case "teacher_id":
+        setTeacherId(value);
+        break;
     }
     const error = validateField(field, value);
     setErrors((prev: any) => ({ ...prev, [field]: error }));
@@ -102,10 +121,17 @@ export function GroupCreateModal({
 
   const handleCancel = () => {
     setOpen(false);
-    setName(""); setStartDate(""); setEndDate("");
-    setLessonDays([]); setLessonTime(""); setMonthlyPrice("");
-    setMaxStudents(""); setRoom(""); setDescription("");
-    setTeacherId(""); setErrors({});
+    setName("");
+    setStartDate("");
+    setEndDate("");
+    setLessonDays([]);
+    setLessonTime("");
+    setMonthlyPrice("");
+    setMaxStudents("");
+    setRoom("");
+    setDescription("");
+    setTeacherId("");
+    setErrors({});
   };
 
   const handleSave = async () => {
@@ -131,11 +157,15 @@ export function GroupCreateModal({
         .join(", ");
 
       await apiClient.post(`${api}/groups`, {
-        name, startDate, endDate,
-        lessonDays: formattedDays, lessonTime,
+        name,
+        startDate,
+        endDate,
+        lessonDays: formattedDays,
+        lessonTime,
         monthlyPrice: numericPrice,
         maxStudents: Number(maxStudents),
-        room, description,
+        room,
+        description,
         learning_center_id: localStorage.getItem("id"),
         teacher_id: Number(teacher_id),
       });
@@ -171,31 +201,46 @@ export function GroupCreateModal({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4 w-full">
               <div className="flex flex-col gap-2">
                 <Label>Guruh Nomi</Label>
-                <Input value={name} onChange={(e) => handleChange("name", e.target.value)} />
-                {errors.name && <p className="text-red-500 text-xs">{errors.name}</p>}
+                <Input
+                  value={name}
+                  onChange={(e) => handleChange("name", e.target.value)}
+                />
+                {errors.name && (
+                  <p className="text-red-500 text-xs">{errors.name}</p>
+                )}
               </div>
 
               <div className="flex flex-col gap-2">
                 <Label>Boshlanish Kuni</Label>
-                <DatePickerCalendar onChange={(date) => handleChange("startDate", date)} />
+                <DatePickerCalendar
+                  onChange={(date) => handleChange("startDate", date)}
+                />
               </div>
 
               <div className="flex flex-col gap-2">
                 <Label>Tugash Kuni</Label>
-                <DatePickerCalendar onChange={(date) => handleChange("endDate", date)} />
+                <DatePickerCalendar
+                  onChange={(date) => handleChange("endDate", date)}
+                />
               </div>
 
               <div className="flex flex-col gap-2">
                 <Label>O'qish Kunlari</Label>
                 <Input
                   readOnly
-                  value={lessonDays.length
-                    ? lessonDays.map((d) => DAYS.find((day) => day.id === d)?.label).join(", ")
-                    : ""}
+                  value={
+                    lessonDays.length
+                      ? lessonDays
+                          .map((d) => DAYS.find((day) => day.id === d)?.label)
+                          .join(", ")
+                      : ""
+                  }
                   placeholder="1-3-5 kunlari..."
                   onClick={() => setDaysModal(true)}
                 />
-                {errors.lessonDays && <p className="text-red-500 text-xs">{errors.lessonDays}</p>}
+                {errors.lessonDays && (
+                  <p className="text-red-500 text-xs">{errors.lessonDays}</p>
+                )}
               </div>
 
               <div className="flex flex-col gap-2">
@@ -208,10 +253,14 @@ export function GroupCreateModal({
                   onChange={(e) => {
                     let value = e.target.value.replace(/\D/g, "");
                     if (value.length > 4) value = value.slice(0, 4);
-                    if (value.length >= 3) value = value.slice(0, 2) + ":" + value.slice(2);
+                    if (value.length >= 3)
+                      value = value.slice(0, 2) + ":" + value.slice(2);
                     handleChange("lessonTime", value);
                   }}
                 />
+                {errors.lessonTime && (
+                  <p className="text-red-500 text-xs">{errors.lessonTime}</p>
+                )}
               </div>
 
               <div className="flex flex-col gap-2">
@@ -220,9 +269,16 @@ export function GroupCreateModal({
                   value={monthlyPrice}
                   onChange={(e) => {
                     const num = e.target.value.replace(/\D/g, "");
-                    setMonthlyPrice(num ? new Intl.NumberFormat("uz-UZ").format(Number(num)) : "");
+                    setMonthlyPrice(
+                      num
+                        ? new Intl.NumberFormat("uz-UZ").format(Number(num))
+                        : "",
+                    );
                   }}
                 />
+                {errors.monthlyPrice && (
+                  <p className="text-red-500 text-xs">{errors.monthlyPrice}</p>
+                )}
               </div>
 
               <div className="flex flex-col gap-2">
@@ -237,22 +293,39 @@ export function GroupCreateModal({
                     handleChange("maxStudents", onlyNumbers);
                   }}
                 />
+                {errors.maxStudents && (
+                  <p className="text-red-500 text-xs">{errors.maxStudents}</p>
+                )}
               </div>
 
               <div className="flex flex-col gap-2">
                 <Label>Xona</Label>
-                <Input value={room} onChange={(e) => handleChange("room", e.target.value)} />
+                <Input
+                  value={room}
+                  onChange={(e) => handleChange("room", e.target.value)}
+                />
+                {errors.room && (
+                  <p className="text-red-500 text-xs">{errors.room}</p>
+                )}
               </div>
 
               <div className="flex flex-col gap-2 sm:col-span-2">
                 <Label>O'qituvchi</Label>
-                <GroupTeacherSelect value={teacher_id} onChange={(v) => handleChange("teacher_id", v)} />
+                <GroupTeacherSelect
+                  value={teacher_id}
+                  onChange={(v) => handleChange("teacher_id", v)}
+                />
+                {errors.teacher_id && (
+                  <p className="text-red-500 text-xs">{errors.teacher_id}</p>
+                )}
               </div>
             </div>
           </AlertDialogHeader>
 
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={handleCancel}>Bekor qilish</AlertDialogCancel>
+            <AlertDialogCancel onClick={handleCancel}>
+              Bekor qilish
+            </AlertDialogCancel>
             <Button onClick={handleSave} disabled={loading}>
               {loading ? "Saqlanmoqda..." : "Saqlash"}
             </Button>
@@ -293,7 +366,10 @@ export function GroupCreateModal({
             ))}
           </div>
           <AlertDialogFooter>
-            <Button className="cursor-pointer" onClick={() => setDaysModal(false)}>
+            <Button
+              className="cursor-pointer"
+              onClick={() => setDaysModal(false)}
+            >
               Saqlash
             </Button>
           </AlertDialogFooter>
