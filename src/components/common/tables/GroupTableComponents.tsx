@@ -237,7 +237,7 @@ export default function GroupTableComponent() {
                       {formatLessonDays(group.lessonDays)}
                     </TableCell>
                     <TableCell className="hidden xl:table-cell px-5 py-4">
-                      {group.lessonTime}
+                      {group.lessonTime.slice(0, 5) || "-"}
                     </TableCell>
                     <TableCell className="px-5 py-4 flex sm:gap-2 justify-center">
                       <GroupEditModal
