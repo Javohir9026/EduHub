@@ -11,7 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { StudentCreateModal } from "../student/StudentCreateModal";
 import { Info, Trash } from "lucide-react";
 import {
   Table,
@@ -41,14 +40,21 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+
 const AllAttendances = () => {
   const [tableData, setTableData] = useState<Attendance[]>([]);
   const api = import.meta.env.VITE_API_URL;
   const token = localStorage.getItem("access_token");
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const navigate = useNavigate();
+  const [deletingId, setDeletingId] = useState<string | number | null>(null);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [search, setSearch] = useState("");
+
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
-
       const res = await apiClient.get(
         `${api}/attendances/learning-center/findAll`,
         {
@@ -60,21 +66,16 @@ const AllAttendances = () => {
 
       console.log("attendance", res);
 
-      // 🔥 qo‘shildi
-      setTableData(res.data || []);
+      // API javobidan massivni xavfsiz ajratib olish
+      const raw = res.data?.data ?? res.data;
+      setTableData(Array.isArray(raw) ? raw : []);
     } catch (error) {
       console.log("error", error);
+      setTableData([]);
     } finally {
       setLoading(false);
     }
   }, [api, token]);
-
-  const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const navigate = useNavigate();
-  const [deletingId, setDeletingId] = useState<string | number | null>(null);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
 
   const handleDelete = async (id: string | number) => {
     try {
@@ -90,11 +91,14 @@ const AllAttendances = () => {
       setDeletingId(null);
     }
   };
-  const [search, setSearch] = useState("");
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [itemsPerPage, search]);
 
   const filteredData = tableData.filter(
     (attendance) =>
@@ -114,9 +118,7 @@ const AllAttendances = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentData = filteredData.slice(startIndex, endIndex);
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [itemsPerPage, search]);
+
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
@@ -124,7 +126,6 @@ const AllAttendances = () => {
           <h1 className="text-2xl sm:text-start text-center font-bold mb-2 sm:mb-0">
             Barcha Davomatlar
           </h1>
-
           <SearchInput
             placeholder="Qidirish..."
             onChange={(e) => setSearch(e.target.value)}
@@ -184,27 +185,18 @@ const AllAttendances = () => {
                     key={index}
                     className="text-center border-b h-[70px] border-gray-200 dark:border-white/[0.05] last:border-b-0"
                   >
-                    {/* Ism Familiya */}
                     <TableCell className="px-5 py-4">
                       <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                     </TableCell>
-
-                    {/* Telefon */}
                     <TableCell className="hidden md:table-cell px-5 py-4">
                       <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                     </TableCell>
-
-                    {/* Tug'ilgan sana */}
                     <TableCell className="hidden lg:table-cell px-5 py-4">
                       <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                     </TableCell>
-
-                    {/* Holati */}
                     <TableCell className="hidden xl:table-cell px-5 py-4">
                       <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                     </TableCell>
-
-                    {/* Qo'shimcha */}
                     <TableCell className="px-5 py-4">
                       <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                     </TableCell>
@@ -215,7 +207,7 @@ const AllAttendances = () => {
                 currentData.map((attendance, idx) => (
                   <TableRow
                     key={attendance.id}
-                    className={` text-start sm:text-center  border-b border-gray-200 dark:border-white/[0.05] last:border-b-0 ${
+                    className={`text-start sm:text-center border-b border-gray-200 dark:border-white/[0.05] last:border-b-0 ${
                       idx % 2 === 0
                         ? "bg-gray-50 dark:bg-white/5"
                         : "bg-white dark:bg-white/0"
@@ -244,11 +236,6 @@ const AllAttendances = () => {
                       </span>
                     </TableCell>
                     <TableCell className="px-5 py-4 flex sm:gap-2 justify-center">
-                      {/* <StudentEditModal
-                        student={student}
-                        onSuccess={fetchStudents}
-                        classname="hidden sm:flex dark:bg-blue-500 bg-blue-500 hover:bg-blue-500/80 hover:text-white cursor-pointer text-white rounded-lg  items-center justify-center gap-2"
-                      /> */}
                       <Button
                         onClick={() =>
                           navigate(`/attendance-info/${attendance.id}`)
@@ -312,7 +299,6 @@ const AllAttendances = () => {
         </div>
       </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-end mt-4">
           <Pagination>

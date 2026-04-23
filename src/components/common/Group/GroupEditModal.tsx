@@ -1,3 +1,4 @@
+// GroupEditModal.tsx
 import apiClient from "@/api/ApiClient";
 import {
   AlertDialog,
@@ -14,8 +15,8 @@ import { Label } from "@/components/ui/label";
 import { Pen, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import type { Group } from "@/lib/types";
 import GroupTeacherSelect from "./GroupTeacherSelect";
+import type { BaseGroup } from "@/pages/Groups/GorupInfo";
 
 export function GroupEditModal({
   classname,
@@ -23,7 +24,7 @@ export function GroupEditModal({
   onSuccess,
 }: {
   classname: string;
-  group: Group;
+  group: BaseGroup; // ← Group emas, BaseGroup
   onSuccess?: () => void;
 }) {
   const api = import.meta.env.VITE_API_URL;
@@ -34,17 +35,14 @@ export function GroupEditModal({
   const [name, setName] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-
   const [lessonDays, setLessonDays] = useState<number[]>([]);
   const [daysModal, setDaysModal] = useState(false);
-
   const [lessonTime, setLessonTime] = useState("");
   const [monthlyPrice, setMonthlyPrice] = useState("");
   const [maxStudents, setMaxStudents] = useState("");
   const [room, setRoom] = useState("");
   const [description, setDescription] = useState("");
   const [teacher_id, setTeacherId] = useState<string | null>(null);
-
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const DAYS = [
@@ -61,7 +59,6 @@ export function GroupEditModal({
     if (group && open) {
       setName(group.name || "");
 
-      // 🔥 lessonDays parse
       if (group.lessonDays) {
         const parsedDays = group.lessonDays
           .split(", ")
@@ -70,7 +67,6 @@ export function GroupEditModal({
             return found?.id;
           })
           .filter(Boolean) as number[];
-
         setLessonDays(parsedDays);
       }
 
@@ -79,27 +75,23 @@ export function GroupEditModal({
       const price = group.monthlyPrice
         ? Number(group.monthlyPrice).toString()
         : "";
-
       const formattedPrice = price
         ? new Intl.NumberFormat("uz-UZ").format(Number(price))
         : "";
-
       setMonthlyPrice(formattedPrice);
+
       setMaxStudents(String(group.maxStudents) || "");
       setRoom(group.room || "");
       setDescription(group.description || "");
       setTeacherId(group.teacher?.id?.toString() || null);
-
       setStartDate(group.startDate?.split("T")[0] || "");
       setEndDate(group.endDate?.split("T")[0] || "");
-
       setErrors({});
     }
   }, [group, open]);
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
-
     if (!name.trim()) newErrors.name = "Nom kiriting!";
     if (!startDate) newErrors.startDate = "Sana kiriting!";
     if (!endDate) newErrors.endDate = "Sana kiriting!";
@@ -109,19 +101,15 @@ export function GroupEditModal({
     if (!maxStudents) newErrors.maxStudents = "Sig'im kiriting!";
     if (!room) newErrors.room = "Xona kiriting!";
     if (!teacher_id) newErrors.teacher_id = "Teacher tanlang!";
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSave = async () => {
     if (!validate()) return;
-
     try {
       setLoading(true);
-
       const numericPrice = Number(monthlyPrice.replace(/\D/g, ""));
-
       const formattedDays = lessonDays
         .map((d) => DAYS.find((day) => day.id === d)?.label?.toUpperCase())
         .join(", ");
@@ -180,6 +168,9 @@ export function GroupEditModal({
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
                 />
+                {errors.startDate && (
+                  <p className="text-red-500 text-xs">{errors.startDate}</p>
+                )}
               </div>
 
               <div className="flex flex-col gap-1">
@@ -189,9 +180,11 @@ export function GroupEditModal({
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
                 />
+                {errors.endDate && (
+                  <p className="text-red-500 text-xs">{errors.endDate}</p>
+                )}
               </div>
 
-              {/* 🔥 DAYS */}
               <div className="flex flex-col gap-1">
                 <Label>O'qish kunlari</Label>
                 <Input
@@ -210,7 +203,6 @@ export function GroupEditModal({
                 )}
               </div>
 
-              {/* TIME */}
               <div className="flex flex-col gap-1">
                 <Label>Boshlanish vaqti</Label>
                 <Input
@@ -223,9 +215,11 @@ export function GroupEditModal({
                     setLessonTime(v);
                   }}
                 />
+                {errors.lessonTime && (
+                  <p className="text-red-500 text-xs">{errors.lessonTime}</p>
+                )}
               </div>
 
-              {/* PRICE */}
               <div className="flex flex-col gap-1">
                 <Label>Oylik summa (uzs)</Label>
                 <Input
@@ -239,9 +233,11 @@ export function GroupEditModal({
                     );
                   }}
                 />
+                {errors.monthlyPrice && (
+                  <p className="text-red-500 text-xs">{errors.monthlyPrice}</p>
+                )}
               </div>
 
-              {/* MAX */}
               <div className="flex flex-col gap-1">
                 <Label>Sig'im</Label>
                 <Input
@@ -251,11 +247,17 @@ export function GroupEditModal({
                     setMaxStudents(e.target.value.replace(/\D/g, ""))
                   }
                 />
+                {errors.maxStudents && (
+                  <p className="text-red-500 text-xs">{errors.maxStudents}</p>
+                )}
               </div>
 
               <div className="flex flex-col gap-1">
                 <Label>Xona</Label>
                 <Input value={room} onChange={(e) => setRoom(e.target.value)} />
+                {errors.room && (
+                  <p className="text-red-500 text-xs">{errors.room}</p>
+                )}
               </div>
 
               <div className="sm:col-span-2 flex flex-col gap-1">
@@ -272,6 +274,9 @@ export function GroupEditModal({
                   value={teacher_id ? String(teacher_id) : "o'qituvchi tanlang"}
                   onChange={(v) => setTeacherId(v)}
                 />
+                {errors.teacher_id && (
+                  <p className="text-red-500 text-xs">{errors.teacher_id}</p>
+                )}
               </div>
             </div>
           </AlertDialogHeader>
@@ -285,7 +290,7 @@ export function GroupEditModal({
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* 🔥 DAYS MODAL */}
+      {/* DAYS MODAL */}
       <AlertDialog open={daysModal} onOpenChange={setDaysModal}>
         <AlertDialogContent>
           <div className="relative">
