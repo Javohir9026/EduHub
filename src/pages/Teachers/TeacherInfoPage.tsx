@@ -144,14 +144,14 @@ const TeacherInfoPage = () => {
               teacher={teacher}
               content="Tahrirlash"
               onSuccess={fetchTeacher}
-              classname="hidden sm:flex bg-blue-500 hover:bg-blue-600 hover:text-white text-white cursor-pointer rounded-lg px-4 py-2 items-center justify-center gap-2"
+              classname="flex bg-blue-500 hover:bg-blue-600 hover:text-white text-white cursor-pointer rounded-lg px-4 py-2 items-center justify-center gap-2"
             />
 
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button className="bg-red-600 hover:bg-red-700 text-white cursor-pointer flex items-center gap-2">
                   <Trash className="w-4 h-4" />
-                  Tahrirlash
+                  O'chirish
                 </Button>
               </AlertDialogTrigger>
 
