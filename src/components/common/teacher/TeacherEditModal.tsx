@@ -86,8 +86,9 @@ export function TeacherEditModal({
 
     if (!name.trim()) newErrors.name = "Ism kiriting!";
     if (!lastName.trim()) newErrors.lastName = "Familiya kiriting!";
-    if (!phone || phone.length < 17)
-      newErrors.phone = "Telefon to'liq kiritilishi kerak";
+    if (!phone || phone.length < 17) {
+      newErrors.phone = "Telefon noto'g'ri kiritildi!";
+    }
 
     if (!email.trim()) {
       newErrors.email = "Email kiriting!";
@@ -102,6 +103,12 @@ export function TeacherEditModal({
     if (!subject.trim()) newErrors.subject = "Fanni kiriting!";
     if (!salary.trim()) newErrors.salary = "Maosh kiriting!";
 
+    const strongPasswordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[.,!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
+
+    if (!strongPasswordRegex.test(password) && password.trim()) {
+      newErrors.password = "Parol kuchli bo'lishi kerak! (Masalan: Password1.)";
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -271,6 +278,9 @@ export function TeacherEditModal({
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
+              {errors.password && (
+                <span className="text-red-500 text-sm">{errors.password}</span>
+              )}
             </div>
           </div>
         </AlertDialogHeader>
