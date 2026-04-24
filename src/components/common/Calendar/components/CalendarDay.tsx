@@ -73,7 +73,7 @@ const CalendarDay: FC<CalendarDayProps> = ({
     <div
       onClick={() => onClick(day)}
       className={`
-        relative flex flex-col min-h-[90px] sm:min-h-[110px] p-1.5 sm:p-2
+        relative flex flex-col min-h-[72px] p-1.5 sm:min-h-[100px] sm:p-2 lg:min-h-[110px]
         rounded-xl cursor-pointer border transition-all duration-200 select-none group
         ${
           isSelected
@@ -83,7 +83,7 @@ const CalendarDay: FC<CalendarDayProps> = ({
       `}
     >
       {/* ── Day number + dot indicators ── */}
-      <div className="flex items-center justify-between mb-1 flex-col sm:flex-row">
+      <div className="mb-1 flex items-center justify-between gap-1 sm:flex-row">
         <span
           className={`
             inline-flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7
@@ -101,7 +101,7 @@ const CalendarDay: FC<CalendarDayProps> = ({
         </span>
 
         {hasEvents && (
-          <span className="flex gap-0.5 flex-col justify-between sm:flex-row">
+          <span className="flex gap-0.5 sm:flex-row">
             {dayData!.lessons.length > 0 && (
               <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
             )}
@@ -116,7 +116,7 @@ const CalendarDay: FC<CalendarDayProps> = ({
       </div>
 
       {/* ── Event pills ── */}
-      <div className="flex-col gap-0.5 overflow-hidden hidden sm:flex">
+      <div className="hidden overflow-hidden sm:flex sm:flex-col sm:gap-0.5">
         {pills.map((p, i) => (
           <EventPill key={i} type={p.type} label={p.label} />
         ))}

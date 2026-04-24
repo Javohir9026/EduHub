@@ -50,11 +50,11 @@ const CalendarGrid: FC<CalendarGridProps> = ({
         </div>
 
         {/* Skeleton cells */}
-        <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
+        <div className="grid grid-cols-7 gap-1 sm:gap-2">
           {Array.from({ length: 35 }).map((_, i) => (
             <div
               key={i}
-              className="h-16 sm:h-24 rounded-xl bg-slate-200 dark:bg-slate-700 animate-pulse"
+              className="h-14 rounded-xl bg-slate-200 animate-pulse dark:bg-slate-700 sm:h-20 lg:h-24"
             />
           ))}
         </div>
@@ -98,7 +98,7 @@ const CalendarGrid: FC<CalendarGridProps> = ({
       </div>
 
       {/* Calendar cells */}
-      <div className="grid grid-cols-7 gap-1.5 sm:gap-2">{cells}</div>
+      <div className="grid grid-cols-7 gap-1 sm:gap-2">{cells}</div>
     </div>
   );
 };

@@ -1,16 +1,12 @@
 import type { FC } from "react";
 import { type DataMap, type StatItem } from "../types";
 
-// ─── PROPS ───────────────────────────────────────────────────
-
 interface StatsBarProps {
   data: DataMap;
   year: number;
   month: number;
   loading: boolean;
 }
-
-// ─── COMPONENT ───────────────────────────────────────────────
 
 const StatsBar: FC<StatsBarProps> = ({ data, year, month, loading }) => {
   const monthStr = `${year}-${String(month + 1).padStart(2, "0")}`;
@@ -20,17 +16,14 @@ const StatsBar: FC<StatsBarProps> = ({ data, year, month, loading }) => {
   let birthdays = 0;
   let revenue = 0;
 
-  // ── Statistika hisoblash ────────────────────────────────────
   Object.entries(data).forEach(([date, d]) => {
     if (date.startsWith(monthStr)) {
       lessons += d.lessons.length;
       payments += d.payments.length;
       birthdays += d.birthdays.length;
-
-      // Backenddan string keladigan amountni numberga o'tkazamiz
       revenue += d.payments.reduce(
-        (sum, p) => sum + Math.floor(Number(p.paidAmount)), // Math.floor bilan nuqtadan keyingi raqamlar kesiladi
-        0,
+        (sum, p) => sum + Math.floor(Number(p.paidAmount)),
+        0
       );
     }
   });
@@ -56,38 +49,36 @@ const StatsBar: FC<StatsBarProps> = ({ data, year, month, loading }) => {
     },
     {
       label: "Daromad",
-      value: `${revenue.toLocaleString()} so'm`, // chiroyli format
+      value: `${revenue.toLocaleString()} so'm`,
       color: "text-indigo-600 dark:text-indigo-400",
       bg: "bg-indigo-50 dark:bg-indigo-950/40",
     },
   ];
 
-  // ── Skeleton Loader ────────────────────────────────────────
   if (loading) {
     return (
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+      <div className="mb-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
         {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}
-            className="rounded-xl border border-slate-200 dark:border-slate-800 px-4 py-3 bg-white dark:bg-slate-900"
+            className="rounded-xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-900"
           >
-            <div className="h-3 w-20 mb-2 rounded bg-slate-200 dark:bg-slate-700 animate-pulse" />
-            <div className="h-6 w-16 rounded bg-slate-300 dark:bg-slate-600 animate-pulse" />
+            <div className="mb-2 h-3 w-20 animate-pulse rounded bg-slate-200 dark:bg-slate-700" />
+            <div className="h-6 w-16 animate-pulse rounded bg-slate-300 dark:bg-slate-600" />
           </div>
         ))}
       </div>
     );
   }
 
-  // ── Normal UI ──────────────────────────────────────────────
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+    <div className="mb-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
       {stats.map((stat) => (
         <div
           key={stat.label}
-          className={`rounded-xl border px-4 py-3 ${stat.bg} border-slate-200 dark:border-slate-800`}
+          className={`rounded-xl border border-slate-200 px-4 py-3 dark:border-slate-800 ${stat.bg}`}
         >
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-1">
+          <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
             {stat.label}
           </p>
           <p className={`text-xl font-bold ${stat.color}`}>{stat.value}</p>
