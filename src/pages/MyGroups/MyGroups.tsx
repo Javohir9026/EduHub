@@ -122,7 +122,7 @@ export default function MyGroupsPage() {
   }, []);
 
   return (
-    <div className="min-h-screen dark:bg-black transition-colors">
+    <div className="min-h-screen  transition-colors">
 
       {/* FULL WIDTH */}
       <div className="w-full px-2 sm:px-4 lg:px-6 py-6">

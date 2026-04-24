@@ -5,6 +5,7 @@ import {
   BanknoteArrowDown,
   Calendar,
   CalendarCheck,
+  ClipboardClock,
   CreditCard,
   Home,
   Layers,
@@ -43,9 +44,9 @@ const AppSidebar: React.FC = () => {
     },
     {
       id: 5,
-      title: "Kalendar",
-      path: "/calendar",
-      icon: Calendar,
+      title: "Darslar",
+      path: "/lessons",
+      icon: ClipboardClock,
     },
     {
       id: 6,
@@ -58,6 +59,12 @@ const AppSidebar: React.FC = () => {
       title: "Davomat",
       path: "/attendances-center",
       icon: CalendarCheck,
+    },
+    {
+      id: 8,
+      title: "Kalendar",
+      path: "/calendar",
+      icon: Calendar,
     },
   ];
 

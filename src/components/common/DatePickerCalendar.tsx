@@ -15,10 +15,9 @@ export function DatePickerCalendar({
 
   const [date, setDate] = useState(defaultValue || today);
 
-  // 🔥 MUHIM QISM
   useEffect(() => {
     if (!defaultValue && onChange) {
-      onChange(today); // parent ga bugungi sanani yuboramiz
+      onChange(today); 
     }
   }, []);
 

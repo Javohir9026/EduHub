@@ -34,7 +34,10 @@ const LessonCreateModal = ({ open, setOpen, data, onSuccess }: Props) => {
   });
 
   const [errors, setErrors] = useState<any>({});
-
+  const handleCloseModal = () => {
+    setOpen(false);
+    setForm({ name: "", description: "", endTime: "" });
+  };
   const handleChange = (key: string, value: string) => {
     setForm((prev) => ({
       ...prev,
@@ -91,7 +94,6 @@ const LessonCreateModal = ({ open, setOpen, data, onSuccess }: Props) => {
           <AlertDialogTitle>Yangi dars yaratish</AlertDialogTitle>
         </AlertDialogHeader>
 
-        {/* 🔥 INFO BLOCK */}
         <div className="bg-gray-50 dark:bg-white/5 rounded-xl p-4 text-sm space-y-2">
           <div className="flex justify-between">
             <span className="text-gray-500">Guruh:</span>
@@ -111,9 +113,7 @@ const LessonCreateModal = ({ open, setOpen, data, onSuccess }: Props) => {
           </div>
         </div>
 
-        {/* 🔥 FORM */}
         <div className="grid gap-4 py-4">
-          {/* Mavzu */}
           <div className="flex flex-col gap-2">
             <Label>Mavzu</Label>
             <Input
@@ -126,7 +126,6 @@ const LessonCreateModal = ({ open, setOpen, data, onSuccess }: Props) => {
             )}
           </div>
 
-          {/* Tavsif */}
           <div className="flex flex-col gap-2">
             <Label>Tavsif</Label>
             <Input
@@ -139,7 +138,6 @@ const LessonCreateModal = ({ open, setOpen, data, onSuccess }: Props) => {
             )}
           </div>
 
-          {/* End time */}
           <div className="flex flex-col gap-2">
             <Label>Tugash vaqti</Label>
             <Input
@@ -167,7 +165,7 @@ const LessonCreateModal = ({ open, setOpen, data, onSuccess }: Props) => {
         <AlertDialogFooter className="flex flex-col sm:flex-row gap-2">
           <Button
             variant="outline"
-            onClick={() => setOpen(false)}
+            onClick={() => handleCloseModal()}
             className="w-full sm:w-auto"
           >
             Bekor qilish

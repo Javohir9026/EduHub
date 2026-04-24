@@ -8,7 +8,6 @@ import {
 
 import apiClient from "@/api/ApiClient";
 import { useEffect, useState, useCallback } from "react";
-import type { Group } from "@/lib/types";
 
 import {
   AlertDialog,
@@ -44,27 +43,11 @@ import {
 } from "@/components/ui/select";
 import SearchInput from "@/components/ui/SearchInput";
 import { toast } from "sonner";
-import { GroupEditModal } from "../Group/GroupEditModal";
-import GroupActions from "../Group/GroupActions"; // <-- yangi component
-const DAY_MAP: Record<string, string> = {
-  DUSHANBA: "1",
-  SESHANBA: "2",
-  CHORSHANBA: "3",
-  PAYSHANBA: "4",
-  JUMA: "5",
-  SHANBA: "6",
-  YAKSHANBA: "7",
-};
-const formatLessonDays = (days: string): string => {
-  if (!days) return "-";
-  return days
-    .split(",")
-    .map((d) => DAY_MAP[d.trim()] ?? d.trim())
-    .sort((a, b) => Number(a) - Number(b)) // sort qo'shildi
-    .join(" - ");
-};
-export default function GroupTableComponent() {
-  const [tableData, setTableData] = useState<Group[]>([]);
+import { GroupCreateModal } from "../Group/GroupCreateModal";
+import type { Lesson } from "../Lessons/type";
+
+export default function LessonTableComponent() {
+  const [tableData, setTableData] = useState<Lesson[]>([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -74,18 +57,27 @@ export default function GroupTableComponent() {
   const navigate = useNavigate();
   const [deletingId, setDeletingId] = useState<string | number | null>(null);
   const [itemsPerPage, setItemsPerPage] = useState(5);
-
   const fetchGroups = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await apiClient.get(
-        `${api}/groups/learning-center/${centerId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
+
+      const today = new Date();
+      const endDate = today.toISOString().split("T")[0];
+
+      const start = new Date();
+      start.setDate(today.getDate() - 7);
+      const startDate = start.toISOString().split("T")[0];
+
+      const res = await apiClient.get(`${api}/lessons/range/`, {
+        params: {
+          startDate: startDate,
+          endDate: endDate,
         },
-      );
-      setTableData(res.data.data || []);
-      console.log(res.data.data);
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setTableData(res.data || []);
+      console.log(res.data);
     } catch (error) {
       console.log("FETCH ERROR:", error);
     } finally {
@@ -96,10 +88,10 @@ export default function GroupTableComponent() {
   const handleDelete = async (id: string | number) => {
     try {
       setDeletingId(id);
-      await apiClient.delete(`${api}/groups/${id}`, {
+      await apiClient.delete(`${api}/lessons/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      toast.success("Guruh muvaffaqqiyatli o'chirildi!");
+      toast.success("Dars muvaffaqqiyatli o'chirildi!");
       await fetchGroups();
       setDeletingId(null);
     } catch (error) {
@@ -107,36 +99,38 @@ export default function GroupTableComponent() {
       setDeletingId(null);
     }
   };
-
   const [search, setSearch] = useState("");
 
   useEffect(() => {
     fetchGroups();
   }, [fetchGroups]);
-
-  const filteredData = tableData.filter((group) =>
-    group.name.toLowerCase().includes(search.toLowerCase()),
+  const filteredData = tableData.filter((lesson) =>
+    lesson.name.toLowerCase().includes(search.toLowerCase()) ||
+    lesson.group.name.toLowerCase().includes(search.toLowerCase()) ||
+    lesson.teacher.name.toLowerCase().includes(search.toLowerCase()) ||
+    lesson.teacher.lastName.toLowerCase().includes(search.toLowerCase()) ||
+    lesson.lessonDate.toLowerCase().includes(search.toLowerCase()),
   );
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentData = filteredData.slice(startIndex, endIndex);
-
   useEffect(() => {
     setCurrentPage(1);
   }, [itemsPerPage]);
+
   useEffect(() => {
     setCurrentPage(1);
   }, [search]);
-
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
         <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 w-full sm:w-auto">
           <h1 className="text-2xl sm:text-start text-center font-bold mb-2 sm:mb-0">
-            Guruhlar
+            Darslar
           </h1>
+
           <SearchInput
             placeholder="Qidirish..."
             onChange={(e) => setSearch(e.target.value)}
@@ -144,7 +138,7 @@ export default function GroupTableComponent() {
           />
         </div>
 
-        <div className="flex gap-2 flex-wrap justify-between items-center">
+        <div className="flex gap-2 flex-wrap justify-between">
           <Select
             onValueChange={(value) => setItemsPerPage(Number(value))}
             defaultValue="5"
@@ -161,8 +155,10 @@ export default function GroupTableComponent() {
             </SelectContent>
           </Select>
 
-          {/* 3-nuqta: AddStudentToGroupModal + GroupCreateModal birlashgan */}
-          <GroupActions onRefetch={fetchGroups} />
+          {/* <GroupCreateModal
+            onSuccess={fetchGroups}
+            classname="flex items-center gap-2 px-3 py-1 rounded-lg bg-blue-500 text-white hover:bg-blue-500/80 cursor-pointer"
+          /> */}
         </div>
       </div>
 
@@ -175,16 +171,19 @@ export default function GroupTableComponent() {
                   isHeader
                   className="px-4 py-4 whitespace-nowrap text-start sm:text-center"
                 >
-                  Guruh nomi
+                  Dars Nomi
+                </TableCell>
+                <TableCell className="hidden sm:table-cell px-5 py-4 text-center whitespace-nowrap">
+                  Guruh
                 </TableCell>
                 <TableCell className="hidden lg:table-cell px-5 py-4 text-center whitespace-nowrap">
-                  O'quvchilar soni
+                  O'qituvchi
                 </TableCell>
                 <TableCell className="hidden xl:table-cell px-5 py-4 text-center whitespace-nowrap">
-                  O'qish Kunlari
+                  Dars Vaqti
                 </TableCell>
                 <TableCell className="hidden xl:table-cell px-5 py-4 text-center whitespace-nowrap">
-                  Boshlanish vaqti
+                  Dars Sanasi
                 </TableCell>
                 <TableCell className="px-5 py-4 whitespace-nowrap text-center">
                   Qo'shimcha
@@ -199,54 +198,70 @@ export default function GroupTableComponent() {
                     key={index}
                     className="text-center border-b h-[70px] border-gray-200 dark:border-white/[0.05] last:border-b-0"
                   >
+                    {/* guruh nomi */}
                     <TableCell className="px-5 py-4">
-                      <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                      <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                     </TableCell>
+
+                    {/* o'quvchilar soni */}
                     <TableCell className="hidden md:table-cell px-5 py-4">
-                      <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                      <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                     </TableCell>
+
+                    {/* o'qish kunlari */}
                     <TableCell className="hidden lg:table-cell px-5 py-4">
-                      <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                      <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                     </TableCell>
+
+                    {/* boshlanish vaqti */}
                     <TableCell className="hidden xl:table-cell px-5 py-4">
-                      <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                      <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                     </TableCell>
+                    
+                    <TableCell className="hidden xl:table-cell px-5 py-4">
+                      <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    </TableCell>
+
+                    {/* Qo'shimcha */}
                     <TableCell className="px-5 py-4">
-                      <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                      <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                     </TableCell>
                   </TableRow>
                 ))}
 
               {!loading &&
-                currentData.map((group, idx) => (
+                currentData.map((lesson, idx) => (
                   <TableRow
-                    key={group.id}
-                    className={`text-start sm:text-center border-b border-gray-200 dark:border-white/[0.05] last:border-b-0 ${
+                    key={lesson.id}
+                    className={` text-start sm:text-center  border-b border-gray-200 dark:border-white/[0.05] last:border-b-0 ${
                       idx % 2 === 0
                         ? "bg-gray-50 dark:bg-white/5"
                         : "bg-white dark:bg-white/0"
                     } hover:bg-gray-100 dark:hover:bg-white/10`}
                   >
                     <TableCell className="px-5 py-4 whitespace-nowrap">
-                      {group.name}
+                      {lesson.name}
                     </TableCell>
-                    <TableCell className="hidden md:table-cell px-5 py-4">
-                      {group.currentStudents}
+                    <TableCell className="hidden sm:table-cell px-5 py-4">
+                      {lesson.group.name}
                     </TableCell>
                     <TableCell className="hidden lg:table-cell px-5 py-4">
-                      {formatLessonDays(group.lessonDays)}
+                      {lesson.teacher.name} {lesson.teacher.lastName}
                     </TableCell>
                     <TableCell className="hidden xl:table-cell px-5 py-4">
-                      {group.lessonTime}
+                      {lesson.startTime} - {lesson.endTime}
+                    </TableCell>
+                    <TableCell className="hidden xl:table-cell px-5 py-4">
+                      {lesson.lessonDate}
                     </TableCell>
                     <TableCell className="px-5 py-4 flex sm:gap-2 justify-center">
-                      <GroupEditModal
-                        group={group}
+                      {/* <GroupEditModal
+                        group={lesson}
                         onSuccess={fetchGroups}
-                        classname="hidden sm:flex dark:bg-blue-500 bg-blue-500 hover:bg-blue-500/80 hover:text-white cursor-pointer text-white rounded-lg items-center justify-center gap-2"
-                      />
+                        classname="hidden sm:flex dark:bg-blue-500 bg-blue-500 hover:bg-blue-500/80 hover:text-white cursor-pointer text-white rounded-lg  items-center justify-center gap-2"
+                      /> */}
                       <Button
-                        onClick={() => navigate(`/group-info/${group.id}`)}
+                        onClick={() => navigate(`/lesson-info/${lesson.id}`)}
                         className="bg-blue-500 hover:bg-blue-500/80 hover:text-white cursor-pointer text-white rounded-lg flex items-center justify-center gap-2"
                       >
                         <Info className="w-4 h-4" />
@@ -272,14 +287,14 @@ export default function GroupTableComponent() {
                                 Bekor qilish
                               </AlertDialogCancel>
                               <AlertDialogAction
-                                disabled={deletingId === group.id}
+                                disabled={deletingId === lesson.id}
                                 onClick={(e) => {
                                   e.preventDefault();
-                                  handleDelete(group.id);
+                                  handleDelete(lesson.id);
                                 }}
                                 className="bg-red-600 hover:bg-red-700 hover:text-white cursor-pointer text-white"
                               >
-                                {deletingId === group.id
+                                {deletingId === lesson.id
                                   ? "O'chirilmoqda..."
                                   : "Ha, O'chirish"}
                               </AlertDialogAction>
@@ -306,6 +321,7 @@ export default function GroupTableComponent() {
         </div>
       </div>
 
+      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-end mt-4">
           <Pagination>
@@ -322,6 +338,7 @@ export default function GroupTableComponent() {
                   }
                 />
               </PaginationItem>
+
               {[...Array(totalPages)].map((_, index) => {
                 const page = index + 1;
                 return (
@@ -336,6 +353,7 @@ export default function GroupTableComponent() {
                   </PaginationItem>
                 );
               })}
+
               <PaginationItem>
                 <PaginationNext
                   onClick={() =>
