@@ -1,13 +1,50 @@
 import { useState, useEffect, useCallback } from "react";
-import apiClient from "@/api/apiClient"; // 🔁 o'zingdagi path
+import apiClient from "@/api/ApiClient";
 
-// ✅ REAL API FUNCTION (TO'G'RILANGAN)
-async function fetchStats() {
+// ================== TYPES ==================
+
+type Overview = {
+  groupCount: number;
+  activeGroupCount: number;
+  studentCount: number;
+  lessonCount: number;
+  todayLessons: number;
+  upcomingLessons: number;
+};
+
+type Attendance = {
+  totalRecords: number;
+  presentCount: number;
+  absentCount: number;
+  attendanceRate: number;
+};
+
+type Lesson = {
+  id: number;
+  name: string;
+  lessonDate: string;
+  startTime: string;
+  endTime: string;
+  group: {
+    id: number;
+    name: string;
+  };
+};
+
+type StatsResponse = {
+  overview: Overview;
+  attendance: Attendance;
+  recentLessons: Lesson[];
+};
+
+// ================== API ==================
+
+async function fetchStats(): Promise<StatsResponse> {
   const token = localStorage.getItem("access_token");
   const api = import.meta.env.VITE_API_URL;
   const teacherId = localStorage.getItem("id");
 
-  const res = await apiClient.get(
+  const res = await apiClient.get<{ data: StatsResponse }>(
     `${api}/teachers/${teacherId}/statistics`,
     {
       headers: {
@@ -16,23 +53,23 @@ async function fetchStats() {
     }
   );
 
-  const overview = res?.data?.data?.overview;
-
-  return {
-    students: overview?.studentCount ?? 0,
-    groups: overview?.groupCount ?? 0,
-    classes: overview?.todayLessons ?? 0,
-  };
+  return res.data.data;
 }
 
-// 🔢 COUNT ANIMATION
-function CountUp({ target, active }) {
-  const [val, setVal] = useState(0);
+// ================== COUNT ANIMATION ==================
+
+function CountUp({
+  target,
+  active,
+}: {
+  target: number;
+  active: boolean;
+}) {
+  const [val, setVal] = useState<number>(0);
 
   useEffect(() => {
     if (!active) return;
 
-    setVal(0);
     let current = 0;
     const steps = 40;
     const increment = Math.ceil(target / steps);
@@ -53,32 +90,42 @@ function CountUp({ target, active }) {
   return <>{val.toLocaleString("uz-UZ")}</>;
 }
 
-// 🎨 CARD CONFIG
-const CARDS = [
+// ================== CARDS ==================
+
+const CARDS: {
+  key: keyof Overview;
+  icon: string;
+  label: string;
+  color: string;
+}[] = [
   {
-    key: "students",
+    key: "studentCount",
     icon: "👨‍🎓",
-    label: "O'quvchilar soni",
-    sublabel: "Total students",
-    numColor: "text-blue-600 dark:text-blue-400",
+    label: "O'quvchilar",
+    color: "text-blue-600",
   },
   {
-    key: "groups",
+    key: "groupCount",
     icon: "📚",
-    label: "Guruhlar soni",
-    sublabel: "Total groups",
-    numColor: "text-emerald-600 dark:text-emerald-400",
+    label: "Guruhlar",
+    color: "text-emerald-600",
   },
   {
-    key: "classes",
+    key: "todayLessons",
     icon: "📅",
     label: "Bugungi darslar",
-    sublabel: "Today's classes",
-    numColor: "text-amber-600 dark:text-amber-400",
+    color: "text-amber-600",
+  },
+  {
+    key: "lessonCount",
+    icon: "📖",
+    label: "Jami darslar",
+    color: "text-purple-600",
   },
 ];
 
-// ⏳ LOADING
+// ================== SKELETON ==================
+
 function SkeletonCard() {
   return (
     <div className="rounded-2xl border p-6 animate-pulse">
@@ -89,12 +136,13 @@ function SkeletonCard() {
   );
 }
 
-// 🚀 MAIN
+// ================== MAIN ==================
+
 export default function DashboardStats() {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [visible, setVisible] = useState(false);
+  const [data, setData] = useState<StatsResponse | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [visible, setVisible] = useState<boolean>(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -104,9 +152,9 @@ export default function DashboardStats() {
     try {
       const result = await fetchStats();
       setData(result);
-      setTimeout(() => setVisible(true), 50);
+      setTimeout(() => setVisible(true), 100);
     } catch (e) {
-      setError(e.message || "Xatolik yuz berdi");
+      setError("Xatolik yuz berdi");
     } finally {
       setLoading(false);
     }
@@ -132,10 +180,10 @@ export default function DashboardStats() {
         </div>
       )}
 
-      {/* GRID */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* STATS */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {loading
-          ? [1, 2, 3].map((i) => <SkeletonCard key={i} />)
+          ? [1, 2, 3, 4].map((i) => <SkeletonCard key={i} />)
           : CARDS.map((card) => (
               <div
                 key={card.key}
@@ -143,22 +191,87 @@ export default function DashboardStats() {
                   visible ? "opacity-100" : "opacity-0 translate-y-4"
                 }`}
               >
-                <div className="text-3xl mb-2">{card.icon}</div>
+                <div className="text-3xl">{card.icon}</div>
 
-                <div className={`text-4xl font-bold ${card.numColor}`}>
+                <div className={`text-4xl font-bold ${card.color}`}>
                   <CountUp
-                    target={data?.[card.key] || 0}
+                    target={data?.overview?.[card.key] ?? 0}
                     active={visible}
                   />
                 </div>
 
                 <p className="font-semibold mt-2">{card.label}</p>
-                <p className="text-xs text-gray-400">
-                  {card.sublabel}
-                </p>
               </div>
             ))}
       </div>
+
+      {/* ATTENDANCE */}
+      {!loading && data?.attendance && (
+        <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border mb-6">
+          <h2 className="text-xl font-semibold mb-4">
+            Davomat statistikasi
+          </h2>
+
+          <div className="flex justify-between">
+            <div>
+              <p>Kelganlar</p>
+              <p className="text-green-600 text-2xl font-bold">
+                {data.attendance.presentCount}
+              </p>
+            </div>
+
+            <div>
+              <p>Kelmaganlar</p>
+              <p className="text-red-600 text-2xl font-bold">
+                {data.attendance.absentCount}
+              </p>
+            </div>
+
+            <div>
+              <p>Foiz</p>
+              <p className="text-blue-600 text-2xl font-bold">
+                {data.attendance.attendanceRate}%
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* RECENT LESSONS */}
+      {!loading && (
+        <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border">
+          <h2 className="text-xl font-semibold mb-4">
+            So'nggi darslar
+          </h2>
+
+          {data?.recentLessons.length === 0 ? (
+            <p className="text-gray-400">Ma'lumot yo‘q</p>
+          ) : (
+            <div className="space-y-3">
+              {data?.recentLessons.map((lesson) => (
+                <div
+                  key={lesson.id}
+                  className="p-4 border rounded-xl flex justify-between"
+                >
+                  <div>
+                    <p className="font-semibold">{lesson.name}</p>
+                    <p className="text-sm text-gray-400">
+                      {lesson.group.name}
+                    </p>
+                  </div>
+
+                  <div className="text-right text-sm">
+                    <p>{lesson.lessonDate}</p>
+                    <p>
+                      {lesson.startTime} - {lesson.endTime}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
