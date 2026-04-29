@@ -256,7 +256,7 @@ const Hero = () => {
 
       <section id="cta" className="py-18 sm:py-22">
         <div className="container">
-          <div className="rounded-[36px] border border-slate-200 bg-slate-950 px-6 py-10 text-white shadow-[0_40px_120px_-40px_rgba(15,23,42,0.55)] sm:px-10 sm:py-14">
+          <div className="rounded-[36px] border border-slate-200 bg-blue-950 px-6 py-10 text-white shadow-[0_40px_120px_-40px_rgba(15,23,42,0.55)] sm:px-10 sm:py-14">
             <div className="mx-auto max-w-3xl text-center">
               <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-400">
                 Boshlash
@@ -279,7 +279,7 @@ const Hero = () => {
                 <Button
                   onClick={() => navigate("/sign-in")}
                   variant="outline"
-                  className="cursor-pointer rounded-full border-slate-700 bg-transparent px-6 py-6 text-base font-semibold text-white hover:bg-white/10"
+                  className="cursor-pointer rounded-full border-slate-700 bg-transparent px-6 py-6 text-base font-semibold text-white hover:bg-black/10 hover:text-white"
                 >
                   Kirish
                 </Button>
