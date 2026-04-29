@@ -10,11 +10,9 @@ const LandingPage = () => {
   }, []);
 
   return (
-    <div>
+    <div className="min-h-screen bg-white text-slate-950">
       <Header />
-      <div>
-        <Hero />
-      </div>
+      <Hero />
       <Footer />
     </div>
   );

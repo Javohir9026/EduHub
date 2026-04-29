@@ -203,6 +203,7 @@ const TeacherGroupsTable = () => {
     group: Group;
     mobile?: boolean;
   }) => {
+    
     if (isAttended(group.id)) {
       return (
         <span

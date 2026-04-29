@@ -2,320 +2,292 @@ import { EduHubHeroImg } from "@/assets/exportImg";
 import { Button } from "@/components/ui/button";
 import {
   BookMarkedIcon,
-  CheckCircle,
-  Clock,
+  CheckCircle2,
+  Clock3,
   Coins,
   Contact,
   GraduationCap,
-  HandshakeIcon,
-  ShieldEllipsis,
+  Handshake,
+  ShieldCheck,
   Trello,
-  TwitchIcon,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+const featureCards = [
+  {
+    icon: Contact,
+    title: "O'qituvchilar boshqaruvi",
+    text: "Ustozlar ma'lumotlari, ish haqi, faoliyat holati va yuklamani bitta panelda boshqaring.",
+  },
+  {
+    icon: BookMarkedIcon,
+    title: "O'quvchilar nazorati",
+    text: "Ro'yxatdan o'tish, guruhga biriktirish, to'lov va davomati bo'yicha jarayonlar tartibli ishlaydi.",
+  },
+  {
+    icon: GraduationCap,
+    title: "Guruhlar boshqaruvi",
+    text: "Guruh, xona, vaqt va ustozni bog'lab, kurslar oqimini chalkashsiz yuriting.",
+  },
+  {
+    icon: CheckCircle2,
+    title: "Davomat tizimi",
+    text: "Davomatni tez kiritish, ko'rish va analiz qilish uchun markazlashgan qulay oqim.",
+  },
+  {
+    icon: Coins,
+    title: "Moliyaviy tartib",
+    text: "To'lovlar, qarzdorlik va tushum ko'rsatkichlari real vaqtga yaqin ko'rinishda chiqadi.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Ishonchli boshqaruv",
+    text: "Barcha asosiy jarayonlar yagona joyda bo'lgani uchun nazorat va aniqlik oshadi.",
+  },
+];
+
+const benefits = [
+  {
+    icon: Clock3,
+    title: "Vaqtni tejaydi",
+    text: "Ma'muriy ishlarga ketadigan vaqtni kamaytirib, asosiy e'tiborni ta'lim sifatiga qaytaradi.",
+  },
+  {
+    icon: Trello,
+    title: "Jarayonni tartiblaydi",
+    text: "Talaba, guruh, dars va to'lov ma'lumotlari bir-biriga bog'langan holda ishlaydi.",
+  },
+  {
+    icon: Coins,
+    title: "Moliyani aniq ko'rsatadi",
+    text: "Tushum, chegirma va qarzdorlikni kuzatish osonlashadi, qaror qabul qilish tezlashadi.",
+  },
+  {
+    icon: Handshake,
+    title: "Jamoaviy ishlashni yengillashtiradi",
+    text: "Rahbariyat va ustozlar uchun yagona tizim bo'lgani sababli hamkorlik aniqroq bo'ladi.",
+  },
+];
+
+const quickStats = [
+  { value: "Bitta panel", label: "asosiy boshqaruv uchun" },
+  { value: "Real vaqt", label: "jarayon monitoringi uchun" },
+  { value: "Kamroq chalkashlik", label: "kunlik operatsiyada" },
+];
+
 const Hero = () => {
   const navigate = useNavigate();
+
   return (
-    <div className="w-full dark:bg-white dark:text-black">
-      <div className="container flex flex-col lg:flex-row justify-between items-center mb-15">
-        <div className="mt-25 max-w-[500px]">
-          <h1 className="!font-bold text-4xl md:text-6xl">
-            Ta'lim markazini oson boshqarish
-          </h1>
-          <br />
-          <p>
-            Ta'lim markazlari uchun to'liq boshqaruv tizimi. O'qituvchilar,
-            talabalar, ish haqi hisob-kitoblari, to'lovlar, guruhlar va
-            davomatni bir joyda boshqaring.
-          </p>{" "}
-          <br />
-          <div className="flex items-center gap-2 flex-col md:flex-row">
-            <Button
-              onClick={() => navigate("/register")}
-              variant="outline"
-              className="
-    p-6 w-full md:w-auto
-    bg-blue-500 dark:bg-blue-500 dark:hover:bg-blue-500/85 text-white !font-semibold
-    hover:bg-blue-500/85 hover:text-white
-    cursor-pointer
-    relative overflow-hidden
-    transition-all duration-300 ease-in-out
-    hover:scale-[1.03]
-    border-white/30 border-[3px]
-    shadow-[0_10px_20px_rgba(0,0,0,0.2)]
+    <div className="bg-[linear-gradient(180deg,#f8fafc_0%,#ffffff_38%,#f8fafc_100%)] text-slate-950">
+      <section id="hero" className="relative overflow-hidden">
+        <div className="absolute inset-x-0 top-0 h-[520px] bg-[radial-gradient(circle_at_top_right,rgba(37,99,235,0.14),transparent_35%),radial-gradient(circle_at_top_left,rgba(15,23,42,0.08),transparent_28%)]" />
+        <div className="container relative py-16 sm:py-20 lg:py-24">
+          <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+            <div className="max-w-2xl">
+              <div className="inline-flex rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500 shadow-sm">
+                EduHub for Learning Centers
+              </div>
 
-    before:content-['']
-    before:absolute before:top-0 before:left-[-100px]
-    before:w-[100px] before:h-full
-    before:bg-[linear-gradient(120deg,rgba(255,255,255,0)_30%,rgba(255,255,255,0.8),rgba(255,255,255,0)_70%)]
-    before:opacity-60
-    hover:before:animate-shine
-  "
-            >
-              Ro'yxatdan o'tish
-            </Button>
+              <h1 className="mt-6 text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-7xl">
+                Ta'lim markazini
+                <span className="block text-blue-600">tartibli va chiroyli</span>
+                boshqaring
+              </h1>
 
-            <Button
-              className="!font-semibold
-  h-[52px] inline-flex items-center justify-center
-  relative z-[1] overflow-hidden
-  cursor-pointer
-  text-[#090909] text-[18px] leading-none
-  px-[1.7em]
-  rounded-lg
-  bg-[#e8e8e8]
-  border border-[#e8e8e8]
-  shadow-[6px_6px_12px_#c5c5c5,-6px_-6px_12px_#ffffff]
-  transition-all duration-200 ease-in
+              <p className="mt-6 max-w-xl text-base leading-8 text-slate-600 sm:text-lg">
+                Ustozlar, o'quvchilar, guruhlar, davomat va to'lovlarni yagona
+                tizimda boshqaring. EduHub markaz ichidagi kundalik ishlarni
+                soddalashtiradi va jarayonni aniq ko'rsatadi.
+              </p>
 
-  active:text-[#666]
-  active:shadow-[inset_4px_4px_12px_#c5c5c5,inset_-4px_-4px_12px_#ffffff]
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <Button
+                  onClick={() => navigate("/register")}
+                  className="cursor-pointer rounded-full bg-blue-600 px-6 py-6 text-base font-semibold text-white hover:bg-blue-500"
+                >
+                  Bepul boshlash
+                </Button>
+                <Button
+                  onClick={() => navigate("/sign-in")}
+                  variant="outline"
+                  className="cursor-pointer rounded-full border-slate-300 px-6 py-6 text-base font-semibold text-slate-700 hover:bg-slate-100 hover:text-slate-950"
+                >
+                  Tizimga kirish
+                </Button>
+              </div>
 
-  before:content-['']
-  before:absolute before:left-1/2 before:top-full
-  before:w-[140%] before:h-[180%]
-  before:-translate-x-1/2
-  before:scale-x-[1.25]
-  before:rounded-full
-  before:bg-black/5
-  before:transition-all before:duration-500 before:delay-100
-  before:[transition-timing-function:cubic-bezier(0.55,0,0.1,1)]
-  before:-z-[1]
+              <div className="mt-10 grid gap-4 sm:grid-cols-3">
+                {quickStats.map((item) => (
+                  <div
+                    key={item.label}
+                    className="rounded-2xl border border-slate-200 bg-white/80 px-4 py-4 shadow-sm backdrop-blur"
+                  >
+                    <p className="text-lg font-black text-slate-950">{item.value}</p>
+                    <p className="mt-1 text-sm leading-6 text-slate-500">{item.label}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-  after:content-['']
-  after:absolute after:left-[55%] after:top-[180%]
-  after:w-[160%] after:h-[190%]
-  after:-translate-x-1/2
-  after:scale-x-[1.45]
-  after:rounded-full
-  after:bg-purple-500
-  after:transition-all after:duration-500 after:delay-100
-  after:[transition-timing-function:cubic-bezier(0.55,0,0.1,1)]
-  after:-z-[1]
+            <div className="relative">
+              <div className="absolute -left-6 top-10 hidden h-36 w-36 rounded-full bg-blue-100 blur-3xl lg:block" />
+              <div className="absolute -right-8 bottom-8 hidden h-44 w-44 rounded-full bg-slate-200 blur-3xl lg:block" />
 
-  hover:text-white hover:border-purple-500
-  hover:before:top-[-35%] hover:before:bg-purple-500 hover:before:scale-y-[1.3] hover:before:scale-x-[0.8]
-  hover:after:top-[-45%] hover:after:bg-purple-500 hover:after:scale-y-[1.3] hover:after:scale-x-[0.8]
-  w-full md:w-auto"
-              onClick={() => navigate("/sign-in")}
-            >
-              Kirish
-            </Button>
+              <div className="relative rounded-[32px] border border-slate-200 bg-white p-4 shadow-[0_40px_120px_-40px_rgba(15,23,42,0.35)] sm:p-6">
+                <div className="mb-4 flex items-center justify-between rounded-2xl bg-slate-950 px-4 py-3 text-white">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.22em] text-slate-400">
+                      Central View
+                    </p>
+                    <p className="mt-1 text-lg font-semibold">Boshqaruv paneli</p>
+                  </div>
+                  <div className="rounded-full bg-white/10 px-3 py-1 text-xs text-slate-200">
+                    Soddalashtirilgan oqim
+                  </div>
+                </div>
+
+                <div className="overflow-hidden rounded-[26px] border border-slate-200 bg-slate-50">
+                  <img
+                    src={EduHubHeroImg}
+                    alt="EduHub dashboard preview"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                      Kundalik nazorat
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                      Darslar, to'lovlar va guruh oqimi bitta ekranda ko'rinadi.
+                    </p>
+                  </div>
+                  <div className="rounded-2xl border border-blue-100 bg-blue-50 px-4 py-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-500">
+                      Minimal rang, aniq fokus
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                      Ko'rinish toza, o'qish oson va harakatlar bir xil uslubda.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <img
-          src={EduHubHeroImg}
-          alt="banner"
-          className="w-full h-full overflow-auto"
-        />
-      </div>
-      <div id="features" className="w-full h-auto bg-gray-50 mx-auto py-30">
+      </section>
+
+      <section id="features" className="py-18 sm:py-22">
         <div className="container">
-          <div className="flex flex-col gap-5">
-            <h1 className="flex justify-center text-center !font-bold text-4xl">
-              Kuchli xususiyatlar
-            </h1>
-            <p className="flex justify-center text-center items-center text-gray-500">
-              O'quv markazingizni samarali boshqarish uchun kerak bo'lgan hamma
-              narsa
+          <div className="mx-auto mb-12 max-w-3xl text-center">
+            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-blue-600">
+              Imkoniyatlar
+            </p>
+            <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-5xl">
+              Markaz uchun kerak bo'lgan asosiy modullar
+            </h2>
+            <p className="mt-4 text-base leading-8 text-slate-500 sm:text-lg">
+              Jarayonlar ortiqcha rang va vizual shovqinsiz, lekin aniq
+              ajratilgan bloklarda ko'rsatiladi.
             </p>
           </div>
-          <br /> <br />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 justify-items-center">
-            <div className="flex flex-col gap-2 bg-white max-w-100 p-5 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-600 cursor-pointer">
-              <Contact className="text-blue-600 size-10" />
-              <h1 className="!font-bold text-1xl">O'qituvchilar boshqaruvi</h1>
-              <p className="text-gray-400 text-sm">
-                O'qituvchilarni qo'shing, ularning ma'lumotlarini boshqaring,
-                oylik maoshlarni hisoblang va to'lovlarni osongina kuzatib
-                boring.
+
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {featureCards.map((item) => {
+              const Icon = item.icon;
+
+              return (
+                <div
+                  key={item.title}
+                  className="group rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+                >
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 transition group-hover:bg-blue-100">
+                    <Icon className="size-6" />
+                  </div>
+                  <h3 className="mt-5 text-xl font-bold text-slate-950">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-7 text-slate-500">{item.text}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section id="benefits" className="border-y border-slate-200 bg-slate-50/80 py-18 sm:py-22">
+        <div className="container">
+          <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-blue-600">
+                Afzalliklar
+              </p>
+              <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-5xl">
+                Operatsiyani yengillashtiradigan tizim
+              </h2>
+              <p className="mt-5 max-w-xl text-base leading-8 text-slate-500 sm:text-lg">
+                EduHub markaz ichidagi jarayonlarni birlashtirib, kunlik ishni
+                tezroq va nazoratli qiladi. Foydalanish soddaligi markaz
+                rahbariyatiga ham, jamoaga ham foyda beradi.
               </p>
             </div>
-            <div className="flex flex-col gap-2 bg-white max-w-100 p-5 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer">
-              <BookMarkedIcon className="text-blue-600 size-10" />
-              <h1 className="!font-bold text-1xl">Talabalar boshqaruvi</h1>
-              <p className="text-gray-400 text-sm">
-                Talabalarni ro'yxatdan o'tkazing, ularning profillarini
-                boshqaring, to'lov sanalarini kuzatib boring va ro'yxatga olish
-                holatini kuzatib boring.
-              </p>
-            </div>
-            <div className="flex flex-col gap-2 bg-white max-w-100 p-5 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer">
-              <GraduationCap className="text-blue-600 size-10" />
-              <h1 className="!font-bold text-1xl">Guruhlar boshqaruvi</h1>
-              <p className="text-gray-400 text-sm">
-                Guruhlarni yaratish va tartibga solish, o'qituvchilarni
-                tayinlash, jadvallarni belgilash va guruh ma’lumotlarini
-                boshqarish.
-              </p>
-            </div>
-            <div className="flex flex-col gap-2 bg-white max-w-100 p-5 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer">
-              <CheckCircle className="text-blue-600 size-10" />
-              <h1 className="!font-bold text-1xl">Davomatni kuzatish</h1>
-              <p className="text-gray-400 text-sm">
-                O'qituvchilar davomatni qayd etishlari, talabalar ishtirokini
-                kuzatishlari va davomat hisobotlarini yaratishlari mumkin.
-              </p>
-            </div>
-            <div className="flex flex-col gap-2 bg-white max-w-100 p-5 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer">
-              <Coins className="text-blue-600 size-10" />
-              <h1 className="!font-bold text-1xl">Maosh boshqaruvi</h1>
-              <p className="text-gray-400 text-sm">
-                Avtomatlashtirilgan ish haqi hisob-kitoblari, to'lovlar tarixi
-                va barcha o'qituvchilar uchun moliyaviy hisobotlar.
-              </p>
-            </div>
-            <div className="flex flex-col gap-2 bg-white max-w-100 p-5 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer">
-              <ShieldEllipsis className="text-blue-600 size-10" />
-              <h1 className="!font-bold text-1xl">Xavfsiz va ishonchli</h1>
-              <p className="text-gray-400 text-sm">
-                Sizning xotirjamligingiz uchun shifrlangan ma'lumotlar va
-                muntazam zaxira nusxalari bilan korporativ darajadagi
-                xavfsizlik.
-              </p>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              {benefits.map((item) => {
+                const Icon = item.icon;
+
+                return (
+                  <div
+                    key={item.title}
+                    className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm"
+                  >
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-700">
+                      <Icon className="size-5" />
+                    </div>
+                    <h3 className="mt-4 text-lg font-bold text-slate-950">{item.title}</h3>
+                    <p className="mt-2 text-sm leading-7 text-slate-500">{item.text}</p>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
-      </div>
-      <div id="benfits" className="container py-30">
-        <div className="flex flex-col gap-5 mb-20">
-          <h1 className="flex justify-center text-center !font-bold text-4xl">
-            Nima uchun EduHubni tanlaysiz?
-          </h1>
-          <p className="flex justify-center text-center items-center text-gray-500">
-            Operatsiyalarni soddalashtiring va asosiy e'tiborni eng muhim
-            narsaga - ta'limga qarating
-          </p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div className="flex items-center gap-5">
-            <Clock className="text-blue-600 size-10" />
-            <div className="flex flex-col w-[500px]">
-              <h1 className="!font-bold text-1xl">Vaqtni tejash</h1>
-              <p className="text-gray-400 text-sm">
-                Ma'muriy vazifalarni avtomatlashtiring va qog'ozbozlik o'rniga
-                o'qitish va talabalar muvaffaqiyatiga e'tibor qarating.
+      </section>
+
+      <section id="cta" className="py-18 sm:py-22">
+        <div className="container">
+          <div className="rounded-[36px] border border-slate-200 bg-slate-950 px-6 py-10 text-white shadow-[0_40px_120px_-40px_rgba(15,23,42,0.55)] sm:px-10 sm:py-14">
+            <div className="mx-auto max-w-3xl text-center">
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-400">
+                Boshlash
               </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-5">
-            <TwitchIcon className="text-blue-600 size-10" />
-            <div className="flex flex-col w-[500px]">
-              <h1 className="!font-bold text-1xl">Yaxshiroq tashkilot</h1>
-              <p className="text-gray-400 text-sm">
-                Foydalanish uchun qulay interfeyslar bilan markazingizning
-                barcha malumotlarini bir joyda saqlang.
+              <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-5xl">
+                Markazingizni yanada tartibli boshqarishga o'ting
+              </h2>
+              <p className="mt-4 text-base leading-8 text-slate-300 sm:text-lg">
+                EduHub bilan ustozlar, guruhlar, to'lovlar va davomatni bitta
+                tartibli oqimga yig'ing.
               </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-5">
-            <Trello className="text-blue-600 size-10" />
-            <div className="flex flex-col w-[500px]">
-              <h1 className="!font-bold text-1xl">Moliyaviy aniqlik</h1>
-              <p className="text-gray-400 text-sm">
-                Barmoqlaringiz uchida ish haqi hisob-kitoblari, to'lovlarni
-                kuzatish va moliyaviy hisobotlarni aniqlang.
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-5">
-            <HandshakeIcon className="text-blue-600 size-10" />
-            <div className="flex flex-col w-[500px]">
-              <h1 className="!font-bold text-1xl">Oson hamkorlik</h1>
-              <p className="text-gray-400 text-sm">
-                O'qituvchilar va administratorlar real vaqt rejimida
-                yangilanishlar orqali birgalikda samarali ishlay oladilar.
-              </p>
+
+              <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+                <Button
+                  onClick={() => navigate("/register")}
+                  className="cursor-pointer rounded-full bg-blue-600 px-6 py-6 text-base font-semibold text-white hover:bg-blue-500"
+                >
+                  Ro'yxatdan o'tish
+                </Button>
+                <Button
+                  onClick={() => navigate("/sign-in")}
+                  variant="outline"
+                  className="cursor-pointer rounded-full border-slate-700 bg-transparent px-6 py-6 text-base font-semibold text-white hover:bg-white/10"
+                >
+                  Kirish
+                </Button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div className="bg-gray-50">
-        <div className="container py-25 flex flex-col gap-10">
-          <div className="flex flex-col gap-6">
-            <h1 className="flex justify-center !font-bold text-center text-4xl items-center">
-              Markazingizni o'zgartirishga tayyormisiz?
-            </h1>
-            <p className="flex justify-center text-center items-center text-gray-500">
-              EduHub-dan foydalanayotgan yuzlab o'quv markazlariga qo'shiling va
-              ularning faoliyatini soddalashtiring
-            </p>
-          </div>
-          <div className="flex justify-center items-center gap-2 flex-col md:flex-row">
-            <Button
-              onClick={() => navigate("/register")}
-              variant="outline"
-              className="dark:bg-blue-500 dark:hover:bg-blue-500/85
-    p-6 w-full md:w-auto
-    bg-blue-500 text-white !font-semibold
-    hover:bg-blue-500/85 hover:text-white
-    cursor-pointer
-    relative overflow-hidden
-    transition-all duration-300 ease-in-out
-    hover:scale-[1.03]
-    border-white/30 border-[3px]
-    shadow-[0_10px_20px_rgba(0,0,0,0.2)]
-
-    before:content-['']
-    before:absolute before:top-0 before:left-[-100px]
-    before:w-[100px] before:h-full
-    before:bg-[linear-gradient(120deg,rgba(255,255,255,0)_30%,rgba(255,255,255,0.8),rgba(255,255,255,0)_70%)]
-    before:opacity-60
-    hover:before:animate-shine
-  "
-            >
-              Ro'yxatdan o'tish
-            </Button>
-
-            <Button
-              className="
-  h-[52px] inline-flex items-center justify-center
-  relative z-[1] overflow-hidden
-  cursor-pointer
-  text-[#090909] text-[18px] leading-none
-  px-[1.7em]
-  rounded-lg
-  bg-[#e8e8e8]
-  border border-[#e8e8e8]
-  shadow-[6px_6px_12px_#c5c5c5,-6px_-6px_12px_#ffffff]
-  transition-all duration-200 ease-in
-
-  active:text-[#666]
-  active:shadow-[inset_4px_4px_12px_#c5c5c5,inset_-4px_-4px_12px_#ffffff]
-
-  before:content-['']
-  before:absolute before:left-1/2 before:top-full
-  before:w-[140%] before:h-[180%]
-  before:-translate-x-1/2
-  before:scale-x-[1.25]
-  before:rounded-full
-  before:transition-all before:duration-500 before:delay-100
-  before:[transition-timing-function:cubic-bezier(0.55,0,0.1,1)]
-  before:-z-[1]
-
-  after:content-['']
-  after:absolute after:left-[55%] after:top-[180%]
-  after:w-[160%] after:h-[190%]
-  after:-translate-x-1/2
-  after:scale-x-[1.45]
-  after:rounded-full
-  after:bg-purple-500
-  after:transition-all after:duration-500 after:delay-100
-  after:[transition-timing-function:cubic-bezier(0.55,0,0.1,1)]
-  after:-z-[1]
-
-  hover:text-white hover:border-purple-500
-  hover:before:top-[-35%] hover:before:bg-purple-500 hover:before:scale-y-[1.3] hover:before:scale-x-[0.8]
-  hover:after:top-[-45%] hover:after:bg-purple-500 hover:after:scale-y-[1.3] hover:after:scale-x-[0.8] !font-semibold
-  w-full md:w-auto"
-              onClick={() => navigate("/sign-in")}
-            >
-              Kirish
-            </Button>
-          </div>
-        </div>
-      </div>
+      </section>
     </div>
   );
 };

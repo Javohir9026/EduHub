@@ -122,7 +122,7 @@ export default function MyGroupsPage() {
   }, []);
 
   return (
-    <div className="min-h-screen dark:bg-black transition-colors">
+    <div className="min-h-screen  transition-colors">
 
       {/* FULL WIDTH */}
       <div className="w-full px-2 sm:px-4 lg:px-6 py-6">
@@ -135,7 +135,8 @@ export default function MyGroupsPage() {
               <TableHeader>
                 <TableRow className="bg-gray-100 dark:bg-gray-900">
                   <TableCell className="px-4 py-3 text-xs font-semibold">
-                    <span className="flex items-center gap-1">
+                    <span className="flex items-center gap-1"> 
+                      
                       <BookOpen className="w-4 h-4" />
                       Guruh
                     </span>

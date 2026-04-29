@@ -4,53 +4,61 @@ import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const navigate = useNavigate();
+
   return (
-    <div className="py-3 top-0 sticky z-99 bg-white shadow-lg">
-      <div className="container flex justify-between items-center">
-        <div
-          className="w-[200px] overflow-hidden flex items-center justify-center cursor-pointer h-[50px]"
+    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl">
+      <div className="container flex h-18 items-center justify-between gap-4">
+        <button
           onClick={() => navigate("/")}
+          className="flex h-12 w-[170px] cursor-pointer items-center justify-start overflow-hidden sm:w-[190px]"
         >
-          <img
-            src={EduLogoLight}
-            alt="LogoLightText"
-            className="object-contain"
-          />
-        </div>
-        <div className="flex items-center gap-5">
-          <div className=" hidden md:flex items-center gap-3">
-            <a
-              href="#features"
-              className="cursor-pointer hover:border-b-2 hover:border-black text-black/70 hover:text-black"
-            >
-              Imkoniyatlar
-            </a>
-            <a
-              href="#benfits"
-              className="cursor-pointer hover:border-b-2 hover:border-black text-black/70 hover:text-black"
-            >
-              Afzalliklar
-            </a>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              onClick={() => navigate("/sign-in")}
-              variant="outline"
-              className="cursor-pointer !font-semibold hover:text-white dark:hover:text-white border-2 dark:border-2 hover:bg-purple-500  dark:hover:hover:bg-purple-500 dark:text-black border-gray-200 border-1 dark:border-gray-200 "
-            >
-              Kirish
-            </Button>
-            <Button
-              onClick={() => navigate("/register")}
-              variant="outline"
-              className="bg-blue-500 dark:bg-blue-500 text-white !font-semibold hover:bg-blue-500/85 dark:hover:bg-blue-500/85 hover:text-white cursor-pointer hidden sm:block"
-            >
-              Ro'yxatdan o'tish
-            </Button>
-          </div>
+          <img src={EduLogoLight} alt="EduHub" className="object-contain" />
+        </button>
+
+        <nav className="hidden items-center gap-8 md:flex">
+          <a
+            href="#hero"
+            className="cursor-pointer text-sm font-medium text-slate-500 transition hover:text-slate-950"
+          >
+            Bosh sahifa
+          </a>
+          <a
+            href="#features"
+            className="cursor-pointer text-sm font-medium text-slate-500 transition hover:text-slate-950"
+          >
+            Imkoniyatlar
+          </a>
+          <a
+            href="#benefits"
+            className="cursor-pointer text-sm font-medium text-slate-500 transition hover:text-slate-950"
+          >
+            Afzalliklar
+          </a>
+          <a
+            href="#cta"
+            className="cursor-pointer text-sm font-medium text-slate-500 transition hover:text-slate-950"
+          >
+            Boshlash
+          </a>
+        </nav>
+
+        <div className="flex items-center gap-2 sm:gap-3">
+          <Button
+            onClick={() => navigate("/sign-in")}
+            variant="outline"
+            className="cursor-pointer rounded-full border-slate-300 px-4 font-semibold text-slate-700 hover:bg-slate-100 hover:text-slate-950"
+          >
+            Kirish
+          </Button>
+          <Button
+            onClick={() => navigate("/register")}
+            className="hidden cursor-pointer rounded-full bg-blue-600 px-5 font-semibold text-white hover:bg-blue-500 sm:inline-flex"
+          >
+            Ro'yxatdan o'tish
+          </Button>
         </div>
       </div>
-    </div>
+    </header>
   );
 };
 

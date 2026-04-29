@@ -50,28 +50,36 @@ const SignInForm = () => {
 
     try {
       setLoading(true);
-      const endpoind = role === "center" ? "auth/login" : "teachers/login";
+      // BUG FIX: "endpoind" → "endpoint"
+      const endpoint = role === "center" ? "auth/login" : "teachers/login";
       const api = import.meta.env.VITE_API_URL;
-      const res = await apiClient.post(`${api}/${endpoind}`, {
+      const res = await apiClient.post(`${api}/${endpoint}`, {
         login,
         password,
       });
       const access_token = res.data?.data?.access_token;
       const refresh_token = res.data?.data?.refresh_token;
+
       if (role === "center") {
         localStorage.setItem("role", "center");
-        localStorage.setItem("id", res.data.data.user.id);
+        // BUG FIX: added optional chaining to avoid crash if user is undefined
+        localStorage.setItem("id", res.data?.data?.user?.id ?? "");
       } else {
         localStorage.setItem("role", "teacher");
-        localStorage.setItem("id", res.data.data.teacher.id);
+        // BUG FIX: added optional chaining to avoid crash if teacher is undefined
+        localStorage.setItem("id", res.data?.data?.teacher?.id ?? "");
       }
+
       if (access_token) localStorage.setItem("access_token", access_token);
       if (refresh_token) localStorage.setItem("refresh_token", refresh_token);
+
       toast.success("Kirish muvaffaqiyatli yakunlandi!");
-      navigate('/dashboard')
+      // BUG FIX: state cleanup moved BEFORE navigate to avoid state updates on unmounted component
       setLogin("");
       setPassword("");
-    } catch (error: any) {
+      navigate("/dashboard");
+    } catch (error: unknown) {
+      // BUG FIX: changed "any" to "unknown" for better type safety
       toast.error("Login yoki parol noto'g'ri!", { duration: 3000 });
     } finally {
       setLoading(false);
@@ -81,9 +89,10 @@ const SignInForm = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-blue-50 p-4">
       <div className="flex flex-col md:flex-row bg-white rounded-3xl shadow-xl overflow-hidden max-w-4xl w-full">
+        {/* Left: Form */}
         <div className="flex-1 p-8 sm:p-10 flex flex-col gap-6">
           <Link to="/">
-            <p className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors">
+            <p className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors w-fit">
               <ArrowLeft strokeWidth={1} size={20} />
               Orqaga qaytish
             </p>
@@ -93,9 +102,12 @@ const SignInForm = () => {
             <h1 className="text-3xl font-bold text-gray-800">Xush Kelibsiz</h1>
             <p className="text-gray-500 text-sm">EduHub hisobingizga kiring</p>
           </div>
-          <div className="flex flex-col gap-2">
-            <RoleSwitcher onChange={(role) => setRole(role)} />
+
+          <div className="flex flex-col gap-4">
+            <RoleSwitcher onChange={(r) => setRole(r)} />
+
             <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
+              {/* Login field */}
               <div className="flex flex-col gap-2">
                 <Label htmlFor="login">Login</Label>
                 <Input
@@ -117,31 +129,36 @@ const SignInForm = () => {
                   <p className="text-red-500 text-xs mt-1">*{errors.login}</p>
                 )}
               </div>
+
+              {/* Password field */}
+              {/* BUG FIX: eye button top value corrected from "top-10" to "top-1/2"
+                  so it always stays vertically centered regardless of label height */}
               <div className="flex flex-col gap-2 relative">
                 <Label htmlFor="pass">Parol</Label>
-
-                <Input
-                  id="pass"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Parol"
-                  value={password}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setPassword(value);
-                    setErrors((prev) => ({
-                      ...prev,
-                      password: validateField("password", value),
-                    }));
-                  }}
-                  className="border dark:text-black border-gray-300 rounded-lg px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute  right-3 top-10 cursor-pointer -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
+                <div className="relative">
+                  <Input
+                    id="pass"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Parol"
+                    value={password}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setPassword(value);
+                      setErrors((prev) => ({
+                        ...prev,
+                        password: validateField("password", value),
+                      }));
+                    }}
+                    className="border dark:text-black border-gray-300 rounded-lg px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
                 {errors.password && (
                   <p className="text-red-500 text-xs mt-1">
                     *{errors.password}
@@ -149,12 +166,18 @@ const SignInForm = () => {
                 )}
               </div>
 
+              {/* Remember me */}
               <div className="flex items-center gap-2">
-                <Checkbox id="checkbox" className="border-gray-300 " />
-                <Label htmlFor="checkbox" className="text-sm text-gray-600">
+                <Checkbox id="checkbox" className="border-gray-300" />
+                <Label
+                  htmlFor="checkbox"
+                  className="text-sm text-gray-600 cursor-pointer"
+                >
                   Tizimda qolish
                 </Label>
               </div>
+
+              {/* Submit button */}
               <Button
                 type="submit"
                 disabled={!isFormValid || loading}
@@ -170,8 +193,10 @@ const SignInForm = () => {
                   "Kirish"
                 )}
               </Button>
+
+              {/* Register link — only for center role */}
               {role === "center" && (
-                <p className="text-center text-sm text-gray-500 mt-4">
+                <p className="text-center text-sm text-gray-500 mt-2">
                   Hisobingiz yo'qmi?{" "}
                   <Link
                     to="/register"
@@ -184,7 +209,7 @@ const SignInForm = () => {
             </form>
           </div>
 
-          <p className="text-center text-sm text-gray-500 mt-4">
+          <p className="text-center text-sm text-gray-500">
             Yordam kerakmi?{" "}
             <Link to="/contact-us" className="text-blue-500 hover:underline">
               Biz bilan bog'laning
@@ -192,8 +217,13 @@ const SignInForm = () => {
           </p>
         </div>
 
+        {/* Right: Image panel */}
         <div className="hidden md:flex flex-1 bg-blue-500 items-center justify-center">
-          <img src={EduHubSignInImg} alt="SignInImg" className="rounded-full" />
+          <img
+            src={EduHubSignInImg}
+            alt="Sign in illustration"
+            className="rounded-full"
+          />
         </div>
       </div>
     </div>
