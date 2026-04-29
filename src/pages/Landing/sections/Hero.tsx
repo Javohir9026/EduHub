@@ -135,14 +135,14 @@ const Hero = () => {
               <div className="absolute -right-8 bottom-8 hidden h-44 w-44 rounded-full bg-slate-200 blur-3xl lg:block" />
 
               <div className="relative rounded-[32px] border border-slate-200 bg-white p-4 shadow-[0_40px_120px_-40px_rgba(15,23,42,0.35)] sm:p-6">
-                <div className="mb-4 flex items-center justify-between rounded-2xl bg-slate-950 px-4 py-3 text-white">
+                <div className="mb-4 flex items-center justify-between rounded-2xl bg-white border px-4 py-3 text-white">
                   <div>
-                    <p className="text-xs uppercase tracking-[0.22em] text-slate-400">
+                    <p className="text-xs uppercase tracking-[0.22em] text-black">
                       Central View
                     </p>
-                    <p className="mt-1 text-lg font-semibold">Boshqaruv paneli</p>
+                    <p className="mt-1 text-lg font-semibold text-black">Boshqaruv paneli</p>
                   </div>
-                  <div className="rounded-full bg-white/10 px-3 py-1 text-xs text-slate-200">
+                  <div className="rounded-full bg-blue-400/30 px-3 py-1 text-xs text-black">
                     Soddalashtirilgan oqim
                   </div>
                 </div>
