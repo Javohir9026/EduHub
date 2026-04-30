@@ -3,6 +3,7 @@ import { Calendar, Clock, User, Users, BookOpen } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import apiClient from "@/api/ApiClient";
 import { BreadcrumbBasic } from "@/components/common/BreadCrumb";
+import { LessonEditModal } from "@/components/common/Lessons/LessonEditModal";
 
 type Lesson = {
   id: number;
@@ -89,17 +90,20 @@ const LessonInfoPage = () => {
   }, []);
 
   return (
-    <div className="p-4 sm:p-6 lg:p-10 bg-gray-50 dark:bg-background min-h-screen">
+    <div className="w-full bg-gray-50 dark:bg-background min-h-screen">
       <div className="flex justify-end mb-10">
         <BreadcrumbBasic
           items={[
             { title: "Bosh sahifa", href: "/" },
             { title: "Darslar", href: "/lessons" },
-            { title: lessonName || "Yuklanmoqda...", href: `/lesson-info/${lesson?.id}` },
+            {
+              title: lessonName || "Yuklanmoqda...",
+              href: `/lesson-info/${lesson?.id}`,
+            },
           ]}
         />
       </div>
-      <div className="max-w-5xl mx-auto bg-white dark:bg-white/5 backdrop-blur-xl rounded-2xl shadow-lg p-6 sm:p-8">
+      <div className="mx-auto bg-white dark:bg-white/5 backdrop-blur-xl rounded-2xl shadow-lg p-6 sm:p-8">
         {loading ? (
           <Skeleton />
         ) : (
@@ -146,7 +150,7 @@ const LessonInfoPage = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10" >
+              <div className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10">
                 <User className="text-blue-500" />
                 <Link to={`/teacher-info/${lesson?.teacher.id}`}>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -178,9 +182,7 @@ const LessonInfoPage = () => {
                 <span>Dars tafsilotlari</span>
               </div>
 
-              <button className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-lg transition">
-                Tahrirlash
-              </button>
+              <LessonEditModal id={Number(id)} onSuccess={() => fetchData()} />
             </div>
           </>
         )}
