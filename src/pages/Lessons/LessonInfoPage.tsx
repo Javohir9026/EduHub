@@ -182,7 +182,7 @@ const LessonInfoPage = () => {
                 <span>Dars tafsilotlari</span>
               </div>
 
-              <LessonEditModal id={Number(id)} onSuccess={() => fetchData()} />
+              <LessonEditModal id={Number(id)} onSuccess={() => fetchData()} style="default" />
             </div>
           </>
         )}

@@ -44,6 +44,7 @@ import {
 import SearchInput from "@/components/ui/SearchInput";
 import { toast } from "sonner";
 import type { Lesson } from "../Lessons/type";
+import { LessonEditModal } from "../Lessons/LessonEditModal";
 
 export default function LessonTableComponent() {
   const [tableData, setTableData] = useState<Lesson[]>([]);
@@ -103,12 +104,13 @@ export default function LessonTableComponent() {
   useEffect(() => {
     fetchGroups();
   }, [fetchGroups]);
-  const filteredData = tableData.filter((lesson) =>
-    lesson.name.toLowerCase().includes(search.toLowerCase()) ||
-    lesson.group.name.toLowerCase().includes(search.toLowerCase()) ||
-    lesson.teacher.name.toLowerCase().includes(search.toLowerCase()) ||
-    lesson.teacher.lastName.toLowerCase().includes(search.toLowerCase()) ||
-    lesson.lessonDate.toLowerCase().includes(search.toLowerCase()),
+  const filteredData = tableData.filter(
+    (lesson) =>
+      lesson.name.toLowerCase().includes(search.toLowerCase()) ||
+      lesson.group.name.toLowerCase().includes(search.toLowerCase()) ||
+      lesson.teacher.name.toLowerCase().includes(search.toLowerCase()) ||
+      lesson.teacher.lastName.toLowerCase().includes(search.toLowerCase()) ||
+      lesson.lessonDate.toLowerCase().includes(search.toLowerCase()),
   );
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -216,7 +218,7 @@ export default function LessonTableComponent() {
                     <TableCell className="hidden xl:table-cell px-5 py-4">
                       <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                     </TableCell>
-                    
+
                     <TableCell className="hidden xl:table-cell px-5 py-4">
                       <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                     </TableCell>
@@ -254,11 +256,11 @@ export default function LessonTableComponent() {
                       {lesson.lessonDate}
                     </TableCell>
                     <TableCell className="px-5 py-4 flex sm:gap-2 justify-center">
-                      {/* <GroupEditModal
-                        group={lesson}
-                        onSuccess={fetchGroups}
-                        classname="hidden sm:flex dark:bg-blue-500 bg-blue-500 hover:bg-blue-500/80 hover:text-white cursor-pointer text-white rounded-lg  items-center justify-center gap-2"
-                      /> */}
+                      <LessonEditModal
+                        id={lesson.id}
+                        onSuccess={() => fetchGroups()}
+                        style="icon"
+                      />
                       <Button
                         onClick={() => navigate(`/lesson-info/${lesson.id}`)}
                         className="bg-blue-500 hover:bg-blue-500/80 hover:text-white cursor-pointer text-white rounded-lg flex items-center justify-center gap-2"

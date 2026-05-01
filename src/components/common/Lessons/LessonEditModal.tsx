@@ -22,6 +22,7 @@ import { toast } from "sonner";
 interface LessonEditModalProps {
   id: number;
   onSuccess?: () => void;
+  style: "default" | "icon";
 }
 
 const EMPTY_FORM: Lesson = {
@@ -35,7 +36,11 @@ const EMPTY_FORM: Lesson = {
   endTime: "",
 };
 
-export function LessonEditModal({ id, onSuccess }: LessonEditModalProps) {
+export function LessonEditModal({
+  id,
+  onSuccess,
+  style,
+}: LessonEditModalProps) {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<Lesson>(EMPTY_FORM);
   const [loading, setLoading] = useState(false);
@@ -111,9 +116,19 @@ export function LessonEditModal({ id, onSuccess }: LessonEditModalProps) {
 
   return (
     <>
-      <Button variant="outline" size="sm" onClick={handleOpen}>
-        <Pencil className="w-4 h-4 mr-1" />
-        Tahrirlash
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={handleOpen}
+        className="bg-blue-500 hover:bg-blue-400 text-white flex items-center justify-center hover:text-white h-9 cursor-pointer"
+      >
+        {style === "icon" ? <Pencil className="w-4 h-4 mr-1" /> : null}
+        {style === "default" ? (
+          <>
+            <Pencil className="w-4 h-4 mr-1" />
+            Tahrirlash
+          </>
+        ) : null}
       </Button>
 
       <AlertDialog open={open} onOpenChange={(val) => !val && handleClose()}>
