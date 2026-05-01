@@ -86,13 +86,13 @@ export function LessonEditModal({ id, onSuccess }: LessonEditModalProps) {
     !form.group.id ||
     !form.teacher.id ||
     !form.lessonDate ||
-    !form.startTime ||
-    !form.endTime;
+    !(form.startTime.length === 5) ||
+    !(form.endTime.length === 5);
 
   const handleSave = async () => {
     setLoading(true);
     try {
-      await apiClient.put(`/lessons/${id}`, {
+      await apiClient.patch(`/lessons/${id}`, {
         name: form.name,
         description: form.description,
         groupId: form.group.id,

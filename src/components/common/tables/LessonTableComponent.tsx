@@ -43,7 +43,6 @@ import {
 } from "@/components/ui/select";
 import SearchInput from "@/components/ui/SearchInput";
 import { toast } from "sonner";
-import { GroupCreateModal } from "../Group/GroupCreateModal";
 import type { Lesson } from "../Lessons/type";
 
 export default function LessonTableComponent() {
@@ -76,8 +75,8 @@ export default function LessonTableComponent() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      setTableData(res.data || []);
-      console.log(res.data);
+      setTableData(res.data.data || []);
+      console.log(res.data.data);
     } catch (error) {
       console.log("FETCH ERROR:", error);
     } finally {
