@@ -33,10 +33,10 @@ interface PaymentFormProps {
 
 const getCurrentMonth = () => {
   const today = new Date();
-  return today.toISOString().slice(0, 7); // YYYY-MM
+  return today.toISOString().slice(0, 7);
 };
 
-const defaultForm: any = {
+const defaultForm = {
   student_id: 0,
   group_id: 0,
   amount: 0,
@@ -45,6 +45,22 @@ const defaultForm: any = {
   month: getCurrentMonth(),
   description: "",
 };
+
+// "1,234,567" → 1234567
+const parseNumber = (value: string): number => {
+  if (!value) return 0;
+  const cleaned = String(value).replace(/,/g, "").replace(/\s/g, "");
+  const parsed = parseFloat(cleaned);
+  return isNaN(parsed) ? 0 : Math.round(parsed);
+};
+
+// 1234567 → "1,234,567"
+const formatCurrency = (value: string): string => {
+  const numbers = value.replace(/\D/g, "");
+  if (!numbers) return "";
+  return numbers.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
 export function PaymentForm({
   open,
   onClose,
@@ -54,91 +70,118 @@ export function PaymentForm({
 }: PaymentFormProps) {
   const [form, setForm] = useState(defaultForm);
   const [error, setError] = useState("");
-  const formatCurrency = (value: string) => {
-    const numbers = value.replace(/\D/g, "");
-    if (!numbers) return "";
-    return numbers.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
-  const parseNumber = (value: string) => {
-    return Number(value.replace(/,/g, ""));
-  };
   const [groups, setGroups] = useState<GroupDetail[]>([]);
-  const [loading, setloading] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // Validation: paidAmount + discount <= amount
   useEffect(() => {
-    const paid = parseNumber(form.paidAmount || "0");
-    const discount = parseNumber(form.discount || "0");
+    const paid = parseNumber(String(form.paidAmount));
+    const discount = parseNumber(String(form.discount));
+    const amount = Math.round(parseFloat(String(form.amount)) || 0);
     const total = paid + discount;
 
-    if (total > Number(form.amount)) {
+    if (amount > 0 && total > amount) {
       setError("To'langan summa va chegirma jami miqdordan oshib ketdi!");
     } else {
       setError("");
     }
   }, [form.paidAmount, form.discount, form.amount]);
+
   const fetchGroups = async () => {
     try {
-      setloading(true);
+      setLoading(true);
       const api = import.meta.env.VITE_API_URL;
       const id = localStorage.getItem("id");
       const res = await apiClient.get(`${api}/groups/learning-center/${id}`);
       setGroups(res.data.data);
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.error("Groups fetch error:", err);
     } finally {
-      setloading(false);
+      setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchGroups();
   }, []);
-  const GetOnePayment = async (id: string) => {
+
+  const getOnePayment = async (id: string) => {
     try {
-      setloading(true);
+      setLoading(true);
       const api = import.meta.env.VITE_API_URL;
       const res = await apiClient.get(`${api}/student-payments/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
+      const data = res.data.data;
       setForm({
-        student_id: res.data.data.student.id,
-        group_id: res.data.data.group?.id,
-        amount: res.data.data.amount,
-        paidAmount: formatCurrency(String(Number(res.data.data.paidAmount))),
-        discount: formatCurrency(String(Number(res.data.data.discount))),
-        month: res.data.data?.month?.slice(0, 7),
-        description: res.data.data?.description,
+        student_id: data.student?.id ?? 0,
+        group_id: data.group?.id ?? 0,
+        // amount ni number ga o'tkazamiz, Math.round bilan
+        amount: Math.round(parseFloat(String(data.amount)) || 0),
+        paidAmount: formatCurrency(
+          String(Math.round(parseFloat(String(data.paidAmount)) || 0)),
+        ),
+        discount: formatCurrency(
+          String(Math.round(parseFloat(String(data.discount)) || 0)),
+        ),
+        month: data.month?.slice(0, 7) ?? getCurrentMonth(),
+        description: data.description ?? "",
       });
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.error("Payment fetch error:", err);
     } finally {
-      setloading(false);
+      setLoading(false);
     }
   };
+
+  // Dialog ochilganda / editingPayment o'zgarganda
   useEffect(() => {
+    if (!open) return;
     if (editingPayment) {
-      GetOnePayment(String(editingPayment.id));
+      getOnePayment(String(editingPayment.id));
     } else {
-      setForm({
-        ...defaultForm,
-        month: new Date().toISOString().slice(0, 7),
-      });
+      setForm({ ...defaultForm, month: getCurrentMonth() });
+      setError("");
     }
   }, [editingPayment, open]);
+
+  // groups keyin kelsa va edit rejimida bo'lsak — qayta fetch
+  useEffect(() => {
+    if (editingPayment && groups.length > 0) {
+      getOnePayment(String(editingPayment.id));
+    }
+  }, [groups]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (error) return;
 
-    if (!form.student_id || !form.group_id || !form.month) return;
+    if (form.group_id === 0) {
+      setError("Guruhni tanlang!");
+      return;
+    }
+    if (form.student_id === 0) {
+      setError("O'quvchini tanlang!");
+      return;
+    }
+    if (!form.month) {
+      setError("Sanani tanlang!");
+      return;
+    }
 
-    onSubmit({
+    const payload: PaymentFormData = {
       ...form,
-      paidAmount: parseNumber(form.paidAmount),
-      discount: parseNumber(form.discount),
+      // amount ni aniq number qilib yuboramiz
+      amount: Math.round(parseFloat(String(form.amount)) || 0),
+      paidAmount: parseNumber(String(form.paidAmount)),
+      discount: parseNumber(String(form.discount)),
       month: form.month + "-01",
-    });
+    };
+
+    onSubmit(payload);
   };
 
   const field = (label: string, children: React.ReactNode) => (
@@ -149,12 +192,9 @@ export function PaymentForm({
       {children}
     </div>
   );
-  useEffect(() => {
-    if (editingPayment && groups.length) {
-      GetOnePayment(String(editingPayment.id));
-    }
-  }, [editingPayment, groups]);
+
   const selectedGroup = groups.find((g) => g.id === form.group_id);
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-lg bg-white dark:bg-background border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-2xl">
@@ -166,26 +206,17 @@ export function PaymentForm({
 
         {loading ? (
           <div className="space-y-4">
-            {/* Guruh + O'quvchi */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Skeleton className="h-10 w-full rounded-xl" />
               <Skeleton className="h-10 w-full rounded-xl" />
             </div>
-
-            {/* Miqdor / Tolandi / Chegirma */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Skeleton className="h-10 w-full rounded-xl" />
               <Skeleton className="h-10 w-full rounded-xl" />
               <Skeleton className="h-10 w-full rounded-xl" />
             </div>
-
-            {/* Sana */}
             <Skeleton className="h-10 w-full rounded-xl" />
-
-            {/* Description */}
             <Skeleton className="h-20 w-full rounded-xl" />
-
-            {/* Buttons */}
             <div className="flex justify-end gap-2 pt-2">
               <Skeleton className="h-10 w-24 rounded-xl" />
               <Skeleton className="h-10 w-24 rounded-xl" />
@@ -201,19 +232,20 @@ export function PaymentForm({
                   value={form.group_id ? String(form.group_id) : ""}
                   onValueChange={(v) => {
                     const group = groups.find((g) => g.id === Number(v));
-
                     setForm({
                       ...form,
                       group_id: Number(v),
                       student_id: 0,
-                      amount: group?.monthlyPrice || 0,
+                      // monthlyPrice ni ham round qilamiz
+                      amount: Math.round(
+                        parseFloat(String(group?.monthlyPrice ?? 0)) || 0,
+                      ),
                     });
                   }}
                 >
                   <SelectTrigger className="rounded-xl w-full border-zinc-200 dark:border-zinc-700">
                     <SelectValue placeholder="Guruhni tanlang" />
                   </SelectTrigger>
-
                   <SelectContent>
                     {groups.map((g) => (
                       <SelectItem key={g.id} value={String(g.id)}>
@@ -235,7 +267,7 @@ export function PaymentForm({
                 >
                   <SelectTrigger
                     disabled={!form.group_id || !!editingPayment}
-                    className="rounded-xl w-full border-zinc-200 dark:border-zinc-700 "
+                    className="rounded-xl w-full border-zinc-200 dark:border-zinc-700"
                   >
                     <SelectValue
                       placeholder={
@@ -245,7 +277,6 @@ export function PaymentForm({
                       }
                     />
                   </SelectTrigger>
-
                   <SelectContent>
                     {selectedGroup?.groupStudents?.map((gs: any) => (
                       <SelectItem
@@ -267,10 +298,10 @@ export function PaymentForm({
                   readOnly
                   value={
                     form.amount
-                      ? `${Math.floor(Number(form.amount)).toLocaleString()} UZS`
+                      ? `${Math.round(Number(form.amount)).toLocaleString()} UZS`
                       : ""
                   }
-                  className="rounded-xl border-zinc-200 dark:border-zinc-700 "
+                  className="rounded-xl border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900"
                 />,
               )}
 
@@ -279,16 +310,15 @@ export function PaymentForm({
                 <div className="relative">
                   <Input
                     value={form.paidAmount}
-                    onChange={(e) => {
-                      const formatted = formatCurrency(e.target.value);
+                    onChange={(e) =>
                       setForm({
                         ...form,
-                        paidAmount: formatted,
-                      });
-                    }}
-                    className="rounded-xl border-zinc-200 dark:border-zinc-700  pr-14"
+                        paidAmount: formatCurrency(e.target.value),
+                      })
+                    }
+                    placeholder="0"
+                    className="rounded-xl border-zinc-200 dark:border-zinc-700 pr-14"
                   />
-
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-zinc-500">
                     UZS
                   </span>
@@ -300,22 +330,22 @@ export function PaymentForm({
                 <div className="relative">
                   <Input
                     value={form.discount}
-                    onChange={(e) => {
-                      const formatted = formatCurrency(e.target.value);
+                    onChange={(e) =>
                       setForm({
                         ...form,
-                        discount: formatted,
-                      });
-                    }}
-                    className="rounded-xl border-zinc-200 dark:border-zinc-700  pr-14"
+                        discount: formatCurrency(e.target.value),
+                      })
+                    }
+                    placeholder="0"
+                    className="rounded-xl border-zinc-200 dark:border-zinc-700 pr-14"
                   />
-
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-zinc-500">
                     UZS
                   </span>
                 </div>,
               )}
             </div>
+
             {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
 
             {field(
@@ -325,7 +355,7 @@ export function PaymentForm({
                 type="month"
                 value={form.month}
                 onChange={(e) => setForm({ ...form, month: e.target.value })}
-                className="rounded-xl border-zinc-200 dark:border-zinc-700 "
+                className="rounded-xl border-zinc-200 dark:border-zinc-700"
               />,
             )}
 
@@ -338,7 +368,7 @@ export function PaymentForm({
                   setForm({ ...form, description: e.target.value })
                 }
                 rows={3}
-                className="rounded-xl border-zinc-200 dark:border-zinc-700  resize-none"
+                className="rounded-xl border-zinc-200 dark:border-zinc-700 resize-none"
               />,
             )}
 
@@ -349,21 +379,16 @@ export function PaymentForm({
                 onClick={onClose}
                 className="rounded-xl cursor-pointer border-zinc-200 dark:border-zinc-700"
               >
-                Cancel
+                Bekor qilish
               </Button>
 
               <Button
                 type="submit"
-                disabled={loadingMain}
+                disabled={loadingMain || !!error}
                 className="rounded-xl cursor-pointer bg-violet-600 hover:bg-violet-700 text-white flex items-center gap-2"
               >
                 {loadingMain && <Loader2 className="w-4 h-4 animate-spin" />}
-
-                {loadingMain
-                  ? "Saqlanmoqda..."
-                  : editingPayment
-                    ? "Saqlash"
-                    : "Saqlash"}
+                {loadingMain ? "Saqlanmoqda..." : "Saqlash"}
               </Button>
             </DialogFooter>
           </form>
