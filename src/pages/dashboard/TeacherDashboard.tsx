@@ -223,7 +223,7 @@ export default function DashboardStats() {
   useEffect(() => { load(); }, [load]);
 
   return (
-    <div className="min-h-screen bg-[#f4f6fb] dark:bg-black p-6">
+    <div className="min-h-screen  p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-7">
         <div>
@@ -272,7 +272,7 @@ export default function DashboardStats() {
               <div
                 key={card.key}
                 className={`
-                  relative rounded-2xl bg-white dark:bg-zinc-900 border overflow-hidden
+                  relative rounded-2xl bg-white dark:bg-fullbg border overflow-hidden
                   ${card.shadow} ${card.border}
                   transition-all duration-300 hover:-translate-y-1
                   hover:shadow-[0_8px_32px_rgba(0,0,0,0.12)] dark:hover:shadow-[0_8px_32px_rgba(0,0,0,0.5)]
@@ -310,7 +310,7 @@ export default function DashboardStats() {
           data?.attendance && (
             <div
               className={`
-                lg:col-span-2 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 p-6
+                lg:col-span-2 rounded-2xl bg-white dark:bg-fullbg border border-slate-100 dark:border-zinc-800 p-6
                 shadow-[0_4px_20px_rgba(0,0,0,0.07)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.4)]
                 transition-all duration-500
                 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}
@@ -372,7 +372,7 @@ export default function DashboardStats() {
         ) : (
           <div
             className={`
-              lg:col-span-3 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 p-6
+              lg:col-span-3 rounded-2xl bg-white dark:bg-fullbg border border-slate-100 dark:border-zinc-800 p-6
               shadow-[0_4px_20px_rgba(0,0,0,0.07)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.4)]
               transition-all duration-500
               ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}
@@ -397,7 +397,7 @@ export default function DashboardStats() {
                       flex items-center justify-between
                       px-4 py-3.5 rounded-xl
                       bg-slate-50 hover:bg-indigo-50
-                      dark:bg-zinc-800 dark:hover:bg-zinc-700
+                      dark:bg-slate-900 dark:hover:bg-zinc-700
                       border border-slate-100 hover:border-indigo-100
                       dark:border-zinc-700 dark:hover:border-zinc-600
                       transition-all duration-200 cursor-default
