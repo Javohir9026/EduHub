@@ -135,13 +135,13 @@ const StudentUpdateGroupSelect: React.FC<StudentUpdateGroupSelectProps> = ({
                   className={`flex cursor-pointer items-center justify-between px-4 py-2 text-sm
                     hover:bg-gray-50 dark:hover:bg-gray-700
                     ${
-                      value === group.id.toString()
+                      value === String(group.id)
                         ? "bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
                         : "text-gray-900 dark:text-gray-100"
                     }`}
                 >
                   {group.name}
-                  {value === group.id.toString() && (
+                  {value === String(group.id) && (
                     <Check
                       size={14}
                       className="text-blue-700 dark:text-blue-400"
