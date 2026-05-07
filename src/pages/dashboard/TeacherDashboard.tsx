@@ -49,8 +49,6 @@ async function fetchStats(): Promise<StatsResponse> {
   return res.data.data;
 }
 
-// ================== COUNT ANIMATION ==================
-
 function CountUp({ target, active }: { target: number; active: boolean }) {
   const [val, setVal] = useState(0);
 
@@ -64,6 +62,7 @@ function CountUp({ target, active }: { target: number; active: boolean }) {
       if (current >= target) {
         setVal(target);
         clearInterval(interval);
+
       } else {
         setVal(current);
       }
@@ -74,7 +73,7 @@ function CountUp({ target, active }: { target: number; active: boolean }) {
   return <>{val.toLocaleString("uz-UZ")}</>;
 }
 
-// ================== SKELETON ==================
+
 
 function SkeletonPulse({ className = "" }: { className?: string }) {
   return (
