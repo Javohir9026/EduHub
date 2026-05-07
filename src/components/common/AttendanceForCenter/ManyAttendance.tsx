@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/pagination";
 import type { Group } from "./TypesGroup";
 import LessonCreateModal from "./LessonCreateModal";
+import { toast } from "sonner";
 const ManyAttendance = () => {
   const [tableData, setTableData] = useState<Group[]>([]);
   const api = import.meta.env.VITE_API_URL;
@@ -48,6 +49,7 @@ const ManyAttendance = () => {
   const todayName = days[today.getDay()];
   const [openModal, setOpenModal] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
+  const todayDate = new Date().toISOString().slice(0, 10);
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
@@ -104,6 +106,54 @@ const ManyAttendance = () => {
     setCurrentPage(1);
   }, [itemsPerPage, search]);
   const navigate = useNavigate();
+  const createDefaultAttendance = async (group: Group, lessonId: number) => {
+    try {
+      await apiClient.post(
+        `${api}/attendances/learning-center/create`,
+        {
+          groupId: group.id,
+          lessonId,
+          teacherId: group.teacher.id,
+          date: todayDate,
+          students: group.groupStudents.map((groupStudent) => ({
+            studentId: groupStudent.student.id,
+            status: "ABSENT",
+          })),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      toast.success("Davomat yaratildi");
+      navigate(`/attendance-lesson/${lessonId}`);
+    } catch (error) {
+      console.log(error);
+      toast.error("Davomat yaratishda xatolik");
+    }
+  };
+
+  const handleAttendanceClick = async (group: Group) => {
+    const todayLesson = group.lessons?.find(
+      (lesson) => lesson.lessonDate === todayDate,
+    );
+    const hasAttendance = Boolean(todayLesson?.attendances?.length);
+
+    if (todayLesson && hasAttendance) {
+      navigate(`/attendance-lesson/${todayLesson.id}`);
+      return;
+    }
+
+    if (todayLesson) {
+      await createDefaultAttendance(group, todayLesson.id);
+      return;
+    }
+
+    setSelectedGroup(group);
+    setOpenModal(true);
+  };
 
   return (
     <div>
@@ -207,8 +257,6 @@ const ManyAttendance = () => {
                 ))}
               {!loading &&
                 currentData.map((group, idx) => {
-                  const todayDate = new Date().toISOString().slice(0, 10);
-
                   const todayLesson = group.lessons?.find(
                     (lesson) => lesson.lessonDate === todayDate,
                   );
@@ -254,16 +302,7 @@ const ManyAttendance = () => {
                       <TableCell className="px-5 py-4 flex sm:gap-2 justify-center">
                         <Button
                           variant={"outline"}
-                          onClick={() => {
-                            {
-                              todayLesson &&
-                                navigate(
-                                  `/attendance-lesson/${todayLesson.id}`,
-                                );
-                            }
-                            setSelectedGroup(group);
-                            setOpenModal(true);
-                          }}
+                          onClick={() => handleAttendanceClick(group)}
                           className="bg-blue-500 hover:text-white hover:bg-blue-400 dark:bg-blue-500 dark:bg-blue-500 dark:hover:bg-blue-400 cursor-pointer text-white"
                         >
                           Davomat
@@ -350,6 +389,7 @@ const ManyAttendance = () => {
                 selectedGroup.teacher.lastName || "",
             lessonDate: new Date().toISOString().slice(0, 10),
             startTime: selectedGroup.lessonTime,
+            groupStudents: selectedGroup.groupStudents,
           }}
           onSuccess={(lessonId) => {
             navigate(`/attendance-lesson/${lessonId}`);

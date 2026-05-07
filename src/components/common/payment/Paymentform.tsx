@@ -377,6 +377,7 @@ export function PaymentForm({
                 type="button"
                 variant="outline"
                 onClick={onClose}
+              
                 className="rounded-xl cursor-pointer border-zinc-200 dark:border-zinc-700"
               >
                 Bekor qilish

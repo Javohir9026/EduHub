@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import apiClient from "@/api/ApiClient";
 import { toast } from "sonner";
+import type { GroupStudent } from "./TypesGroup";
 
 type Props = {
   open: boolean;
@@ -22,9 +23,12 @@ type Props = {
     teacherId: number;
     lessonDate: string;
     startTime: string;
+    groupStudents: GroupStudent[];
   };
   onSuccess: (lessonId: number) => void;
 };
+
+type FormErrors = Partial<Record<"name" | "description" | "endTime", string>>;
 
 const LessonCreateModal = ({ open, setOpen, data, onSuccess }: Props) => {
   const [form, setForm] = useState({
@@ -33,7 +37,7 @@ const LessonCreateModal = ({ open, setOpen, data, onSuccess }: Props) => {
     endTime: "",
   });
 
-  const [errors, setErrors] = useState<any>({});
+  const [errors, setErrors] = useState<FormErrors>({});
   const handleCloseModal = () => {
     setOpen(false);
     setForm({ name: "", description: "", endTime: "" });
@@ -44,14 +48,14 @@ const LessonCreateModal = ({ open, setOpen, data, onSuccess }: Props) => {
       [key]: value,
     }));
 
-    setErrors((prev: any) => ({
+    setErrors((prev) => ({
       ...prev,
       [key]: "",
     }));
   };
 
   const validate = () => {
-    let newErrors: any = {};
+    const newErrors: FormErrors = {};
 
     if (!form.name) newErrors.name = "Mavzu kiritish shart";
     if (!form.description) newErrors.description = "Tavsif kiritish shart";
@@ -64,6 +68,9 @@ const LessonCreateModal = ({ open, setOpen, data, onSuccess }: Props) => {
   const handleSubmit = async () => {
     if (!validate()) return;
 
+    const api = import.meta.env.VITE_API_URL;
+    const token = localStorage.getItem("access_token");
+
     const payload = {
       name: form.name,
       description: form.description,
@@ -74,17 +81,44 @@ const LessonCreateModal = ({ open, setOpen, data, onSuccess }: Props) => {
       endTime: form.endTime,
     };
 
-    console.log("SEND:", payload);
-    const api = import.meta.env.VITE_API_URL;
-    const res = await apiClient.post(`${api}/lessons`, payload, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-      },
-    });
-    console.log("RES:", res);
-    toast.success("Dars muvaffaqiyatli yaratildi");
-    onSuccess(res.data.id);
-    setOpen(false);
+    try {
+      const res = await apiClient.post(`${api}/lessons`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const lessonId = res.data?.data?.id ?? res.data?.id;
+      if (!lessonId) {
+        throw new Error("Lesson id topilmadi");
+      }
+
+      await apiClient.post(
+        `${api}/attendances/learning-center/create`,
+        {
+          groupId: data.groupId,
+          lessonId,
+          teacherId: data.teacherId,
+          date: data.lessonDate,
+          students: data.groupStudents.map((groupStudent) => ({
+            studentId: groupStudent.student.id,
+            status: "ABSENT",
+          })),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      toast.success("Dars va davomat muvaffaqiyatli yaratildi");
+      onSuccess(lessonId);
+      setOpen(false);
+    } catch (error) {
+      console.log(error);
+      toast.error("Dars yoki davomat yaratishda xatolik");
+    }
   };
 
   return (

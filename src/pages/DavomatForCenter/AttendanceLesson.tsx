@@ -6,6 +6,7 @@ import type { Lesson } from "./type";
 import { toast } from "sonner";
 
 type AttendanceItem = {
+  attendanceId?: number;
   studentId: number;
   status: "PRESENT" | "ABSENT";
 };
@@ -49,10 +50,17 @@ const AttendanceLesson = () => {
   // 🔹 INIT STUDENTS
   useEffect(() => {
     if (data?.group.groupStudents) {
-      const initial = data.group.groupStudents.map((gs) => ({
-        studentId: gs.student.id,
-        status: "ABSENT" as "PRESENT" | "ABSENT",
-      }));
+      const initial = data.group.groupStudents.map((gs) => {
+        const studentAttendance = data.attendances?.find(
+          (attendance) => attendance.student.id === gs.student.id,
+        );
+
+        return {
+          attendanceId: studentAttendance?.id,
+          studentId: gs.student.id,
+          status: studentAttendance?.status || ("ABSENT" as const),
+        };
+      });
       setAttendance(initial);
     }
   }, [data]);
@@ -67,22 +75,37 @@ const AttendanceLesson = () => {
     );
   };
 
-  // 🔹 SUBMIT
-  const handleSubmit = async () => {
+  const updateAttendance = async (attendanceItem: AttendanceItem) => {
     try {
       const api = import.meta.env.VITE_API_URL;
       const token = localStorage.getItem("access_token");
-
       const payload = {
-        groupId: data?.group.id,
-        lessonId: data?.id,
-        teacherId: data?.teacher.id,
-        date: data?.lessonDate,
-        students: attendance,
+        studentId: attendanceItem.studentId,
+        status: attendanceItem.status,
+        isAttended: attendanceItem.status === "PRESENT",
       };
 
-      const res = await apiClient.post(
-        `${api}/attendances/learning-center/create`,
+      if (!attendanceItem.attendanceId) {
+        await apiClient.post(
+          `${api}/attendances/learning-center/create`,
+          {
+            groupId: data?.group.id,
+            lessonId: data?.id,
+            teacherId: data?.teacher.id,
+            date: data?.lessonDate,
+            students: [payload],
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+        return;
+      }
+
+      await apiClient.patch(
+        `${api}/attendances/learning-center/${attendanceItem.attendanceId}`,
         payload,
         {
           headers: {
@@ -90,8 +113,16 @@ const AttendanceLesson = () => {
           },
         },
       );
-      console.log(res)
-      console.log(payload)
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  // 🔹 SUBMIT
+  const handleSubmit = async () => {
+    try {
+      await Promise.all(attendance.map((item) => updateAttendance(item)));
       toast.success("Davomat saqlandi");
       navigate("/attendances-center");
     } catch (error) {

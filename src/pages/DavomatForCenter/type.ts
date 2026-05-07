@@ -2,6 +2,10 @@ export interface Attendance {
   id: number;
   created_at: string;
   updated_at: string;
+  date: string;
+  isAttended: boolean;
+  status: "PRESENT" | "ABSENT";
+  student: Student;
 }
 
 export interface Student {

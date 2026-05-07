@@ -43,6 +43,7 @@ export interface Lesson {
 // =============================
 export interface GroupStudent {
   id: number;
+  student: Student;
 }
 
 // =============================

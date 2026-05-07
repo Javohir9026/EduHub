@@ -16,7 +16,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import GroupTeacherSelect from "./GroupTeacherSelect";
 import { DatePickerCalendar } from "../DatePickerCalendar";
-import { X } from "lucide-react";
+import { DaysModal } from "./DaysModal";
 
 export function GroupCreateModal({
   classname,
@@ -334,47 +334,12 @@ export function GroupCreateModal({
       </AlertDialog>
 
       {/* DAYS MODAL */}
-      <AlertDialog open={daysModal} onOpenChange={setDaysModal}>
-        <AlertDialogContent>
-          <div className="relative">
-            <button
-              onClick={() => setDaysModal(false)}
-              className="absolute top-3 cursor-pointer right-3 p-1 rounded-md hover:bg-gray-100"
-            >
-              <X size={18} />
-            </button>
-          </div>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Kunlarni tanlang</AlertDialogTitle>
-          </AlertDialogHeader>
-          <div className="grid grid-cols-2 gap-1">
-            {DAYS.map((day) => (
-              <label key={day.id} className="flex gap-2">
-                <input
-                  type="checkbox"
-                  checked={lessonDays.includes(day.id)}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setLessonDays([...lessonDays, day.id]);
-                    } else {
-                      setLessonDays(lessonDays.filter((d) => d !== day.id));
-                    }
-                  }}
-                />
-                {day.label}
-              </label>
-            ))}
-          </div>
-          <AlertDialogFooter>
-            <Button
-              className="cursor-pointer"
-              onClick={() => setDaysModal(false)}
-            >
-              Saqlash
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <DaysModal
+        open={daysModal}
+        onOpenChange={setDaysModal}
+        lessonDays={lessonDays}
+        setLessonDays={setLessonDays}
+      />
     </>
   );
 }
