@@ -78,25 +78,22 @@ interface GroupDetail extends BaseGroup {
   groupStudents: GroupStudent[];
   learningCenter: LearningCenter;
 }
-// ─────────────────────────────────────────────────────────
 
-const DAY_MAP: Record<string, string> = {
-  DUSHANBA: "1",
-  SESHANBA: "2",
-  CHORSHANBA: "3",
-  PAYSHANBA: "4",
-  JUMA: "5",
-  SHANBA: "6",
-  YAKSHANBA: "7",
-};
+const formatLessonDays = (days: string) => {
+  const map: Record<string, string> = {
+    dushanba: "Du",
+    seshanba: "Se",
+    chorshanba: "Cho",
+    payshanba: "Pay",
+    juma: "Ju",
+    shanba: "Sha",
+    yakshanba: "Yak",
+  };
 
-const formatLessonDays = (days: string): string => {
-  if (!days) return "-";
   return days
     .split(",")
-    .map((d) => DAY_MAP[d.trim()] ?? d.trim())
-    .sort((a, b) => Number(a) - Number(b))
-    .join("-");
+    .map((day) => map[day.trim().toLowerCase()] || day)
+    .join(" • ");
 };
 
 export const GroupInfo = () => {
@@ -211,46 +208,54 @@ export const GroupInfo = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <GroupEditModal
-              group={group}
-              onSuccess={fetchGroup}
-              classname="flex dark:bg-blue-500 bg-blue-500 hover:bg-blue-500/80 hover:text-white cursor-pointer text-white rounded-lg items-center justify-center gap-2"
-            />
+            {role === "center" && (
+              <>
+                <GroupEditModal
+                  group={group}
+                  onSuccess={fetchGroup}
+                  classname="flex dark:bg-blue-500 bg-blue-500 hover:bg-blue-500/80 hover:text-white cursor-pointer text-white rounded-lg items-center justify-center gap-2"
+                />
 
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button className="bg-red-600 hover:bg-red-700 hover:text-white cursor-pointer text-white rounded-lg flex items-center justify-center gap-2">
-                  <Trash className="w-4 h-4" />
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>
-                    O'chirishni tasdiqlaysizmi?
-                  </AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Haqiqatdan ham ishonchingiz komilmi?
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel className="cursor-pointer">
-                    Bekor qilish
-                  </AlertDialogCancel>
-                  <AlertDialogAction
-                    disabled={deletingId === group.id}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleDelete(group.id);
-                    }}
-                    className="bg-red-600 hover:bg-red-700 hover:text-white cursor-pointer text-white"
-                  >
-                    {deletingId === group.id
-                      ? "O'chirilmoqda..."
-                      : "Ha, O'chirish"}
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button className="bg-red-600 hover:bg-red-700 hover:text-white cursor-pointer text-white rounded-lg flex items-center justify-center gap-2">
+                      <Trash className="w-4 h-4" />
+                    </Button>
+                  </AlertDialogTrigger>
+
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        O'chirishni tasdiqlaysizmi?
+                      </AlertDialogTitle>
+
+                      <AlertDialogDescription>
+                        Haqiqatdan ham ishonchingiz komilmi?
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+
+                    <AlertDialogFooter>
+                      <AlertDialogCancel className="cursor-pointer">
+                        Bekor qilish
+                      </AlertDialogCancel>
+
+                      <AlertDialogAction
+                        disabled={deletingId === group.id}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleDelete(group.id);
+                        }}
+                        className="bg-red-600 hover:bg-red-700 hover:text-white cursor-pointer text-white"
+                      >
+                        {deletingId === group.id
+                          ? "O'chirilmoqda..."
+                          : "Ha, O'chirish"}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </>
+            )}
           </div>
         </div>
 
@@ -391,3 +396,5 @@ const InfoCard = ({
     </div>
   </div>
 );
+
+export default formatLessonDays;

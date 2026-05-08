@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import formatLessonDays from "../Groups/GorupInfo";
 
 type Teacher = {
   id: number;
@@ -203,7 +204,6 @@ const TeacherGroupsTable = () => {
     group: Group;
     mobile?: boolean;
   }) => {
-    
     if (isAttended(group.id)) {
       return (
         <span
@@ -219,9 +219,7 @@ const TeacherGroupsTable = () => {
 
     return (
       <button
-        onClick={() =>
-          navigate(`/group-info/AttendancessMainPage/${group.id}`)
-        }
+        onClick={() => navigate(`/group-info/AttendancessMainPage/${group.id}`)}
         className="inline-flex items-center gap-1.5 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition-colors duration-150 shadow-sm shadow-blue-200 dark:shadow-none"
       >
         <Info size={13} /> Davomat
@@ -290,7 +288,8 @@ const TeacherGroupsTable = () => {
 
                 <td className="px-5 py-4">
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-violet-50 dark:bg-violet-950 text-violet-600 dark:text-violet-400">
-                    <Calendar size={11} /> {group.lessonDays} kun
+                    <Calendar size={11} /> {group.lessonTime} |{" "}
+                    {formatLessonDays(String(group.lessonDays))} kun/hafta
                   </span>
                 </td>
 

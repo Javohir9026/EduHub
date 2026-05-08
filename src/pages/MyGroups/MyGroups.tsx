@@ -10,6 +10,7 @@ import {
   BookOpen,
   AlertCircle,
 } from "lucide-react";
+import formatLessonDays from "../Groups/GorupInfo";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -85,7 +86,15 @@ export default function MyGroupsPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-gray-50 dark:bg-gray-800/60 text-gray-500 dark:text-gray-400 uppercase text-[11px] tracking-widest font-semibold">
-                {["#", "Guruh nomi", "O'quvchilar", "Kunlar", "Vaqt", "O'qituvchi", "Amal"].map((h) => (
+                {[
+                  "#",
+                  "Guruh nomi",
+                  "O'quvchilar",
+                  "Kunlar",
+                  "Vaqt",
+                  "O'qituvchi",
+                  "Amal",
+                ].map((h) => (
                   <th key={h} className="px-5 py-4 text-left last:text-right">
                     {h}
                   </th>
@@ -95,7 +104,15 @@ export default function MyGroupsPage() {
             <tbody className="divide-y divide-gray-100 dark:divide-gray-800 bg-white dark:bg-gray-900">
               {[...Array(5)].map((_, i) => (
                 <tr key={i}>
-                  {["24px", "120px", "60px", "80px", "72px", "110px", "88px"].map((w, j) => (
+                  {[
+                    "24px",
+                    "120px",
+                    "60px",
+                    "80px",
+                    "72px",
+                    "110px",
+                    "88px",
+                  ].map((w, j) => (
                     <td key={j} className="px-5 py-4">
                       <div
                         className="h-4 bg-gray-100 dark:bg-gray-800 rounded-lg animate-pulse"
@@ -122,7 +139,10 @@ export default function MyGroupsPage() {
               </div>
               <div className="grid grid-cols-3 gap-2">
                 {[...Array(3)].map((__, j) => (
-                  <div key={j} className="h-10 bg-gray-100 dark:bg-gray-800 rounded-xl" />
+                  <div
+                    key={j}
+                    className="h-10 bg-gray-100 dark:bg-gray-800 rounded-xl"
+                  />
                 ))}
               </div>
             </div>
@@ -218,14 +238,17 @@ export default function MyGroupsPage() {
                 </td>
 
                 <td className="px-5 py-4">
-                  <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border ${getCapacityStyle(group.currentStudents)}`}>
+                  <span
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border ${getCapacityStyle(group.currentStudents)}`}
+                  >
                     <Users size={11} /> {group.currentStudents} ta
                   </span>
                 </td>
 
                 <td className="px-5 py-4">
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-violet-50 dark:bg-violet-950 text-violet-600 dark:text-violet-400">
-                    <CalendarDays size={11} /> {getDayLabel(group.lessonDays)}
+                    <CalendarDays size={11} /> {group.lessonTime} |{" "}
+                    {formatLessonDays(String(group.lessonDays))} kun/hafta
                   </span>
                 </td>
 
@@ -292,7 +315,14 @@ export default function MyGroupsPage() {
                 <p className="text-[10px] text-blue-400 font-medium flex items-center gap-1 mb-0.5">
                   <Users size={10} /> O'quvchilar
                 </p>
-                <p className={`text-xs font-bold ${getCapacityStyle(group.currentStudents).split(" ").filter(c => c.startsWith("text-")).join(" ")}`}>
+                <p
+                  className={`text-xs font-bold ${getCapacityStyle(
+                    group.currentStudents,
+                  )
+                    .split(" ")
+                    .filter((c) => c.startsWith("text-"))
+                    .join(" ")}`}
+                >
                   {group.currentStudents} ta
                 </p>
               </div>
