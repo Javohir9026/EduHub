@@ -233,18 +233,6 @@ export default function DashboardStats() {
             Umumiy ko'rsatkichlar
           </p>
         </div>
-        {!loading && (
-          <button
-            onClick={load}
-            className="flex items-center gap-2 text-sm font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950 hover:bg-indigo-100 dark:hover:bg-indigo-900 transition px-4 py-2 rounded-xl"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5}
-                d="M4 4v5h.582M20 20v-5h-.581M5.635 19A9 9 0 1019.364 5" />
-            </svg>
-            Yangilash
-          </button>
-        )}
       </div>
 
       {/* Error */}
