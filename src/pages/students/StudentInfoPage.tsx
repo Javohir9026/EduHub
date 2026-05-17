@@ -8,12 +8,10 @@ import {
   Phone,
   PhoneCall,
   Trash2,
-  Pencil,
   ChevronRight,
   Home,
 } from "lucide-react";
 import type { Student } from "@/lib/types";
-import { Button } from "@/components/ui/button";
 import { StudentEditModal } from "@/components/common/student/StudentEditModal";
 import {
   AlertDialog,

@@ -6,7 +6,6 @@ import {
   Calendar,
   CalendarCheck,
   ClipboardClock,
-  CreditCard,
   Home,
   Layers,
   Users,

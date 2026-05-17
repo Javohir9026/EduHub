@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Plus, CreditCard, Pencil, Trash2 } from "lucide-react";
+import { Plus, CreditCard} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PaymentForm } from "@/components/common/payment/Paymentform";
 import { PaymentStats } from "@/components/common/payment/Paymentstats";
@@ -93,7 +93,7 @@ export function PaymentsPage() {
   const DeletePayment = async (id: number) => {
     try {
       const api = import.meta.env.VITE_API_URL;
-      const res = await apiClient.delete(`${api}/student-payments/${id}`);
+      apiClient.delete(`${api}/student-payments/${id}`);
     } catch (error) {
       console.log(error);
     }

@@ -155,7 +155,7 @@ export function UserEditModal({ classname }: { classname: string }) {
         email: userData.email || "",
         phone: userData.phone || "",
         login: userData.login || "",
-        image: userData.image || "",
+        image: "image" in userData ? userData.image || "" : "",
       };
 
       setOriginalData(data);

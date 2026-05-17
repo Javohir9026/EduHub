@@ -1,4 +1,4 @@
-import { EduHubLogo, EduLogoLight } from "@/assets/exportImg";
+import { EduHubLogo } from "@/assets/exportImg";
 import { Button } from "@/components/ui/button";
 import { Users, Globe, Award } from "lucide-react";
 import { useNavigate } from "react-router-dom";

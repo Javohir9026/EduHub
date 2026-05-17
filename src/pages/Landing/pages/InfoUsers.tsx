@@ -2,7 +2,6 @@ import {
   Coins,
   GraduationCapIcon,
   SquareUserRound,
-  User,
   Users,
 } from "lucide-react";
 
