@@ -5,7 +5,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Info, User2Icon, UserIcon } from "lucide-react";
+import { Info, UserIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { AnimatedThemeToggler } from "../ui/animated-theme-toggler";
 import LogOutButton from "./LogOutButton";

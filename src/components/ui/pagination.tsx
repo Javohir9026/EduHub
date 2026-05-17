@@ -2,8 +2,6 @@ import * as React from "react";
 import {
   ArrowBigLeft,
   ArrowBigRight,
-  ChevronLeftIcon,
-  ChevronRightIcon,
   MoreHorizontalIcon,
 } from "lucide-react";
 

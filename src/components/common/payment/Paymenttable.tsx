@@ -1,4 +1,4 @@
-import { Info, Pencil, Trash, Trash2 } from "lucide-react";
+import { Info, Pencil, Trash2 } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -19,7 +19,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useState } from "react";
 
 // ─── TYPES ───────────────────────────────────────────────────────────────
 interface Student {
@@ -115,7 +114,6 @@ export function PaymentTable({
   onDelete,
 }: PaymentTableProps) {
   const navigate = useNavigate();
-  const [deletingId, setDeletingId] = useState<number | null>(null);
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-fullbg">
       <div className="max-w-full overflow-x-auto">
